@@ -1,8 +1,8 @@
-# Sticker Studio V2
+# Sticker Studio V2.1
 
 A mobile-first sticker editor for creating, composing and exporting stickers.
 
-## V2 editor
+## V2.1 editor
 
 - Paste an image from clipboard
 - Upload a photo

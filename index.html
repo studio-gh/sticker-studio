@@ -124,8 +124,6 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 </div>
 
 <script type="module">
-import removeBackground from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/+esm";
-
 const library=[
 {id:1,text:"NOPE.",cat:"Funny",color:"#151515",style:"outline"},{id:2,text:"LET'S GO",cat:"Football",color:"#ff4d2e",style:"bubble"},
 {id:3,text:"PLAY IT LOUD",cat:"Music",color:"#151515",style:"shadow"},{id:4,text:"GOOD IDEA",cat:"Type",color:"#ff4d2e",style:"clean"},
@@ -180,11 +178,44 @@ async function handleFile(file){if(!file)return;const src=await readData(file);a
 function readData(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
 window.handleFile=handleFile;
 
-async function pasteFromClipboard(){try{const items=await navigator.clipboard.read();for(const item of items){const type=item.types.find(t=>t.startsWith("image/"));if(type){const blob=await item.getType(type);return handleFile(blob)}}toast("No image found in clipboard")}catch(e){toast("Clipboard permission blocked. Use ⌘V / Ctrl+V.")}}
+async function pasteFromClipboard(){try{if(!navigator.clipboard?.read)throw new Error("clipboard-read-unavailable");const items=await navigator.clipboard.read();for(const item of items){const type=item.types.find(t=>t.startsWith("image/"));if(type){const blob=await item.getType(type);return handleFile(blob)}}toast("No image found in clipboard")}catch(e){toast("Clipboard permission blocked. Use ⌘V / Ctrl+V.")}}
 window.pasteFromClipboard=pasteFromClipboard;
 document.addEventListener("paste",e=>{const item=[...(e.clipboardData?.items||[])].find(x=>x.type.startsWith("image/"));if(item){e.preventDefault();handleFile(item.getAsFile())}});
 
-window.removeBackground=async function(){let l=selected();if(!l||l.type!=="image")return;try{$("removeBgBtn").disabled=true;$("status").textContent="Removing background… the first run can take a little while because the model is downloaded.";setProgress(5);const blob=await removeBackground(l.src,{progress:(key,current,total)=>setProgress(Math.max(5,Math.round(current/total*95)))});l.src=URL.createObjectURL(blob);l.name=(l.name||"photo").replace(/\.[^.]+$/,"")+" cutout.png";$("status").textContent="Background removed. The image stays in your browser.";setProgress(100);renderEditor();setTimeout(()=>setProgress(0),1000)}catch(e){console.error(e);$("status").textContent="Background removal failed. Try the image again.";toast("Could not remove background")}finally{$("removeBgBtn").disabled=false}}
+window.removeBackground=async function(){
+  const l=selected();
+  if(!l||l.type!=="image")return;
+  try{
+    $("removeBgBtn").disabled=true;
+    $("status").textContent="Loading background removal…";
+    setProgress(8);
+
+    const mod=await import("https://esm.sh/@imgly/background-removal@1.7.0");
+    const removeBg=mod.default||mod.removeBackground;
+    if(typeof removeBg!=="function") throw new Error("Background removal module unavailable");
+
+    $("status").textContent="Removing background…";
+    const blob=await removeBg(l.src,{
+      progress:(key,current,total)=>{
+        if(total) setProgress(Math.max(8,Math.min(96,Math.round(current/total*100))));
+      }
+    });
+
+    l.src=URL.createObjectURL(blob);
+    l.name=(l.name||"photo").replace(/\.[^.]+$/,"")+" cutout.png";
+    $("status").textContent="Background removed. The image stays in your browser.";
+    setProgress(100);
+    renderEditor();
+    setTimeout(()=>setProgress(0),1000);
+  }catch(e){
+    console.error(e);
+    $("status").textContent="Background removal could not load. The rest of the editor is still available.";
+    toast("Background removal unavailable");
+    setProgress(0);
+  }finally{
+    $("removeBgBtn").disabled=false;
+  }
+}
 function setProgress(n){$("progress").style.width=n+"%"}
 
 window.exportPNG=async function(){if(!layers.length){toast("Add something first");return}const c=document.createElement("canvas"),size=1000;c.width=c.height=size;const ctx=c.getContext("2d");for(const l of layers){ctx.save();ctx.globalAlpha=l.opacity;ctx.translate(l.x*2,l.y*2);ctx.rotate(l.rotation*Math.PI/180);ctx.scale(l.scale*2,l.scale*2);if(l.type==="text"){ctx.font=`900 ${l.fontSize}px "${l.fontFamily}"`;ctx.fillStyle=l.color;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(l.text||"TEXT",0,0)}else{const img=await loadImg(l.src);ctx.drawImage(img,-l.w/2,-l.h/2,l.w,l.h)}ctx.restore()}const a=document.createElement("a");a.download="sticker-studio.png";a.href=c.toDataURL("image/png");a.click();toast("PNG exported")}
