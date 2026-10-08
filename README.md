@@ -20,3 +20,12 @@ Mobile-first editor refinement focused on the core creation experience.
 ## MVP notes
 
 No login, backend, payments or AI are required. The app remains a static GitHub Pages build.
+
+
+## V9 performance pass
+- Photo imports: max 1200px and WebP/JPEG compression for faster editing.
+- History snapshots no longer duplicate full image data.
+- Image outline preview/export uses 8 filtered shadows instead of 16-20 repeated image draws.
+- Background removal preprocesses photos to max 1024px.
+- Crop ratios now include horizontal/vertical crop positioning.
+- Export waits for image decode and renders all visible layers into a transparent, tightly cropped PNG.
