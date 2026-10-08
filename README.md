@@ -48,3 +48,11 @@ https://studio-gh.github.io/sticker-studio/
 ## V4 mobile-first editor
 
 The mobile editor keeps the live canvas visible while the controls scroll underneath it. Desktop remains a side-by-side canvas + properties layout.
+
+## V5 editing utilities
+
+- Undo button
+- Cmd/Ctrl+Z keyboard shortcut
+- HEX color input
+- Browser EyeDropper color sampling
+- Custom color controls for text, outline, shadow and highlight
