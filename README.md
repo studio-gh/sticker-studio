@@ -1,28 +1,34 @@
-# Sticker Studio
+# Sticker Studio V2
 
-Mobile-first MVP for creating, discovering and remixing stickers.
+A mobile-first sticker editor for creating, composing and exporting stickers.
+
+## V2 editor
+
+- Paste an image from clipboard
+- Upload a photo
+- In-browser AI background removal
+- Multiple text layers
+- Multiple image layers
+- Drag layers directly on canvas
+- Layer ordering
+- Opacity
+- Scale
+- Rotation
+- Color
+- Six font styles
+- PNG export
+- Local browser storage for saved items
+
+### Background removal
+
+The editor uses `@imgly/background-removal` in the browser. The first removal downloads the model, so the first run can be slower. Images are processed locally in the browser.
 
 ## GitHub Pages
 
-1. Upload `index.html`, `manifest.json` and `icon.svg` to the repository root.
-2. Commit to `main`.
-3. Go to **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select `main` and `/ (root)`.
-6. Save.
+Upload the files to the repository root and commit to `main`.
+
+Settings → Pages → Deploy from a branch → `main` → `/ (root)`.
 
 Expected URL:
 
-`https://studio-gh.github.io/sticker-studio/`
-
-## MVP
-
-- Home / Create / Explore / Saved
-- Text sticker editor
-- Outline, Clean, Shadow and Bubble styles
-- Size, rotation and color controls
-- Save locally in the browser
-- Search and categories
-- Remix-ready library architecture
-- Mobile-first responsive layout
-- No login, backend or AI required for MVP
+https://studio-gh.github.io/sticker-studio/
