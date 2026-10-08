@@ -37,3 +37,11 @@ No login, backend, payments or AI are required. The app remains a static GitHub 
 - Rotation is available only from the red top handle.
 - Removed accidental pinch/gesture state from single-pointer dragging.
 - Added pointer-cancel handling and click suppression after drag.
+
+
+## V9.2
+- One-finger canvas drag is move-only.
+- Removed touch-conflicting resize/rotate canvas handles; use Scale and Rotation controls.
+- Added prominent Copy sticker action using the system image clipboard (PNG).
+- Copy action gives an iOS-friendly confirmation for pasting into Instagram.
+- Improved pointer movement scaling on responsive mobile canvas.
