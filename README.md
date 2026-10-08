@@ -32,3 +32,19 @@ Settings → Pages → Deploy from a branch → `main` → `/ (root)`.
 Expected URL:
 
 https://studio-gh.github.io/sticker-studio/
+
+- `favicon.svg` → browser tab favicon
+
+## V3 text design
+
+- Letter spacing
+- Line height
+- Adjustable outline width and color
+- Drop shadow with blur, offset and color
+- Curved text
+- Highlight block behind text with color, opacity, padding and radius
+- PNG export includes V3 text effects
+
+## V4 mobile-first editor
+
+The mobile editor keeps the live canvas visible while the controls scroll underneath it. Desktop remains a side-by-side canvas + properties layout.

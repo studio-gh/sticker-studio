@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f4f1eb">
 <title>Sticker Studio</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +32,7 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 .workspace{display:grid;gap:16px}.stage-wrap{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:14px}.stage{width:100%;max-width:620px;aspect-ratio:1;margin:auto;position:relative;overflow:hidden;background-image:linear-gradient(45deg,#e5e3de 25%,transparent 25%),linear-gradient(-45deg,#e5e3de 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#e5e3de 75%),linear-gradient(-45deg,transparent 75%,#e5e3de 75%);background-size:28px 28px;background-position:0 0,0 14px,14px -14px,-14px 0;border-radius:14px}
 .layer{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);transform-origin:center;user-select:none;touch-action:none;cursor:grab}.layer.selected{outline:1px solid var(--accent);outline-offset:5px}.layer:active{cursor:grabbing}.layer img{display:block;max-width:100%;pointer-events:none}.text-layer{font-weight:900;line-height:.9;letter-spacing:-.055em;white-space:nowrap;text-align:center}.layer .delete{display:none;position:absolute;right:-11px;top:-11px;width:22px;height:22px;border-radius:50%;border:0;background:var(--accent);color:white;font-size:14px;line-height:22px;padding:0}.layer.selected .delete{display:block}
 .panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;gap:18px}.panel-section{border-bottom:1px solid var(--line);padding-bottom:16px}.panel-section:last-child{border-bottom:0;padding-bottom:0}.panel-title{font-size:11px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--muted);margin-bottom:10px}
-.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tool{border:1px solid var(--line);background:transparent;border-radius:10px;padding:11px 8px;font-weight:800}.tool.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.tool:disabled{opacity:.45;cursor:not-allowed}
+.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tool{border:1px solid var(--line);background:transparent;border-radius:10px;padding:11px 8px;font-weight:800}.tool.primary{background:var(--ink);color:#fff;border-color:var(--ink)}.tool:disabled{opacity:.45;cursor:not-allowed}.tool.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .field{margin-top:12px}.field label{display:flex;justify-content:space-between;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}.field input[type=text],.field select{width:100%;height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 10px}.field input[type=range]{width:100%;accent-color:var(--ink)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.color-row{display:flex;gap:10px;align-items:center}.color-row input{width:45px;height:38px;border:0;background:none;padding:0}
 .layers{display:grid;gap:6px}.layer-row{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer}.layer-row.active{border-color:var(--ink)}.layer-thumb{width:34px;height:34px;border-radius:7px;background:var(--stage);display:grid;place-items:center;overflow:hidden;font-size:11px;font-weight:900}.layer-thumb img{width:100%;height:100%;object-fit:cover}.layer-name{flex:1;font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.layer-order{display:flex;gap:3px}.mini{border:0;background:none;padding:3px;color:var(--muted)}
 .fonts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.font-btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 3px;font-size:12px}.font-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -39,6 +41,74 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 .toast{position:fixed;z-index:50;bottom:86px;left:50%;transform:translate(-50%,15px);opacity:0;background:var(--ink);color:#fff;padding:11px 16px;border-radius:999px;font-size:13px;font-weight:900;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(min-width:800px){.grid{grid-template-columns:repeat(4,1fr)}.workspace{grid-template-columns:minmax(0,1fr) 360px;align-items:start}.stage-wrap{padding:22px}.bottom{display:none}.app{padding-bottom:0}}
 @media(max-width:500px){.shell{width:min(100% - 22px,1240px)}main{padding-top:15px}.hero{padding:28px 0 30px}.editor-head{align-items:flex-start}.editor-head h2{font-size:32px}.editor-actions{flex-wrap:wrap;justify-content:flex-end}.panel{padding:13px}.stage-wrap{padding:8px}}
+
+.live-preview-label{display:none}
+/* V4 MOBILE-FIRST EDITOR
+   The canvas stays visible while the property panel scrolls underneath it.
+*/
+@media(max-width:799px){
+  .live-preview-label{display:block}
+  main{padding-top:10px}
+  #create{margin-left:-1px;margin-right:-1px}
+  .editor-head{
+    position:sticky;
+    top:0;
+    z-index:30;
+    background:rgba(244,241,235,.96);
+    backdrop-filter:blur(12px);
+    padding:8px 0 10px;
+    margin-bottom:0;
+  }
+  .editor-head h2{font-size:28px}
+  .editor-actions{gap:6px}
+  .editor-actions .small-btn{padding:9px 10px;font-size:12px}
+  .workspace{
+    display:block;
+  }
+  .stage-wrap{
+    position:sticky;
+    top:57px;
+    z-index:25;
+    margin:0 -1px;
+    padding:8px 0 12px;
+    border:0;
+    border-radius:0;
+    background:rgba(244,241,235,.97);
+    backdrop-filter:blur(12px);
+  }
+  .stage{
+    width:min(100%,380px);
+    height:auto;
+    aspect-ratio:1;
+    margin:0 auto;
+    border-radius:16px;
+    box-shadow:0 4px 18px rgba(0,0,0,.06);
+  }
+  .panel{
+    border-radius:18px;
+    margin-top:4px;
+    padding:12px;
+    gap:14px;
+  }
+  .panel-section{padding-bottom:13px}
+  .panel-title{margin-bottom:8px}
+  .field{margin-top:9px}
+  .field input[type=text],.field select{height:44px}
+  .tool{padding:12px 8px}
+  .fonts{gap:5px}
+  .font-btn{padding:10px 3px}
+  .bottom{height:68px}
+  .app{padding-bottom:74px}
+}
+@media(max-width:420px){
+  .shell{width:calc(100% - 22px)}
+  .editor-head{top:0}
+  .stage-wrap{top:54px}
+  .stage{width:min(100%,350px)}
+  .editor-actions .small-btn{padding:8px 9px}
+  .editor-head h2{font-size:26px}
+}
+
 </style>
 </head>
 <body>
@@ -65,7 +135,7 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 <div class="editor-head"><h2>Sticker editor</h2><div class="editor-actions"><button class="small-btn" onclick="addText()">+ Text</button><button class="small-btn" onclick="document.getElementById('file').click()">+ Photo</button><button class="small-btn dark" onclick="exportPNG()">Export PNG</button></div></div>
 <input id="file" type="file" accept="image/*" hidden onchange="handleFile(this.files[0])">
 <div class="workspace">
-<div class="stage-wrap"><div id="stage" class="stage"></div></div>
+<div class="stage-wrap"><div class="live-preview-label" style="width:min(100%,380px);margin:0 auto 5px;padding:0 3px;font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--muted)">Live preview</div><div id="stage" class="stage"></div></div>
 <aside class="panel">
 <div class="panel-section">
 <div class="panel-title">Add</div>
@@ -99,6 +169,50 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 <button class="font-btn" style="font-family:'Permanent Marker'" onclick="setFont('Permanent Marker',this)">Marker</button>
 </div></div>
 <div class="field"><label>Size <span id="fontSizeVal">54</span></label><input id="fontSize" type="range" min="12" max="140" value="54" oninput="setProp('fontSize',+this.value)"></div>
+</div>
+
+
+<div class="panel-section" id="textEffectsControls" style="display:none">
+<div class="panel-title">Text design</div>
+<div class="row">
+<div class="field"><label>Letter spacing <span id="letterVal">0</span></label><input id="letterSpacing" type="range" min="-10" max="20" value="0" oninput="setTextProp('letterSpacing',+this.value)"></div>
+<div class="field"><label>Line height <span id="lineVal">1.0</span></label><input id="lineHeight" type="range" min="60" max="180" value="100" oninput="setTextProp('lineHeight',+this.value/100)"></div>
+</div>
+
+<div class="field"><label>Effects</label>
+<div class="tool-grid">
+<button id="outlineToggle" class="tool" onclick="toggleEffect('outline')">Outline</button>
+<button id="shadowToggle" class="tool" onclick="toggleEffect('shadow')">Drop shadow</button>
+<button id="curveToggle" class="tool" onclick="toggleEffect('curve')">Curved text</button>
+<button id="highlightToggle" class="tool" onclick="toggleEffect('highlight')">Highlight</button>
+</div></div>
+
+<div id="outlineControls" style="display:none">
+<div class="row">
+<div class="field"><label>Width <span id="outlineWidthVal">3</span></label><input id="outlineWidth" type="range" min="1" max="14" value="3" oninput="setTextProp('outlineWidth',+this.value)"></div>
+<div class="color-row field"><label style="margin:0;flex:1">Color</label><input id="outlineColor" type="color" value="#ffffff" onchange="setTextProp('outlineColor',this.value)"></div>
+</div></div>
+
+<div id="shadowControls" style="display:none">
+<div class="row">
+<div class="field"><label>Blur <span id="shadowBlurVal">8</span></label><input id="shadowBlur" type="range" min="0" max="30" value="8" oninput="setTextProp('shadowBlur',+this.value)"></div>
+<div class="field"><label>Offset <span id="shadowOffsetVal">4</span></label><input id="shadowOffset" type="range" min="-20" max="20" value="4" oninput="setTextProp('shadowOffset',+this.value)"></div>
+</div>
+<div class="color-row field"><label style="margin:0;flex:1">Color</label><input id="shadowColor" type="color" value="#000000" onchange="setTextProp('shadowColor',this.value)"></div>
+</div>
+
+<div id="curveControls" style="display:none">
+<div class="field"><label>Curve <span id="curveVal">45</span></label><input id="curveAmount" type="range" min="-100" max="100" value="45" oninput="setTextProp('curve',+this.value)"></div>
+</div>
+
+<div id="highlightControls" style="display:none">
+<div class="row">
+<div class="field"><label>Padding <span id="highlightPadVal">10</span></label><input id="highlightPad" type="range" min="0" max="30" value="10" oninput="setTextProp('highlightPadding',+this.value)"></div>
+<div class="field"><label>Radius <span id="highlightRadiusVal">8</span></label><input id="highlightRadius" type="range" min="0" max="30" value="8" oninput="setTextProp('highlightRadius',+this.value)"></div>
+</div>
+<div class="color-row field"><label style="margin:0;flex:1">Color</label><input id="highlightColor" type="color" value="#ffffff" onchange="setTextProp('highlightColor',this.value)"></div>
+<div class="field"><label>Opacity <span id="highlightOpacityVal">85%</span></label><input id="highlightOpacity" type="range" min="0" max="100" value="85" oninput="setTextProp('highlightOpacity',+this.value/100)"></div>
+</div>
 </div>
 
 <div class="panel-section">
@@ -144,22 +258,82 @@ window.setCat=function(c,b){cat=c;document.querySelectorAll(".chip").forEach(x=>
 window.toggleSave=function(s){if(saved.some(x=>x.id===s.id))saved=saved.filter(x=>x.id!==s.id);else saved=[s,...saved];localStorage.setItem("stickerStudioSaved",JSON.stringify(saved));renderHome();renderExplore();renderSaved();toast(saved.some(x=>x.id===s.id)?"Saved":"Removed")}
 
 function newId(){return "l"+Date.now()+Math.random().toString(16).slice(2)}
-function addText(text="YOUR TEXT"){let l={id:newId(),type:"text",text,fontFamily:"DM Sans",fontSize:54,color:"#151515",opacity:1,scale:1,rotation:0,x:250,y:250};layers.push(l);selectedId=l.id;renderEditor()}
+function addText(text="YOUR TEXT"){let l={id:newId(),type:"text",text,fontFamily:"DM Sans",fontSize:54,color:"#151515",opacity:1,scale:1,rotation:0,x:250,y:250,letterSpacing:0,lineHeight:1,outline:false,outlineWidth:3,outlineColor:"#ffffff",shadow:false,shadowBlur:8,shadowOffset:4,shadowColor:"#000000",curve:0,highlight:false,highlightPadding:10,highlightRadius:8,highlightColor:"#ffffff",highlightOpacity:.85};layers.push(l);selectedId=l.id;renderEditor()}
 function addImage(src,name="Photo"){let l={id:newId(),type:"image",src,name,opacity:1,scale:.7,rotation:0,x:250,y:250,w:220,h:220};layers.push(l);selectedId=l.id;renderEditor()}
 window.addText=addText;
 function selected(){return layers.find(l=>l.id===selectedId)}
 function renderEditor(){
   const stage=$("stage");stage.innerHTML="";
   layers.forEach(l=>{
-    const el=document.createElement("div");el.className="layer"+(l.id===selectedId?" selected":"");el.dataset.id=l.id;
-    el.style.left=l.x+"px";el.style.top=l.y+"px";el.style.opacity=l.opacity;el.style.transform=`translate(-50%,-50%) rotate(${l.rotation}deg) scale(${l.scale})`;
-    if(l.type==="text"){el.className+=" text-layer";el.style.fontFamily=`"${l.fontFamily}"`;el.style.fontSize=l.fontSize+"px";el.style.color=l.color;el.textContent=l.text||"TEXT";}
-    else{const img=document.createElement("img");img.src=l.src;img.style.width=l.w+"px";img.style.height=l.h+"px";img.style.objectFit="contain";el.appendChild(img)}
-    const del=document.createElement("button");del.className="delete";del.textContent="×";del.onclick=e=>{e.stopPropagation();layers=layers.filter(x=>x.id!==l.id);selectedId=null;renderEditor()};el.appendChild(del);
-    el.onpointerdown=e=>startDrag(e,l.id);el.onclick=()=>{selectedId=l.id;renderEditor()};
+    const el=document.createElement("div");
+    el.className="layer"+(l.id===selectedId?" selected":"");
+    el.dataset.id=l.id;
+    el.style.left=l.x+"px";el.style.top=l.y+"px";el.style.opacity=l.opacity;
+    el.style.transform=`translate(-50%,-50%) rotate(${l.rotation}deg) scale(${l.scale})`;
+
+    if(l.type==="text"){
+      el.className+=" text-layer";
+      el.style.fontFamily=`"${l.fontFamily}"`;
+      el.style.fontSize=l.fontSize+"px";
+      el.style.color=l.color;
+      el.style.letterSpacing=(l.letterSpacing||0)+"px";
+      el.style.lineHeight=l.lineHeight||1;
+
+      if(l.highlight){
+        el.style.backgroundColor=hexToRgba(l.highlightColor||"#ffffff",l.highlightOpacity??.85);
+        el.style.padding=(l.highlightPadding||0)+"px";
+        el.style.borderRadius=(l.highlightRadius||0)+"px";
+        el.style.boxDecorationBreak="clone";
+        el.style.webkitBoxDecorationBreak="clone";
+      }else{
+        el.style.backgroundColor="transparent";el.style.padding="0";
+      }
+
+      if(l.outline){
+        el.style.webkitTextStroke=`${l.outlineWidth||1}px ${l.outlineColor||"#ffffff"}`;
+        el.style.paintOrder="stroke fill";
+      }else el.style.webkitTextStroke="0 transparent";
+
+      if(l.shadow){
+        const o=l.shadowOffset||0;
+        el.style.textShadow=`${o}px ${o}px ${l.shadowBlur||0}px ${l.shadowColor||"#000000"}`;
+      }else el.style.textShadow="none";
+
+      if(l.curve){
+        el.innerHTML=curvedTextSVG(l);
+        el.style.backgroundColor="transparent";
+        el.style.padding="0";
+        el.style.width=Math.max(220,Math.abs(l.curve)*5+220)+"px";
+        el.style.height=Math.max(120,Math.abs(l.curve)*2+120)+"px";
+      }else{
+        el.textContent=l.text||"TEXT";
+      }
+    }else{
+      const img=document.createElement("img");
+      img.src=l.src;img.style.width=l.w+"px";img.style.height=l.h+"px";img.style.objectFit="contain";el.appendChild(img);
+    }
+
+    const del=document.createElement("button");del.className="delete";del.textContent="×";
+    del.onclick=e=>{e.stopPropagation();layers=layers.filter(x=>x.id!==l.id);selectedId=null;renderEditor()};
+    el.appendChild(del);
+    el.onpointerdown=e=>startDrag(e,l.id);
+    el.onclick=()=>{selectedId=l.id;renderEditor()};
     stage.appendChild(el);
   });
   renderLayers();updatePanel();
+}
+function curvedTextSVG(l){
+  const text=esc(l.text||"TEXT"), curve=l.curve||0;
+  const width=Math.max(220,Math.abs(curve)*5+220),height=Math.max(120,Math.abs(curve)*2+120);
+  const r=Math.max(70,110+Math.abs(curve)*2);
+  const cy=curve>=0?height+r*.25:-r*.15;
+  const start=curve>=0?Math.PI+0.35:Math.PI-0.35;
+  const end=curve>=0?-0.35:0.35;
+  const sweep=curve>=0?1:0;
+  const x1=width/2+r*Math.cos(start),y1=cy+r*Math.sin(start);
+  const x2=width/2+r*Math.cos(end),y2=cy+r*Math.sin(end);
+  const path=`M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible"><defs><path id="curvePath" d="${path}"/></defs><text fill="${l.color||"#151515"}" stroke="${l.outline?(l.outlineColor||"#fff"):"none"}" stroke-width="${l.outline?(l.outlineWidth||1)*2:0}" paint-order="stroke" font-family="${esc(l.fontFamily)}" font-size="${l.fontSize}" font-weight="900" letter-spacing="${l.letterSpacing||0}px"><textPath href="#curvePath" startOffset="50%" text-anchor="middle">${text}</textPath></text></svg>`;
 }
 function startDrag(e,id){if(e.target.closest(".delete"))return;selectedId=id;const l=selected();const r=$("stage").getBoundingClientRect();drag={id,ox:e.clientX,oy:e.clientY,x:l.x,y:l.y,scaleX:r.width/500,scaleY:r.height/500};e.currentTarget.setPointerCapture?.(e.pointerId)}
 document.addEventListener("pointermove",e=>{if(!drag)return;const l=layers.find(x=>x.id===drag.id);if(!l)return;l.x=Math.max(0,Math.min(500,drag.x+(e.clientX-drag.ox)/drag.scaleX));l.y=Math.max(0,Math.min(500,drag.y+(e.clientY-drag.oy)/drag.scaleY));renderEditor()});
@@ -168,8 +342,56 @@ document.addEventListener("pointerup",()=>drag=null);
 function renderLayers(){$("layers").innerHTML=layers.length?layers.slice().reverse().map((l,i)=>`<div class="layer-row ${l.id===selectedId?"active":""}" onclick="selectLayer('${l.id}')"><div class="layer-thumb">${l.type==="image"?`<img src="${l.src}">`:"T"}</div><div class="layer-name">${esc(l.type==="text"?l.text||"Text":l.name||"Photo")}</div><div class="layer-order"><button class="mini" onclick="event.stopPropagation();moveLayer('${l.id}',1)">↑</button><button class="mini" onclick="event.stopPropagation();moveLayer('${l.id}',-1)">↓</button></div></div>`).join(""):`<div class="status">No layers yet.</div>`}
 window.selectLayer=function(id){selectedId=id;renderEditor()}
 window.moveLayer=function(id,dir){let i=layers.findIndex(x=>x.id===id);let j=i+dir;if(j<0||j>=layers.length)return;[layers[i],layers[j]]=[layers[j],layers[i]];selectedId=id;renderEditor()}
-function updatePanel(){let l=selected();$("selectionControls").textContent=l?`${l.type==="text"?"Text":"Image"} layer selected. Drag it directly on the canvas.`:"Select a layer on the canvas.";if(!l)return;$("opacity").value=l.opacity*100;$("opacityVal").textContent=Math.round(l.opacity*100)+"%";$("scale").value=Math.round(l.scale*100);$("scaleVal").textContent=Math.round(l.scale*100)+"%";$("rotation").value=l.rotation;$("rotationVal").textContent=Math.round(l.rotation)+"°";$("color").value=l.color||"#151515";$("textControls").style.display=l.type==="text"?"block":"none";$("removeBgBtn").disabled=l.type!=="image";if(l.type==="text"){$("textValue").value=l.text;$("fontSize").value=l.fontSize;$("fontSizeVal").textContent=l.fontSize;document.querySelectorAll(".font-btn").forEach(b=>b.classList.toggle("active",b.textContent.trim().toLowerCase().startsWith(l.fontFamily.split(" ")[0].toLowerCase())))}} 
-window.setProp=function(k,v){let l=selected();if(!l)return;l[k]=v;renderEditor()}
+function updatePanel(){
+  const l=selected();
+  $("selectionControls").textContent=l?`${l.type==="text"?"Text":"Image"} layer selected. Drag it directly on the canvas.`:"Select a layer on the canvas.";
+  if(!l)return;
+  $("opacity").value=l.opacity*100;$("opacityVal").textContent=Math.round(l.opacity*100)+"%";
+  $("scale").value=Math.round(l.scale*100);$("scaleVal").textContent=Math.round(l.scale*100)+"%";
+  $("rotation").value=l.rotation;$("rotationVal").textContent=Math.round(l.rotation)+"°";
+  $("color").value=l.color||"#151515";
+  $("textControls").style.display=l.type==="text"?"block":"none";
+  $("textEffectsControls").style.display=l.type==="text"?"block":"none";
+  $("removeBgBtn").disabled=l.type!=="image";
+  if(l.type==="text"){
+    $("textValue").value=l.text;$("fontSize").value=l.fontSize;$("fontSizeVal").textContent=l.fontSize;
+    $("letterSpacing").value=l.letterSpacing||0;$("letterVal").textContent=l.letterSpacing||0;
+    $("lineHeight").value=(l.lineHeight||1)*100;$("lineVal").textContent=(l.lineHeight||1).toFixed(1);
+    $("outlineToggle").classList.toggle("on",!!l.outline);$("shadowToggle").classList.toggle("on",!!l.shadow);$("curveToggle").classList.toggle("on",!!l.curve);$("highlightToggle").classList.toggle("on",!!l.highlight);
+    $("outlineControls").style.display=l.outline?"block":"none";$("shadowControls").style.display=l.shadow?"block":"none";$("curveControls").style.display=l.curve?"block":"none";$("highlightControls").style.display=l.highlight?"block":"none";
+    $("outlineWidth").value=l.outlineWidth||3;$("outlineWidthVal").textContent=l.outlineWidth||3;$("outlineColor").value=l.outlineColor||"#ffffff";
+    $("shadowBlur").value=l.shadowBlur||0;$("shadowBlurVal").textContent=l.shadowBlur||0;$("shadowOffset").value=l.shadowOffset||0;$("shadowOffsetVal").textContent=l.shadowOffset||0;$("shadowColor").value=l.shadowColor||"#000000";
+    $("curveAmount").value=l.curve||45;$("curveVal").textContent=l.curve||45;
+    $("highlightPad").value=l.highlightPadding||10;$("highlightPadVal").textContent=l.highlightPadding||10;$("highlightRadius").value=l.highlightRadius||8;$("highlightRadiusVal").textContent=l.highlightRadius||8;$("highlightColor").value=l.highlightColor||"#ffffff";$("highlightOpacity").value=(l.highlightOpacity??.85)*100;$("highlightOpacityVal").textContent=Math.round((l.highlightOpacity??.85)*100)+"%";
+    document.querySelectorAll(".font-btn").forEach(b=>b.classList.toggle("active",b.textContent.trim().toLowerCase().startsWith(l.fontFamily.split(" ")[0].toLowerCase())));
+  }
+}
+window.setProp=function(k,v){
+  const l=selected();if(!l)return;l[k]=v;
+  if(k==="fontSize")$("fontSizeVal").textContent=v;
+  if(k==="opacity")$("opacityVal").textContent=Math.round(v*100)+"%";
+  if(k==="rotation")$("rotationVal").textContent=Math.round(v)+"°";
+  renderEditor()
+}
+window.setTextProp=function(k,v){
+  const l=selected();if(!l||l.type!=="text")return;l[k]=v;
+  const labels={letterSpacing:["letterVal",v],lineHeight:["lineVal",(+v).toFixed(1)],outlineWidth:["outlineWidthVal",v],shadowBlur:["shadowBlurVal",v],shadowOffset:["shadowOffsetVal",v],curve:["curveVal",v],highlightPadding:["highlightPadVal",v],highlightRadius:["highlightRadiusVal",v],highlightOpacity:["highlightOpacityVal",Math.round(v*100)+"%"]};
+  if(labels[k])$(labels[k][0]).textContent=labels[k][1];
+  renderEditor()
+}
+window.toggleEffect=function(effect){
+  const l=selected();if(!l||l.type!=="text")return;
+  if(effect==="outline")l.outline=!l.outline;
+  if(effect==="shadow")l.shadow=!l.shadow;
+  if(effect==="curve")l.curve=l.curve?0:45;
+  if(effect==="highlight")l.highlight=!l.highlight;
+  renderEditor()
+}
+function hexToRgba(hex,a){
+  hex=hex.replace("#","");if(hex.length===3)hex=hex.split("").map(x=>x+x).join("");
+  const n=parseInt(hex,16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  return `rgba(${r},${g},${b},${a})`;
+}
 window.setScale=function(v){let l=selected();if(!l)return;l.scale=+v;renderEditor()}
 window.setText=function(v){let l=selected();if(!l||l.type!=="text")return;l.text=v;renderEditor()}
 window.setFont=function(f,b){let l=selected();if(!l||l.type!=="text")return;l.fontFamily=f;document.querySelectorAll(".font-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderEditor()}
@@ -218,11 +440,53 @@ window.removeBackground=async function(){
 }
 function setProgress(n){$("progress").style.width=n+"%"}
 
-window.exportPNG=async function(){if(!layers.length){toast("Add something first");return}const c=document.createElement("canvas"),size=1000;c.width=c.height=size;const ctx=c.getContext("2d");for(const l of layers){ctx.save();ctx.globalAlpha=l.opacity;ctx.translate(l.x*2,l.y*2);ctx.rotate(l.rotation*Math.PI/180);ctx.scale(l.scale*2,l.scale*2);if(l.type==="text"){ctx.font=`900 ${l.fontSize}px "${l.fontFamily}"`;ctx.fillStyle=l.color;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(l.text||"TEXT",0,0)}else{const img=await loadImg(l.src);ctx.drawImage(img,-l.w/2,-l.h/2,l.w,l.h)}ctx.restore()}const a=document.createElement("a");a.download="sticker-studio.png";a.href=c.toDataURL("image/png");a.click();toast("PNG exported")}
+window.exportPNG=async function(){
+  if(!layers.length){toast("Add something first");return}
+  const c=document.createElement("canvas"),size=1000;c.width=c.height=size;
+  const ctx=c.getContext("2d");
+  for(const l of layers){
+    ctx.save();ctx.globalAlpha=l.opacity;
+    ctx.translate(l.x*2,l.y*2);ctx.rotate(l.rotation*Math.PI/180);ctx.scale(l.scale*2,l.scale*2);
+    if(l.type==="text"){
+      ctx.font=`900 ${l.fontSize}px "${l.fontFamily}"`;ctx.textAlign="center";ctx.textBaseline="middle";
+      const lines=String(l.text||"TEXT").split(/\n/),lh=l.fontSize*(l.lineHeight||1);
+      const widths=lines.map(t=>ctx.measureText(t).width),maxW=Math.max(...widths),totalH=lines.length*lh;
+      if(l.highlight){
+        const pad=l.highlightPadding||0,w=maxW+pad*2,h=totalH+pad*2;
+        ctx.fillStyle=hexToRgba(l.highlightColor||"#fff",l.highlightOpacity??.85);
+        roundedRect(ctx,-w/2,-h/2,w,h,Math.min(l.highlightRadius||0,w/2,h/2));ctx.fill();
+      }
+      if(l.shadow){ctx.shadowColor=l.shadowColor||"#000";ctx.shadowBlur=l.shadowBlur||0;ctx.shadowOffsetX=l.shadowOffset||0;ctx.shadowOffsetY=l.shadowOffset||0}
+      if(l.curve){
+        const chars=[...String(l.text||"TEXT")],radius=Math.max(90,220-Math.abs(l.curve)),step=(Math.abs(l.curve)/100)*Math.PI/Math.max(chars.length,1),startA=-(chars.length-1)*step/2;
+        chars.forEach((ch,i)=>{const a=(l.curve>=0?1:-1)*(startA+i*step),xx=Math.sin(a)*radius,yy=(l.curve>=0?-1:1)*(radius-Math.cos(a)*radius);ctx.save();ctx.translate(xx,yy);ctx.rotate(a*(l.curve>=0?1:-1));drawTextWithOutline(ctx,ch,0,0,l);ctx.restore()});
+      }else{
+        lines.forEach((line,i)=>drawTextWithOutline(ctx,line,0,(i-(lines.length-1)/2)*lh,l));
+      }
+    }else{
+      const img=await loadImg(l.src);ctx.drawImage(img,-l.w/2,-l.h/2,l.w,l.h);
+    }
+    ctx.restore();
+  }
+  const a=document.createElement("a");a.download="sticker-studio.png";a.href=c.toDataURL("image/png");a.click();toast("PNG exported")
+}
+function roundedRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+function drawTextWithOutline(ctx,text,x,y,l){
+  if(l.outline){ctx.lineJoin="round";ctx.strokeStyle=l.outlineColor||"#fff";ctx.lineWidth=(l.outlineWidth||1)*2;ctx.strokeText(text,x,y)}
+  ctx.fillStyle=l.color||"#151515";ctx.fillText(text,x,y)
+}
 function loadImg(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src})}
 
 window.saveComposition=function(){const data={layers:layers.map(l=>({...l}))};saved=[{id:"comp"+Date.now(),text:"Composition",cat:"Created",color:"#151515",style:"clean",data},...saved];localStorage.setItem("stickerStudioSaved",JSON.stringify(saved));toast("Composition saved")}
 function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1700)}
+
+$("textValue")?.addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    e.target.blur();
+  }
+});
+
 renderHome();renderExplore();renderSaved();addText("YOUR STICKER");
 </script>
 </body>
