@@ -56,3 +56,24 @@ The mobile editor keeps the live canvas visible while the controls scroll undern
 - HEX color input
 - Browser EyeDropper color sampling
 - Custom color controls for text, outline, shadow and highlight
+
+## V6 media and zoom
+
+- Preserves image aspect ratio in PNG export
+- Quick zoom controls for the selected layer
+- Mobile-friendly zoom slider
+- Text preview is constrained to the canvas width
+
+## V7 product upgrade
+
+- Direct move, resize, rotate and two-finger gesture editing
+- Undo + Redo
+- Autosaved draft
+- Crop aspect presets and Fit/Fill
+- Sticker outline + shadow for photo layers
+- Text and sticker quick styles
+- Duplicate, hide, lock and reorder layers
+- Copy PNG and native Share when supported
+- HEIC/HEIF conversion attempt in-browser
+- Stickerize flow
+- Existing text effects, HEX colors, eyedropper and background removal retained
