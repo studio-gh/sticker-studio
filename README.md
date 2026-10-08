@@ -29,3 +29,11 @@ No login, backend, payments or AI are required. The app remains a static GitHub 
 - Background removal preprocesses photos to max 1024px.
 - Crop ratios now include horizontal/vertical crop positioning.
 - Export waits for image decode and renders all visible layers into a transparent, tightly cropped PNG.
+
+
+## V9.1 interaction hotfix
+- One-finger drag now moves layers only.
+- Resize is available only from the black corner handle.
+- Rotation is available only from the red top handle.
+- Removed accidental pinch/gesture state from single-pointer dragging.
+- Added pointer-cancel handling and click suppression after drag.
