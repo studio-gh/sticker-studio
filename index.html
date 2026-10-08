@@ -305,10 +305,19 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 <div id="toast" class="toast"></div>
 </div>
 
-<script type="module">
+<script>
 const library=[
 {id:1,text:"NOPE.",cat:"Funny",color:"#151515",style:"outline"},{id:2,text:"LET'S GO",cat:"Football",color:"#ff4d2e",style:"bubble"},{id:3,text:"PLAY IT LOUD",cat:"Music",color:"#151515",style:"shadow"},{id:4,text:"GOOD IDEA",cat:"Type",color:"#ff4d2e",style:"clean"},{id:5,text:"BRB",cat:"Funny",color:"#151515",style:"bubble"},{id:6,text:"FULL SEND",cat:"Football",color:"#151515",style:"outline"},{id:7,text:"ONE MORE SONG",cat:"Music",color:"#ff4d2e",style:"clean"},{id:8,text:"WHY NOT?",cat:"Type",color:"#151515",style:"shadow"}];
-let saved=JSON.parse(localStorage.getItem("stickerStudioSaved")||"[]"),cat="All";
+let saved=[];
+try{
+  const rawSaved=localStorage.getItem("stickerStudioSaved");
+  saved=rawSaved?JSON.parse(rawSaved):[];
+  if(!Array.isArray(saved))saved=[];
+}catch(e){
+  saved=[];
+  try{localStorage.removeItem("stickerStudioSaved")}catch(_){}
+}
+let cat="All";
 let layers=[],selectedId=null,history=[],historyIndex=-1,pendingEdits={},drag=null,dragBefore=null;
 let pointers=new Map(),gesture=null,autosaveTimer=null;
 const $=id=>document.getElementById(id);
@@ -396,11 +405,35 @@ window.exportPNG=async()=>{if(!layers.length){toast('Add something first');retur
 window.copyPNG=async()=>{try{const blob=await renderBlob();if(!navigator.clipboard?.write)throw 0;await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);toast('Sticker copied')}catch(e){toast('Copy is not supported here. Use Export PNG.')}}
 window.sharePNG=async()=>{try{const blob=await renderBlob();const file=new File([blob],'sticker-studio.png',{type:'image/png'});if(navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}))){await navigator.share({files:[file],title:'Sticker Studio'});toast('Shared')}else{await copyPNG()}}catch(e){if(e?.name!=='AbortError')toast('Share is not available here')}}
 function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1700)}
+window.addEventListener('error',e=>{
+  console.error('Sticker Studio runtime error:',e.error||e.message);
+  const status=$('status');
+  if(status)status.textContent='A tool hit an error. The rest of the editor is still available.';
+});
+window.addEventListener('unhandledrejection',e=>{
+  console.error('Sticker Studio async error:',e.reason);
+});
 function wireColors(){['color','outlineColor','shadowColor','highlightColor','mediaOutlineColor'].forEach(prop=>{const n=$(prop),t=$(prop+'Hex');if(n)n.addEventListener('input',()=>setColorControl(prop,n.value));if(t)t.addEventListener('change',()=>setColorControl(prop,t.value))})}
 wireColors();
-const draft=localStorage.getItem('stickerStudioDraft');if(draft){try{layers=JSON.parse(draft);selectedId=layers.at(-1)?.id||null}catch(e){layers=[]}}
-if(!layers.length)addText('YOUR STICKER');else{commitHistory();renderEditor()}
-renderHome();renderExplore();renderSaved();
+try{
+  const draft=localStorage.getItem('stickerStudioDraft');
+  if(draft){
+    try{
+      layers=JSON.parse(draft);
+      if(!Array.isArray(layers))layers=[];
+      selectedId=layers.length?layers[layers.length-1]?.id||null:null;
+    }catch(e){
+      layers=[];
+      try{localStorage.removeItem('stickerStudioDraft')}catch(_){}
+    }
+  }
+  if(!layers.length)addText('YOUR STICKER');else{commitHistory();renderEditor()}
+  renderHome();renderExplore();renderSaved();
+}catch(e){
+  console.error('Sticker Studio boot error:',e);
+  const status=$('status');
+  if(status)status.textContent='Something went wrong while loading the editor. Refresh to try again.';
+}
 </script>
 </body>
 </html>

@@ -77,3 +77,10 @@ The mobile editor keeps the live canvas visible while the controls scroll undern
 - HEIC/HEIF conversion attempt in-browser
 - Stickerize flow
 - Existing text effects, HEX colors, eyedropper and background removal retained
+
+## V7.1 stability hotfix
+
+- Switched the editor runtime from module script to classic script for broader compatibility with inline controls.
+- Hardened localStorage parsing so stale/corrupt saved data cannot kill the app on startup.
+- Added boot and runtime error handling.
+- No product features were changed.
