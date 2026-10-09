@@ -45,3 +45,10 @@ No login, backend, payments or AI are required. The app remains a static GitHub 
 - Added prominent Copy sticker action using the system image clipboard (PNG).
 - Copy action gives an iOS-friendly confirmation for pasting into Instagram.
 - Improved pointer movement scaling on responsive mobile canvas.
+
+## V9.3 move-only interaction
+- Removed on-canvas resize and rotation handles entirely because touch hit areas were interfering with moving objects on mobile.
+- Dragging anywhere inside an object now has one job: move its position.
+- Scale and rotation remain available through dedicated property sliders.
+- Pointer tracking and capture are scoped to the canvas stage to avoid transformed child elements interfering with the gesture.
+- This is a deliberate stability step inspired by Canva/Adobe Express' separation between moving an element and transforming it. Dedicated handles can be reintroduced only after move behavior is reliable.
