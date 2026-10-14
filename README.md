@@ -1,6 +1,12 @@
-# Sticker Studio V9.8 · Compact Mobile Workspace
+# Sticker Studio V9.9 — Text Box Interaction Fix
 
-Mobile-first layout improvement for the GitHub Pages app. The live canvas is compact by default on phones, remains sticky while editing, and can be expanded with the preview toggle. On shorter screens the canvas shrinks further to preserve more room for the properties panel. Desktop layout is unchanged.
+This version fixes the text-box width handles for mobile and desktop.
 
-## Publish
-Replace the repository files with the contents of this ZIP and wait for GitHub Pages to deploy.
+- Orange side handles have larger touch targets.
+- Dragging a side handle changes `textWidth`, not font size or object scale.
+- The opposite edge stays anchored while resizing the text box.
+- The width calculation accounts for responsive canvas size and layer scale.
+- Dragging inside the text still moves the object only.
+- The Text box width slider remains available for precise adjustment.
+
+Replace the current GitHub Pages files with the contents of this ZIP. Test on mobile after deployment.
