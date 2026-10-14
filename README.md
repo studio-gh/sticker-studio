@@ -1,9 +1,13 @@
-# Sticker Studio V9.5 — Text Box Width
+# Sticker Studio V9.7 — Story Shapes
 
-V9.5 adds Canva-style text box width control:
-- Drag the left or right side handle of a selected text layer to change its width and line wrapping.
-- Drag inside the text box to move it; this does not change width or font size.
-- A Text box width slider is available in the Text panel for precise control.
-- PNG export wraps text to the chosen box width.
+Adds story-friendly geometric shape presets:
+- Square
+- Vertical rectangle
+- Horizontal rectangle
+- Circle
+- Triangle
 
-Replace the files in the GitHub Pages repository with the files in this ZIP.
+Each shape supports Filled and Outline only modes, fill and stroke colors (including HEX), and adjustable stroke width. Outline mode automatically sets a visible default stroke. Shapes remain editable layers and are included in transparent PNG export.
+
+## Deploy
+Replace the current GitHub Pages files with the files in this ZIP, then wait for the Pages deployment to finish.
