@@ -53,9 +53,7 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 @media(max-width:500px){.shell{width:min(100% - 22px,1240px)}main{padding-top:15px}.hero{padding:28px 0 30px}.editor-head{align-items:flex-start}.editor-head h2{font-size:32px}.editor-actions{flex-wrap:wrap;justify-content:flex-end}.panel{padding:13px}.stage-wrap{padding:8px}}
 
 .live-preview-label{display:none}
-/* V4 MOBILE-FIRST EDITOR
-   The canvas stays visible while the property panel scrolls underneath it.
-*/
+/* V9.10 COMPACT PREVIEW: keep the square canvas coordinate system, but reduce its mobile footprint. */
 @media(max-width:799px){
   .live-preview-label{display:block}
   main{padding-top:10px}
@@ -87,7 +85,7 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
     backdrop-filter:blur(12px);
   }
   .stage{
-    width:min(100%,380px);
+    width:min(100%,270px);
     height:auto;
     aspect-ratio:1;
     margin:0 auto;
@@ -118,7 +116,7 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
   .shell{width:calc(100% - 22px)}
   .editor-head{top:0}
   .stage-wrap{top:54px}
-  .stage{width:min(100%,350px)}
+  .stage{width:min(100%,250px)}
   .editor-actions .small-btn{padding:8px 9px}
   .editor-head h2{font-size:26px}
 }
