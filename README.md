@@ -1,13 +1,6 @@
-# Sticker Studio V9.7 — Story Shapes
+# Sticker Studio V9.8 · Compact Mobile Workspace
 
-Adds story-friendly geometric shape presets:
-- Square
-- Vertical rectangle
-- Horizontal rectangle
-- Circle
-- Triangle
+Mobile-first layout improvement for the GitHub Pages app. The live canvas is compact by default on phones, remains sticky while editing, and can be expanded with the preview toggle. On shorter screens the canvas shrinks further to preserve more room for the properties panel. Desktop layout is unchanged.
 
-Each shape supports Filled and Outline only modes, fill and stroke colors (including HEX), and adjustable stroke width. Outline mode automatically sets a visible default stroke. Shapes remain editable layers and are included in transparent PNG export.
-
-## Deploy
-Replace the current GitHub Pages files with the files in this ZIP, then wait for the Pages deployment to finish.
+## Publish
+Replace the repository files with the contents of this ZIP and wait for GitHub Pages to deploy.
