@@ -123,6 +123,56 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
   .editor-head h2{font-size:26px}
 }
 
+
+/* V10 PRODUCT UX PASS: one primary location for each action, clearer hierarchy */
+:root{--bg:#f5f3ee;--paper:#fffefa;--ink:#171717;--muted:#706d67;--line:#dfdcd5;--accent:#ff4d2e;--stage:#e9e7e1}
+.logo{font-size:19px;letter-spacing:-.055em}
+.editor-head{gap:12px;margin-bottom:12px}
+.editor-head h2{font-size:clamp(26px,3vw,36px);letter-spacing:-.065em;white-space:nowrap}
+.editor-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.editor-actions .small-btn{min-height:42px;padding:10px 13px;border-radius:12px;white-space:nowrap}
+.editor-actions .small-btn:nth-child(3),.editor-actions .small-btn:nth-child(4){background:var(--paper);border-color:var(--line)}
+.editor-actions .small-btn.dark{background:var(--accent);border-color:var(--accent);color:#fff}
+.workspace{gap:14px}
+.stage-wrap{padding:16px;background:#eeece6;border-color:#e5e1d9}
+.stage{box-shadow:inset 0 0 0 1px #00000005}
+.panel{gap:0;padding:0;overflow:hidden}
+.panel-section{padding:18px;border-bottom:1px solid var(--line)}
+.panel-section:last-child{padding-bottom:18px}
+.panel-title{font-size:10px;letter-spacing:.16em;margin-bottom:12px}
+.quick-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.quick-tool-grid .tool{min-height:44px;background:#fff;border-radius:12px;text-align:left;padding:12px;font-size:13px}
+.quick-tool-grid .tool:active,.tool:active,.small-btn:active{transform:scale(.985)}
+.tool,.small-btn,.preset,.font-btn{transition:background .15s,border-color .15s,transform .1s}
+.field label{letter-spacing:.055em}
+.field textarea{font-size:16px}
+#selectionControls{background:#f4f2ec;border-radius:10px;padding:10px 12px}
+.bottom{background:rgba(250,249,245,.96)}
+@media(max-width:799px){
+  .editor-head{display:flex;flex-direction:column;align-items:stretch;gap:9px;padding:8px 0 10px}
+  .editor-head h2{font-size:25px}
+  .editor-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;width:100%}
+  .editor-actions .small-btn{min-width:0;min-height:42px;padding:8px 3px;font-size:11px;border-radius:11px;overflow:hidden;text-overflow:ellipsis}
+  .editor-actions .small-btn.dark{font-size:11px}
+  .stage-wrap{top:111px;padding:8px 0 12px;background:rgba(245,243,238,.98)}
+  .stage{width:min(100%,390px)}
+  .panel{margin-top:8px}
+  .panel-section{padding:15px}
+  .quick-tool-grid .tool{font-size:12px}
+}
+@media(max-width:420px){
+  .editor-head h2{font-size:24px}
+  .editor-actions{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+  .editor-actions .small-btn{font-size:10px;padding:7px 2px}
+  .stage-wrap{top:108px}
+  .stage{width:min(100%,360px)}
+  .panel-section{padding:13px}
+}
+@media(min-width:800px){
+  .editor-head{margin-bottom:16px}
+  .stage-wrap{position:sticky;top:16px}
+  .panel{border-radius:18px}
+}
 </style>
 </head>
 <body>
@@ -152,20 +202,16 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 <div class="stage-wrap"><div class="live-preview-label" style="width:min(100%,380px);margin:0 auto 5px;padding:0 3px;font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--muted)">Live preview</div><div id="stage" class="stage"><div id="guideV" class="guide v" style="display:none"></div><div id="guideH" class="guide h" style="display:none"></div></div></div>
 <aside class="panel">
 <div class="panel-section">
-<div class="panel-title">Add</div>
-<div class="tool-grid">
-<button class="tool primary" onclick="addText()">＋ Text</button>
-<button class="tool" onclick="document.getElementById('file').click()">＋ Photo</button>
+<div class="panel-title">Quick actions</div>
+<div class="tool-grid quick-tool-grid">
 <button class="tool" onclick="pasteFromClipboard()">Paste photo</button>
 <button class="tool" id="removeBgBtn" onclick="removeBackground()" disabled>Remove background</button>
-</div>
-<div class="status" id="status">Tip: copy a photo, then tap “Paste photo”. You can also use ⌘V / Ctrl+V.</div><div class="progress"><i id="progress"></i></div>
-<div class="quick-actions">
 <button class="tool" onclick="stickerize()">✦ Stickerize</button>
-<button class="tool" onclick="newCanvas()">New</button>
-<button class="tool" onclick="copyPNG()">Copy</button>
+<button class="tool" onclick="newCanvas()">New canvas</button>
+<button class="tool" onclick="copyPNG()">Copy sticker</button>
 <button class="tool" onclick="sharePNG()">Share</button>
 </div>
+<div class="status" id="status">Add text or a photo from the toolbar above. Paste photo imports an image from your clipboard.</div><div class="progress"><i id="progress"></i></div>
 </div>
 
 <div class="panel-section">

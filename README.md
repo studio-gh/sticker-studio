@@ -1,11 +1,15 @@
-# Sticker Studio V9.7 — Gesture & Geometry Fix
+# Sticker Studio V10 — Product UX pass
 
-This build fixes the canvas coordinate model so object movement, dimensions, and scale use one consistent 500-unit design space across responsive screens.
+This update focuses on reducing duplicate actions and improving the editor hierarchy without replacing the existing editing engine.
 
-- Dragging the body of an image or text moves position only.
-- Image width/height and text font/box width scale with the responsive canvas, not by scaling the entire layer to match the viewport.
-- Image size can be adjusted with the Scale control or the dedicated black corner handle.
-- Image crop positioning remains a separate mode/control from moving the image layer.
-- Keeps the existing V9.6 crop, outline, export, and performance features.
+## UX changes
+- Kept the primary creation actions (`Undo`, `Redo`, `Text`, `Photo`, `Export PNG`) in one toolbar above the canvas.
+- Removed duplicate `Text` and `Photo` buttons from the panel below the preview.
+- Consolidated secondary actions below the preview: Paste photo, Remove background, Stickerize, New canvas, Copy sticker, and Share.
+- Improved mobile toolbar sizing, spacing, contrast, canvas framing, and property panel hierarchy.
+- Retained the current editor functionality and data model.
 
-Replace the files in the repository with the files in this ZIP. Test on-device before treating touch interactions as verified; JavaScript syntax has been checked, but no real-device touch test was available here.
+## Deploy
+Upload the contents of this ZIP to the root of the `studio-gh/sticker-studio` repository and allow GitHub Pages to redeploy.
+
+Note: This is a UI/UX hierarchy pass, not a claim that the underlying touch manipulation bugs are fixed. Those require separate device testing and should be addressed after this cleaner interface is validated.
