@@ -1,10 +1,11 @@
-# Sticker Studio V9.6 · Image Resize + Direct Crop
+# Sticker Studio V9.7 — Gesture & Geometry Fix
 
-Focused image-editing improvements:
-- Selected images expose explicit corner resize and rotation handles.
-- Resize/rotate handles have real pointer events and larger touch targets.
-- Crop ratios use a fixed frame (`cover`), then **Adjust crop on canvas** lets users drag the image inside that frame without moving the layer.
-- Existing crop X/Y sliders remain available for precise positioning.
-- Normal drag still moves the object; crop drag is only enabled while crop mode is active.
+This build fixes the canvas coordinate model so object movement, dimensions, and scale use one consistent 500-unit design space across responsive screens.
 
-Upload the contents of this ZIP to the root of the `studio-gh/sticker-studio` repository.
+- Dragging the body of an image or text moves position only.
+- Image width/height and text font/box width scale with the responsive canvas, not by scaling the entire layer to match the viewport.
+- Image size can be adjusted with the Scale control or the dedicated black corner handle.
+- Image crop positioning remains a separate mode/control from moving the image layer.
+- Keeps the existing V9.6 crop, outline, export, and performance features.
+
+Replace the files in the repository with the files in this ZIP. Test on-device before treating touch interactions as verified; JavaScript syntax has been checked, but no real-device touch test was available here.
