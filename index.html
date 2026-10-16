@@ -173,6 +173,15 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
   .stage-wrap{position:sticky;top:16px}
   .panel{border-radius:18px}
 }
+
+/* V11.1: preview canvas reduced by 35% to give controls more room on mobile */
+@media (max-width: 799px){
+  .stage{width:min(65%,234px)!important;max-width:234px!important}
+  .stage-wrap{padding-top:8px;padding-bottom:10px}
+}
+@media (min-width: 800px){
+  .stage{width:min(65%,403px)!important;max-width:403px!important}
+}
 </style>
 </head>
 <body>
