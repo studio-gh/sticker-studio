@@ -671,7 +671,18 @@ $('stage').addEventListener('pointerup',e=>{
   setTimeout(()=>{suppressClick=false},0);
 });
 $('stage').addEventListener('pointercancel',e=>{
-  if(drag){drag=null;updateGuides(null);renderEditor()}
+  if(drag){
+    // A cancelled touch gesture must not leave half-applied edits behind.
+    try{
+      const previous=JSON.parse(drag.before);
+      layers=Array.isArray(previous.layers)?previous.layers:layers;
+      selectedId=previous.selectedId??selectedId;
+    }catch(_){}
+    drag=null;
+    updateGuides(null);
+    renderEditor();
+    saveDraft();
+  }
   suppressClick=false;
 });
 function finishGesture(before){const after=stateJSON();if(before===after)return;history=history.slice(0,historyIndex+1);history.push(before,after);historyIndex=history.length-1;updateHistoryUI();saveDraft()}
