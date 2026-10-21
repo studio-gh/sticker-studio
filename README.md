@@ -7,3 +7,8 @@ This is a focused UI adjustment to V11. The preview canvas is reduced by 35% fro
 - Canvas coordinate system and layer geometry are unchanged; object positions and scales continue to be calculated relative to the responsive canvas.
 
 Deploy by replacing the existing GitHub Pages files with the contents of this ZIP.
+
+
+## Product redesign
+
+The `redesign/stand-out-stories` branch begins a mobile-first redesign around the product promise **Make your Stories stand out.** See [`PRODUCT-REDESIGN.md`](PRODUCT-REDESIGN.md) for positioning, interaction principles, design tokens, screen structure and release quality gates. The `main` branch remains unchanged while this direction is reviewed.
