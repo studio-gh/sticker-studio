@@ -193,13 +193,19 @@ h1{font-size:clamp(48px,8vw,88px);line-height:.9;letter-spacing:-.075em;margin:0
 
 <main class="shell">
 <section id="home" class="view active">
-<div class="hero"><div class="eyebrow">A visual toolkit for Stories</div><h1>Make your Stories<br><span class="headline-accent">stand out.</span></h1><p class="sub">Turn everyday photos and messages into bold visuals with cutouts, expressive type and graphic shapes.</p><div class="actions"><button class="btn" onclick="show('create')">Create something bold ↗</button><button class="btn alt" onclick="show('explore')">Explore ideas</button></div></div>
+<div class="hero"><div class="eyebrow">A visual toolkit for Stories</div><h1>Make your Stories<br><span class="headline-accent">stand out.</span></h1><p class="sub">Turn everyday photos and messages into bold visuals with cutouts, expressive type and graphic shapes.</p><div class="actions"><button class="btn" onclick="show('create')">Create something bold ↗</button><button class="btn alt" onclick="show('explore')">Explore ideas</button></div><div class="hero-proof"><span>01 / CUTOUTS</span><span>02 / TYPE EFFECTS</span><span>03 / GRAPHIC SHAPES</span></div></div>
+<div class="section-head"><h3>Choose your starting point</h3></div>
+<div class="value-grid">
+<button class="value-card" onclick="show('create');addText('MAKE IT MATTER')"><span class="value-number">01 / TYPE</span><strong>Words with<br>more impact.</strong><span class="value-sample sample-type">WOW!</span><span class="value-link">Create expressive text ↗</span></button>
+<button class="value-card" onclick="show('create');addShape('circle')"><span class="value-number">02 / SHAPES</span><strong>Build a stronger<br>composition.</strong><span class="value-sample sample-shapes"><i></i><b></b><em></em></span><span class="value-link">Add graphic shapes ↗</span></button>
+<button class="value-card" onclick="show('create');document.getElementById('file').click()"><span class="value-number">03 / CUTOUTS</span><strong>Make photos<br>pop off the screen.</strong><span class="value-sample sample-cutout">CUT<br>OUT</span><span class="value-link">Start with a photo ↗</span></button>
+</div>
 <div class="section-head"><h3>Ideas worth remixing</h3><button class="link" onclick="show('explore')">Explore all ↗</button></div><div id="homeGrid" class="grid"></div>
 </section>
 
 <section id="explore" class="view">
-<div class="hero" style="padding-bottom:24px"><div class="eyebrow">Discover</div><h2>Start with a spark.<br>Make it yours.</h2><p class="sub">Remixable starting points for launches, offers, creator updates and everyday Stories. Pick a direction, then bring your own voice.</p></div>
-<input id="search" class="search" placeholder="Search ideas, moods or messages..." oninput="renderExplore()"><div class="status" style="margin:10px 0 14px">Choose an idea → Remix → customize → share.</div>
+<div class="hero explore-hero" style="padding-bottom:18px"><div class="eyebrow">The idea shelf</div><h2>Start with a spark.<br>Make it yours.</h2><p class="sub">Practical visual starting points for product launches, offers, creator updates and everyday messages. Remix the idea, then make it yours.</p></div>
+<label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" class="search" placeholder="Search ideas or messages..." oninput="renderExplore()"></label><div class="explore-helper"><strong>Pick a direction.</strong><span>Remix it. Customize it. Share it.</span></div>
 <div class="chips"><button class="chip active" onclick="setCat('All',this)">All ideas</button><button class="chip" onclick="setCat('Creators',this)">Creator</button><button class="chip" onclick="setCat('Sell',this)">Sell</button><button class="chip" onclick="setCat('Type',this)">Typography</button><button class="chip" onclick="setCat('Shape',this)">Shapes</button></div>
 <div id="exploreGrid" class="grid"></div>
 </section>
@@ -692,3 +698,36 @@ main{padding-top:20px}
 .quick-tool-grid .tool{text-align:left;min-height:44px}.panel-section{padding:14px}.bottom{height:68px}
 }
 @media(min-width:800px){.hero{padding:38px 0}.value-grid{gap:14px}.value-card{min-height:270px;padding:23px}.stage{width:min(100%,560px)!important;max-width:560px!important}}
+
+/* Bold editorial refinement */
+.hero-proof{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:.12em}
+.value-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 36px}
+.value-card{position:relative;display:flex;min-width:0;min-height:218px;flex-direction:column;align-items:flex-start;text-align:left;overflow:hidden;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--paper);color:var(--ink);cursor:pointer}
+.value-card:hover{border-color:#aaa39a;transform:translateY(-2px)}
+.value-number{font-size:10px;font-weight:900;letter-spacing:.14em;color:var(--muted)}
+.value-card strong{font-size:clamp(20px,2.7vw,32px);line-height:.95;letter-spacing:-.065em;margin-top:18px;position:relative;z-index:2}
+.value-sample{position:absolute;right:14px;bottom:29px;line-height:.8;font-weight:900;letter-spacing:-.1em}
+.sample-type{font-size:clamp(36px,6vw,64px);color:var(--accent);transform:rotate(-9deg)}
+.sample-shapes{width:90px;height:80px}
+.sample-shapes i,.sample-shapes b,.sample-shapes em{display:block;position:absolute}
+.sample-shapes i{width:49px;height:49px;border-radius:50%;background:var(--accent);left:0;top:8px}
+.sample-shapes b{width:45px;height:45px;background:var(--ink);right:0;top:0;transform:rotate(12deg)}
+.sample-shapes em{width:52px;height:32px;background:#d8d1c5;left:18px;bottom:0;border-radius:50% 50% 4px 4px}
+.sample-cutout{font-size:31px;text-align:center;color:var(--ink);background:#e9e6df;padding:10px;border-radius:48% 42% 14px 14px;transform:rotate(7deg);right:16px;bottom:25px}
+.value-link{position:absolute;left:18px;bottom:16px;font-size:11px;font-weight:900}
+.search-wrap{display:flex;align-items:center;gap:10px;padding-left:14px;border:1px solid var(--line);border-radius:13px;background:var(--paper)}
+.search-wrap>span{font-size:24px;color:var(--muted)}
+.search-wrap .search{width:100%;border:0;outline:0;background:transparent;margin:0}
+.explore-helper{display:flex;flex-wrap:wrap;gap:7px 12px;margin:12px 0 5px;font-size:12px;color:var(--muted)}
+.explore-helper strong{color:var(--ink)}
+@media(max-width:799px){
+.hero-proof{gap:8px 12px;margin-top:18px;font-size:9px}
+.value-grid{grid-template-columns:1fr;gap:9px;margin-bottom:27px}
+.value-card{min-height:150px;padding:15px;border-radius:15px}
+.value-card strong{font-size:27px;margin-top:13px}
+.value-link{left:15px;bottom:13px}
+.value-sample{right:22px;bottom:23px}
+.sample-type{font-size:54px}
+.sample-shapes{transform:scale(.82);transform-origin:bottom right;right:12px}
+.sample-cutout{font-size:27px}
+}
