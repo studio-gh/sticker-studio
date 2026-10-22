@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f5f3ee">\n<meta name="description" content="Create standout Stories with expressive type, photo cutouts and bold graphic shapes.">
+<meta name="theme-color" content="#f5f3ee">
+<meta name="description" content="Create standout Stories with expressive type, photo cutouts and bold graphic shapes.">
 <title>Sticker Studio — Make your Stories stand out</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -292,6 +293,7 @@ main{padding-top:20px}
 html,body{background:var(--bg);color:var(--ink)}
 header{border-color:var(--line)}
 .logo{color:var(--ink)}
+.header-tools{display:flex;align-items:center;gap:10px}.language-toggle{background:#1d1d1d;color:var(--ink);border:1px solid #454545;border-radius:999px;padding:10px 12px;font-size:11px;font-weight:900;letter-spacing:.04em;white-space:nowrap}.language-toggle:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .round,.small-btn,.tool,.preset,.font-btn,.layer-row,.hex-input,.native-color,.eyedrop-btn,.zoom-btn,.mini-action{background:#1d1d1d;color:var(--ink);border-color:#3a3a3a}
 .btn{background:var(--accent);border-color:var(--accent);color:#fff}
 .btn.alt{background:transparent;border-color:#454545;color:var(--ink)}
@@ -323,7 +325,7 @@ header{border-color:var(--line)}
 <div class="app">
 <header class="shell">
 <button class="logo" onclick="show('home')">STICKER<span>•</span>STUDIO</button>
-<button class="round" onclick="show('saved')">♡</button>
+<div class="header-tools"><button id="languageToggle" class="language-toggle" type="button" aria-label="Change language" onclick="toggleLanguage()">EN / PT-BR</button><button class="round" onclick="show('saved')">♡</button></div>
 </header>
 
 <main class="shell">
@@ -761,5 +763,69 @@ try{
   if(status)status.textContent='Something went wrong while loading the editor. Refresh to try again.';
 }
 </script>
+
+<script>
+(function(){
+const dict={
+"A visual toolkit for Stories":"Uma caixa de ferramentas visuais para Stories",
+"Make your Stories":"Dê mais impacto aos seus Stories",
+"stand out.":"que se destacam.",
+"Turn everyday photos and messages into bold visuals with cutouts, expressive type and graphic shapes.":"Transforme fotos e mensagens do dia a dia em visuais marcantes com recortes, tipografia expressiva e formas gráficas.",
+"Create something bold ↗":"Criar algo marcante ↗","Explore ideas":"Explorar ideias",
+"01 / CUTOUTS":"01 / RECORTES","02 / TYPE EFFECTS":"02 / EFEITOS DE TEXTO","03 / GRAPHIC SHAPES":"03 / FORMAS GRÁFICAS",
+"Choose your starting point":"Escolha por onde começar","01 / TYPE":"01 / TEXTO","Words with":"Palavras com","more impact.":"mais impacto.",
+"Create expressive text ↗":"Criar texto expressivo ↗","02 / SHAPES":"02 / FORMAS","Build a stronger":"Crie uma composição","composition.":"mais marcante.","Add graphic shapes ↗":"Adicionar formas gráficas ↗",
+"Make photos":"Dê vida às fotos","pop off the screen.":"e destaque suas imagens.","Start with a photo ↗":"Começar com uma foto ↗",
+"Ideas worth remixing":"Ideias para remixar","Explore all ↗":"Explorar tudo ↗","The idea shelf":"Prateleira de ideias","Start with a spark.":"Comece com uma faísca.","Make it yours.":"Deixe com a sua cara.",
+"Practical visual starting points for product launches, offers, creator updates and everyday messages. Remix the idea, then make it yours.":"Pontos de partida visuais para lançamentos, ofertas, novidades de criadores e mensagens do dia a dia. Remixe e deixe com a sua cara.",
+"Search ideas or messages...":"Buscar ideias ou mensagens...","Pick a direction.":"Escolha uma direção.","Remix it. Customize it. Share it.":"Remixe. Personalize. Compartilhe.",
+"All ideas":"Todas","Creator":"Criadores","Sell":"Vendas","Typography":"Tipografia","Funny":"Humor","Shapes":"Formas",
+"Make it stand out.":"Dê destaque à sua ideia.","Undo":"Desfazer","Redo":"Refazer","+ Text":"+ Texto","+ Photo":"+ Foto","Export PNG":"Exportar PNG","Live preview":"Prévia ao vivo",
+"Quick actions":"Ações rápidas","Paste photo":"Colar foto","Remove background":"Remover fundo","✦ Stickerize":"✦ Transformar em figurinha","New canvas":"Nova tela","Copy sticker":"Copiar figurinha","Share":"Compartilhar","Add a shape":"Adicionar forma",
+"Circle":"Círculo","Square":"Quadrado","Rounded":"Arredondado","Triangle":"Triângulo","Star":"Estrela","Bubble":"Balão",
+"Add text or a photo from the toolbar above. Paste photo imports an image from your clipboard.":"Adicione um texto ou uma foto pela barra acima. “Colar foto” importa uma imagem da área de transferência.",
+"Selected layer":"Camada selecionada","Select a layer on the canvas.":"Selecione uma camada na tela.","Opacity":"Opacidade","Scale":"Escala","Rotation":"Rotação","Zoom":"Zoom","Color":"Cor","Eyedropper":"Conta-gotas","Photo":"Foto","Fit":"Ajustar","Fill":"Preencher","Crop":"Recortar",
+"Home":"Início","Create":"Criar","Explore":"Explorar","Saved":"Salvos","Your collection":"Sua coleção","Saved & created.":"Salvos e criados.","Your stickers stay on this device for now.":"Por enquanto, suas figurinhas ficam salvas neste dispositivo.",
+"Nothing here yet. Try another search.":"Nada por aqui ainda. Tente outra busca.",
+"Creators":"Criadores","Funny":"Humor","Shape":"Forma","Remix ↗":"Remixar ↗","Save sticker":"Salvar figurinha",
+"Text":"Texto","Shape":"Forma","Image":"Imagem","Layer":"Camada",
+"PNG exported · transparent + tightly cropped":"PNG exportado · transparente e recortado","Sticker copied":"Figurinha copiada","Background removal unavailable":"Não foi possível remover o fundo",
+"Add something first":"Adicione algo primeiro","Select a photo first":"Selecione uma foto primeiro","Choose a crop ratio or Fill first":"Escolha uma proporção de recorte ou Preencher primeiro",
+"Processing photo…":"Processando foto…","Exporting transparent PNG…":"Exportando PNG transparente…","PNG ready for Stories, WhatsApp or Telegram.":"PNG pronto para Stories, WhatsApp ou Telegram.",
+"Background removed. Outline is now ready.":"Fundo removido. O contorno está pronto.","Could not sample color":"Não foi possível capturar a cor","Enter a valid HEX color":"Digite uma cor HEX válida",
+"Cutouts":"Recortes","Type effects":"Efeitos de texto","Graphic shapes":"Formas gráficas"
+};
+let lang=localStorage.getItem("stickerStudioLanguage")==="pt"?"pt":"en";
+const originals=new WeakMap();
+function translateNode(node){
+ if(node.nodeType!==Node.TEXT_NODE)return;
+ if(!originals.has(node))originals.set(node,node.nodeValue);
+ const original=originals.get(node),trim=original.trim();
+ if(!trim)return;
+ const value=lang==="pt"?(dict[trim]||trim):trim;
+ node.nodeValue=original.replace(trim,value);
+}
+function apply(){
+ document.documentElement.lang=lang==="pt"?"pt-BR":"en";
+ document.querySelectorAll("body *").forEach(el=>{
+   el.childNodes.forEach(translateNode);
+   ["placeholder","aria-label","title"].forEach(attr=>{
+     if(!el.hasAttribute(attr))return;
+     const key=attr+":"+el.getAttribute(attr);
+     if(!el.dataset["original"+attr])el.dataset["original"+attr]=el.getAttribute(attr);
+     const original=el.dataset["original"+attr];
+     el.setAttribute(attr,lang==="pt"?(dict[original]||original):original);
+   });
+ });
+ const b=document.getElementById("languageToggle");
+ if(b){b.textContent=lang==="pt"?"PT-BR / EN":"EN / PT-BR";b.setAttribute("aria-label",lang==="pt"?"Mudar idioma para inglês":"Switch language to Portuguese")}
+}
+window.toggleLanguage=function(){lang=lang==="en"?"pt":"en";localStorage.setItem("stickerStudioLanguage",lang);apply()};
+const observer=new MutationObserver(records=>records.forEach(r=>{if(r.type==="childList")r.addedNodes.forEach(n=>{if(n.nodeType===Node.TEXT_NODE)translateNode(n);else if(n.nodeType===Node.ELEMENT_NODE){n.childNodes.forEach(translateNode);n.querySelectorAll("*").forEach(el=>el.childNodes.forEach(translateNode))}})}));
+window.addEventListener("DOMContentLoaded",()=>{apply();observer.observe(document.body,{subtree:true,childList:true})});
+if(document.readyState!=="loading"){apply();observer.observe(document.body,{subtree:true,childList:true})}
+})();
+</script>
+
 </body>
 </html>
