@@ -653,10 +653,10 @@ function stageUnit(){const stage=$('stage');return stage?stage.clientWidth/500:1
 function renderEditor(){const stage=$('stage');const unit=stageUnit();const oldV=$('guideV'),oldH=$('guideH');stage.innerHTML='';if(oldV)stage.appendChild(oldV);if(oldH)stage.appendChild(oldH);layers.forEach(l=>{if(l.visible===false)return;const el=document.createElement('div');el.className='layer'+(l.id===selectedId?' selected':'')+(l.locked?' locked':'');el.dataset.id=l.id;el.style.left=(l.x*unit)+'px';el.style.top=(l.y*unit)+'px';el.style.opacity=l.opacity;el.style.transform=`translate(-50%,-50%) rotate(${l.rotation}deg) scale(${l.scale})`;
 if(l.type==='text'){el.className+=' text-layer';el.style.fontFamily=`"${l.fontFamily}"`;el.style.fontSize=(l.fontSize*unit)+'px';el.style.color=l.color;el.style.letterSpacing=(l.letterSpacing||0)+'px';el.style.lineHeight=l.lineHeight||1;el.style.textAlign=l.textAlign||'center';el.style.width=((l.textWidth||300)*unit)+'px';el.style.maxWidth='none';el.style.whiteSpace='normal';if(l.highlight){el.style.backgroundColor=hexToRgba(l.highlightColor||'#fff',l.highlightOpacity??.85);el.style.padding=(l.highlightPadding||0)+'px';el.style.borderRadius=(l.highlightRadius||0)+'px';el.style.boxDecorationBreak='clone';el.style.webkitBoxDecorationBreak='clone'}if(l.outline){el.style.webkitTextStroke=`${l.outlineWidth||1}px ${l.outlineColor||'#fff'}`;el.style.paintOrder='stroke fill'}if(l.shadow){const o=l.shadowOffset||0;el.style.textShadow=`${o}px ${o}px ${l.shadowBlur||0}px ${l.shadowColor||'#000'}`}if(l.curve){el.innerHTML=curvedTextSVG(l);el.style.backgroundColor='transparent';el.style.padding='0';el.style.width=(Math.max(220,Math.abs(l.curve)*5+220)*unit)+'px';el.style.height=(Math.max(120,Math.abs(l.curve)*2+120)*unit)+'px'}else{const span=document.createElement('span');span.className='text-content';span.textContent=l.text||'TEXT';el.appendChild(span)}}else if(l.type==='shape'){el.className+=' shape-layer';el.style.width=(l.w*unit)+'px';el.style.height=(l.h*unit)+'px';el.innerHTML=shapeSVG(l);el.querySelector('svg').style.width='100%';el.querySelector('svg').style.height='100%'}else{const img=document.createElement('img');img.className='layer-media';img.src=l.src;img.style.width=(l.w*unit)+'px';img.style.height=(l.h*unit)+'px';img.style.objectFit=l.fit==='cover'?'cover':'contain';img.style.objectPosition=`${l.cropX??50}% ${l.cropY??50}%`;img.style.filter=outlineFilter(l);el.appendChild(img)}
 if(l.type==='text'&&!l.curve){for(const side of ['left','right']){const wh=document.createElement('button');wh.type='button';wh.className='width-handle '+side;wh.setAttribute('aria-label','Resize text box width');wh.onpointerdown=e=>beginHandle(e,l.id,'width-'+side);el.appendChild(wh)}}
-if(l.type==='image'){const rh=document.createElement('button');rh.type='button';rh.className='handle resize-handle';rh.setAttribute('aria-label','Resize image');rh.onpointerdown=e=>beginHandle(e,l.id,'resize');el.appendChild(rh);const rot=document.createElement('button');rot.type='button';rot.className='handle rotate-handle';rot.setAttribute('aria-label','Rotate image');rot.onpointerdown=e=>beginHandle(e,l.id,'rotate');el.appendChild(rot)}
+if(l.type==='image'||l.type==='shape'){const rh=document.createElement('button');rh.type='button';rh.className='handle resize-handle';rh.setAttribute('aria-label',l.type==='shape'?'Resize shape':'Resize image');rh.onpointerdown=e=>beginHandle(e,l.id,'resize');el.appendChild(rh);const rot=document.createElement('button');rot.type='button';rot.className='handle rotate-handle';rot.setAttribute('aria-label',l.type==='shape'?'Rotate shape':'Rotate image');rot.onpointerdown=e=>beginHandle(e,l.id,'rotate');el.appendChild(rot)}
 const del=document.createElement('button');del.className='delete';del.textContent='×';del.onclick=e=>{e.stopPropagation();deleteLayer(l.id)};el.appendChild(del);
 /* V9.4: stage uses a consistent 500-unit coordinate system at every responsive size. Text width no longer depends on its x-position, preventing apparent resize/wrapping while moving. */
-el.onpointerdown=e=>beginPointer(e,l.id);el.onclick=()=>{if(suppressClick){suppressClick=false;return}selectedId=l.id;renderEditor()};stage.appendChild(el)});renderLayers();updatePanel();saveDraft();updateGuides(null)}
+el.onpointerdown=e=>{if(e.target.closest('button'))return;beginPointer(e,l.id)};el.onclick=()=>{if(suppressClick){suppressClick=false;return}selectedId=l.id;renderEditor()};stage.appendChild(el)});renderLayers();updatePanel();saveDraft();updateGuides(null)}
 
 function shapeSVG(l){const fill=l.color||'#ff4d2e',stroke=l.strokeColor||'none',sw=l.strokeWidth||0;let body='';switch(l.shape){case'square':body='<rect x="5" y="5" width="90" height="90" />';break;case'rounded':body='<rect x="4" y="18" width="92" height="64" rx="20" />';break;case'triangle':body='<path d="M50 4 L96 94 H4 Z" />';break;case'star':body='<path d="M50 2 L62 35 L98 36 L70 58 L80 94 L50 73 L20 94 L30 58 L2 36 L38 35 Z" />';break;case'speech':body='<path d="M8 8 H92 Q98 8 98 16 V68 Q98 76 90 76 H55 L32 96 V76 H8 Q2 76 2 68 V16 Q2 8 8 8 Z" />';break;default:body='<circle cx="50" cy="50" r="45" />'}return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true"><g fill="${fill}" stroke="${stroke}" stroke-width="${sw}" stroke-linejoin="round">${body}</g></svg>`}
 function curvedTextSVG(l){const text=esc(l.text||'TEXT'),curve=l.curve||0,width=Math.max(220,Math.abs(curve)*5+220),height=Math.max(120,Math.abs(curve)*2+120),r=Math.max(70,110+Math.abs(curve)*2),cy=curve>=0?height+r*.25:-r*.15,start=curve>=0?Math.PI+.35:Math.PI-.35,end=curve>=0?-.35:.35,sweep=curve>=0?1:0,x1=width/2+r*Math.cos(start),y1=cy+r*Math.sin(start),x2=width/2+r*Math.cos(end),y2=cy+r*Math.sin(end),path=`M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}`;return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible"><defs><path id="curvePath" d="${path}"/></defs><text fill="${l.color||'#151515'}" stroke="${l.outline?(l.outlineColor||'#fff'):'none'}" stroke-width="${l.outline?(l.outlineWidth||1)*2:0}" paint-order="stroke" font-family="${esc(l.fontFamily)}" font-size="${l.fontSize}" font-weight="900" letter-spacing="${l.letterSpacing||0}px"><textPath href="#curvePath" startOffset="50%" text-anchor="middle">${text}</textPath></text></svg>`}
@@ -803,19 +803,15 @@ window.addEventListener('unhandledrejection',e=>{
 
 wireColors();
 try{
-  const draft=localStorage.getItem('stickerStudioDraft');
-  if(draft){
-    try{
-      layers=JSON.parse(draft);
-      if(!Array.isArray(layers))layers=[];
-      layers=layers.map(l=>{if(l.type==='image'){if(!l.assetId)l.assetId=newId();if(l.src)assetStore.set(l.assetId,l.src)}return l});
-      selectedId=layers.length?layers[layers.length-1]?.id||null:null;
-    }catch(e){
-      layers=[];
-      try{localStorage.removeItem('stickerStudioDraft')}catch(_){}
-    }
-  }
-  if(!layers.length)addText('YOUR STICKER');else{commitHistory();renderEditor()}
+  // Start with a clean canvas on every visit. Draft persistence was confusing
+  // first-time users by silently restoring old layers after refresh.
+  layers=[];
+  selectedId=null;
+  try{
+    localStorage.removeItem('stickerStudioDraft');
+    localStorage.removeItem('stickerStudioDraftAt');
+  }catch(_){}
+  renderEditor();
   renderHome();renderExplore();renderSaved();
 }catch(e){
   console.error('Sticker Studio boot error:',e);
