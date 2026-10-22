@@ -379,6 +379,13 @@ header{border-color:#383838}
  .stage-wrap{background:rgba(25,25,25,.98)!important}
 }
 
+
+/* V13 interaction fix: shape layers must receive pointer events on touch devices */
+.shape-layer{pointer-events:auto!important;touch-action:none;cursor:grab}
+.shape-layer svg{pointer-events:none}
+.layer .delete{pointer-events:auto!important;z-index:20;touch-action:manipulation}
+.layer .handle{pointer-events:auto!important;touch-action:none}
+
 </style>
 </head>
 <body>
