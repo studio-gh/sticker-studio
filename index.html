@@ -521,6 +521,39 @@ header{border-color:#383838}
 .shape-style-grid .tool.on{background:#ff5038!important;color:#17110f!important;border-color:#ff5038!important}
 @media(max-width:799px){.shape-style-grid{gap:7px}.shape-style-grid .tool{min-height:44px}}
 
+
+/* V19: compact selected-layer controls in a two-column mobile grid */
+@media(max-width:799px){
+  #create .panel-section:has(>#selectionControls){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    column-gap:12px!important;
+    row-gap:8px!important;
+    align-items:end!important;
+  }
+  #create .panel-section:has(>#selectionControls)>.panel-title,
+  #create .panel-section:has(>#selectionControls)>#selectionControls,
+  #create .panel-section:has(>#selectionControls)>.status,
+  #create .panel-section:has(>#selectionControls)>.shape-style-grid,
+  #create .panel-section:has(>#selectionControls)>#shapeControls{
+    grid-column:1/-1!important;
+  }
+  #create .panel-section:has(>#selectionControls)>.field{
+    min-width:0!important;
+    margin-top:2px!important;
+  }
+  #create .panel-section:has(>#selectionControls)>.field label{
+    display:flex!important;justify-content:space-between!important;gap:4px!important;
+    font-size:10px!important;letter-spacing:.07em!important;
+  }
+  #create .panel-section:has(>#selectionControls)>.field input[type=range]{width:100%!important}
+  #create .panel-section:has(>#selectionControls)>.field:has(#opacity){grid-column:1!important}
+  #create .panel-section:has(>#selectionControls)>.field:has(#scale){grid-column:2!important}
+  #create .panel-section:has(>#selectionControls)>.field:has(#rotation){grid-column:1!important}
+  #create .panel-section:has(>#selectionControls)>.field:has(#zoom){grid-column:2!important}
+  #create .panel-section:has(>#selectionControls)>.field:has(#colorHex){grid-column:1/-1!important}
+}
+
 </style>
 </head>
 <body>
