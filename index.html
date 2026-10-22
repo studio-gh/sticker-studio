@@ -554,6 +554,12 @@ header{border-color:#383838}
   #create .panel-section:has(>#selectionControls)>.field:has(#colorHex){grid-column:1/-1!important}
 }
 
+
+/* V20 manual cutout cleanup brush */
+body.erase-mode #stage .layer-media{cursor:crosshair!important;touch-action:none!important}
+body.erase-mode #stage .layer{cursor:crosshair!important}
+#eraseModeBtn.active{background:#ff5038!important;color:#17110f!important;border-color:#ff5038!important}
+
 </style>
 </head>
 <body>
@@ -637,6 +643,12 @@ header{border-color:#383838}
 
 <div class="panel-section" id="imageControls" style="display:none">
 <div class="panel-title">Photo</div>
+<div class="tool-grid" style="margin-bottom:8px">
+<button class="tool" id="eraseModeBtn" onclick="toggleEraseMode()">Erase leftovers</button>
+<button class="tool" id="eraseClearBtn" onclick="clearEraseMode()">Finish erasing</button>
+</div>
+<div class="field" id="eraserSizeWrap" style="display:none"><label>Brush size <span id="eraserSizeVal">24</span> px</label><input id="eraserSize" type="range" min="6" max="90" value="24" oninput="document.getElementById('eraserSizeVal').textContent=this.value"></div>
+<div class="crop-label" id="eraserHint" style="display:none">Paint over leftover pixels to erase them. Your changes update the cutout.</div>
 <div class="tool-grid">
 <button class="tool" onclick="fitImage()">Fit</button>
 <button class="tool" onclick="fillImage()">Fill</button>
@@ -1078,6 +1090,52 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
  document.addEventListener('focusout',()=>setTimeout(syncKeyboard,180));
  window.addEventListener('resize',syncKeyboard);
 })();
+</script>
+<script>
+/* Manual alpha eraser for cleaning small remnants after background removal. */
+let eraseMode=false,eraseStroke=null;
+window.toggleEraseMode=async()=>{
+ const l=selected();if(!l||l.type!=='image'){toast('Select a photo first');return}
+ try{
+  if(!l.src)throw new Error('Missing image');
+  const img=await loadImg(l.src);
+  const c=document.createElement('canvas');c.width=img.naturalWidth||img.width;c.height=img.naturalHeight||img.height;
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  l.eraseCanvas=c;
+  eraseMode=true;document.body.classList.add('erase-mode');
+  $('eraseModeBtn').classList.add('active');$('eraserSizeWrap').style.display='block';$('eraserHint').style.display='block';
+  $('status').textContent='Erase mode: paint over unwanted pixels on the photo.';
+ }catch(e){console.error(e);toast('Could not open cutout for editing')}
+};
+window.clearEraseMode=()=>{
+ eraseMode=false;eraseStroke=null;document.body.classList.remove('erase-mode');
+ $('eraseModeBtn')?.classList.remove('active');if($('eraserSizeWrap'))$('eraserSizeWrap').style.display='none';if($('eraserHint'))$('eraserHint').style.display='none';
+ if($('status'))$('status').textContent='Cutout cleanup finished.';
+};
+function eraseAt(e){
+ if(!eraseStroke)return;
+ const r=eraseStroke.img.getBoundingClientRect(),c=eraseStroke.canvas,ctx=c.getContext('2d');
+ const x=(e.clientX-r.left)/r.width*c.width,y=(e.clientY-r.top)/r.height*c.height;
+ const radius=(+$('eraserSize').value/2)*(c.width/r.width);
+ ctx.save();ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(x,y,Math.max(1,radius),0,Math.PI*2);ctx.fill();ctx.restore();
+}
+document.addEventListener('pointerdown',e=>{
+ if(!eraseMode||!e.target.matches('#stage .layer-media'))return;
+ const l=selected();if(!l||l.type!=='image'||!l.eraseCanvas)return;
+ e.preventDefault();e.stopPropagation();commitHistory();
+ eraseStroke={img:e.target,canvas:l.eraseCanvas,id:l.id};
+ try{e.target.setPointerCapture(e.pointerId)}catch(_){}
+ eraseAt(e);
+},{capture:true});
+document.addEventListener('pointermove',e=>{if(eraseStroke){e.preventDefault();eraseAt(e)}},{capture:true});
+document.addEventListener('pointerup',e=>{
+ if(!eraseStroke)return;
+ const stroke=eraseStroke;eraseStroke=null;
+ const l=layers.find(x=>x.id===stroke.id);if(!l)return;
+ l.src=stroke.canvas.toDataURL('image/png');if(!l.assetId)l.assetId=newId();assetStore.set(l.assetId,l.src);
+ l.name=(l.name||'photo').replace(/ cutout\.png$/,'')+' cutout.png';
+ renderEditor();commitHistory();saveDraft();
+},{capture:true});
 </script>
 </body>
 </html>
