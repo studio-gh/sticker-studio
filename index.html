@@ -386,6 +386,40 @@ header{border-color:#383838}
 .layer .delete{pointer-events:auto!important;z-index:20;touch-action:manipulation}
 .layer .handle{pointer-events:auto!important;touch-action:none}
 
+
+/* V14: compact mobile canvas and keyboard-friendly text editing */
+@media(max-width:799px){
+  .stage-wrap{
+    position:relative!important;
+    top:auto!important;
+    padding:7px 0 9px!important;
+    margin:0!important;
+    background:transparent!important;
+    backdrop-filter:none!important;
+  }
+  .stage{
+    width:min(76vw,320px)!important;
+    max-width:320px!important;
+    aspect-ratio:1!important;
+  }
+  .editor-head{
+    position:relative!important;
+    top:auto!important;
+    background:transparent!important;
+    backdrop-filter:none!important;
+  }
+  body:has(#textValue:focus) .stage-wrap,
+  body:has(.field input:focus) .stage-wrap,
+  body:has(.field textarea:focus) .stage-wrap{
+    display:none!important;
+  }
+  body:has(#textValue:focus) .editor-head,
+  body:has(.field input:focus) .editor-head,
+  body:has(.field textarea:focus) .editor-head{
+    display:none!important;
+  }
+}
+
 </style>
 </head>
 <body>
