@@ -319,6 +319,66 @@ header{border-color:var(--line)}
  .value-card{background:#191919}
 }
 
+
+/* V12 ACCESSIBILITY PASS: consistent high-contrast controls and a light transparency grid */
+:root{
+  color-scheme:dark;
+  --bg:#101010; --paper:#191919; --ink:#f7f5f0; --muted:#c2beb7;
+  --line:#454545; --accent:#ff5038; --stage:#e7e5df;
+}
+html,body{background:#101010!important;color:#f7f5f0!important}
+header,.editor-head,.stage-wrap,.bottom{color:#f7f5f0}
+header{border-color:#383838}
+.sub,.hero .sub{color:#d0ccc5!important}
+.eyebrow,.panel-title,.status,.crop-label,.card-info small{color:#c5c1ba!important}
+.stage-wrap{background:#191919!important;border-color:#454545!important}
+.stage{
+  background-color:#f4f3ef!important;
+  background-image:
+    linear-gradient(45deg,#d7d6d1 25%,transparent 25%),
+    linear-gradient(-45deg,#d7d6d1 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#d7d6d1 75%),
+    linear-gradient(-45deg,transparent 75%,#d7d6d1 75%)!important;
+  background-size:28px 28px!important;
+  background-position:0 0,0 14px,14px -14px,-14px 0!important;
+}
+.preview{
+  background-color:#f4f3ef!important;
+  background-image:
+    linear-gradient(45deg,#d7d6d1 25%,transparent 25%),
+    linear-gradient(-45deg,#d7d6d1 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#d7d6d1 75%),
+    linear-gradient(-45deg,transparent 75%,#d7d6d1 75%)!important;
+}
+.panel,.card{background:#191919!important;border-color:#454545!important;color:#f7f5f0!important}
+.panel-section{border-color:#454545!important}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.mini-action,.remix-btn,.layer-row,.search,.search-wrap,.hex-input,.native-color,.eyedrop-btn,.zoom-btn,.field input[type=text],.field textarea,.field select{
+  background:#242424!important;color:#fff!important;border-color:#666!important;
+}
+.tool.primary,.tool.on,.small-btn.dark,.chip.active,.remix-btn{
+  background:#ff5038!important;color:#17110f!important;border-color:#ff5038!important;
+}
+.btn{background:#ff5038!important;color:#17110f!important;border-color:#ff5038!important}
+.btn.alt{background:#242424!important;color:#fff!important;border-color:#666!important}
+.tool:disabled,.small-btn:disabled,.preset:disabled,.font-btn:disabled{
+  opacity:1!important;background:#303030!important;color:#aaa!important;border-color:#555!important;
+}
+.shape-btn{color:#fff!important}
+.shape-btn svg{color:#ff5038}
+.shape-btn svg *{stroke:currentColor}
+.font-btn.active,.layer-row.active{background:#353535!important;color:#fff!important;border-color:#ff806d!important}
+.nav-btn{color:#c5c1ba!important}
+.nav-btn.active{color:#ff6a54!important}
+.bottom{background:rgba(16,16,16,.97)!important;border-color:#454545!important}
+#selectionControls{background:#292929!important;color:#fff!important}
+.field label{color:#f7f5f0!important}
+.layer-thumb{color:#171717!important}
+.toast{background:#f7f5f0!important;color:#171717!important}
+@media(max-width:799px){
+ .editor-head{background:rgba(16,16,16,.97)!important}
+ .stage-wrap{background:rgba(25,25,25,.98)!important}
+}
+
 </style>
 </head>
 <body>
