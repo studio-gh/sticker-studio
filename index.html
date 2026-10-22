@@ -575,6 +575,80 @@ body.erase-mode #stage .layer{cursor:crosshair!important}
 @keyframes bgp-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){#bgProcessFeedback .bgp-spinner{animation:none}}
 
+
+/* V22 FINAL MOBILE UX PASS: consistent spacing, sticky preview, readable controls */
+:root{scroll-padding-top:12px}
+button,input,textarea,select{touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[role=button]:focus-visible{outline:3px solid #ff5038!important;outline-offset:2px!important}
+button:disabled{opacity:.5!important}
+@media(max-width:799px){
+  .app{padding-bottom:calc(68px + env(safe-area-inset-bottom))!important}
+  .shell{width:calc(100% - 24px)!important}
+  main{padding:5px 0 12px!important}
+  #create{scroll-margin-top:8px}
+  .editor-head{padding:5px 0 8px!important;margin:0!important;gap:8px!important}
+  .editor-head h2{font-size:24px!important;line-height:1.05!important;white-space:normal!important}
+  .editor-actions{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
+  .editor-actions .small-btn{min-width:0!important;min-height:42px!important;padding:7px 2px!important;font-size:clamp(9px,2.6vw,11px)!important;line-height:1.1!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  .stage-wrap{position:sticky!important;top:var(--preview-sticky-top,108px)!important;z-index:25!important;margin:0 -12px!important;padding:8px 12px 10px!important;border:0!important;border-bottom:1px solid #333!important;border-radius:0!important;background:rgba(16,16,16,.97)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important}
+  .live-preview-label{display:block!important;margin:0 0 7px!important;font-size:10px!important;line-height:1.2!important;letter-spacing:.14em!important}
+  .stage{width:min(56vw,230px)!important;max-width:230px!important;height:auto!important;aspect-ratio:1!important;margin:0 auto!important;border-radius:13px!important;flex-shrink:0}
+  .panel{margin-top:8px!important;padding:0!important;gap:0!important;border-radius:16px!important;overflow:visible!important}
+  .panel-section{padding:12px!important;min-width:0!important}
+  .panel-title{font-size:10px!important;margin-bottom:8px!important}
+  .field{margin-top:9px!important}
+  .field label{font-size:10px!important;letter-spacing:.06em!important}
+  .field input[type=text],.field textarea,.field select,.hex-input{font-size:16px!important;min-height:42px!important}
+  .field textarea{min-height:72px!important}
+  .tool,.small-btn,.preset,.font-btn,.shape-btn,.mini-action,.zoom-btn,.eyedrop-btn{min-height:42px!important}
+  .fonts{gap:6px!important}
+  .font-btn{padding:9px 3px!important}
+  .shape-grid{gap:7px!important}
+  .shape-btn{padding:9px 3px!important;min-height:70px!important}
+  .quick-actions{gap:7px!important}
+  .quick-actions .tool{min-height:42px!important}
+  .layers{gap:6px!important}
+  .layer-row{min-height:48px!important;padding:7px!important}
+  .layer-order .mini{min-width:28px!important;min-height:30px!important}
+  #selectionControls{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px 12px!important;align-items:end!important}
+  #selectionControls>.panel-title,#selectionControls>.status,#selectionControls>#shapeControls,#selectionControls>#textControls,#selectionControls>#imageControls{grid-column:1/-1!important;min-width:0!important}
+  #selectionControls>.field{min-width:0!important;margin-top:2px!important}
+  #selectionControls>.field:has(#opacity){grid-column:1!important}
+  #selectionControls>.field:has(#scale){grid-column:2!important}
+  #selectionControls>.field:has(#rotation){grid-column:1!important}
+  #selectionControls>.field:has(#zoom){grid-column:2!important}
+  #selectionControls>.field:has(#colorHex){grid-column:1/-1!important}
+  .custom-color{grid-template-columns:minmax(0,1fr) 44px!important;gap:7px!important}
+  .custom-color .eyedrop-btn{grid-column:1/-1!important;width:100%!important}
+  .bottom{height:calc(64px + env(safe-area-inset-bottom))!important;padding-bottom:env(safe-area-inset-bottom)!important}
+  .nav-btn{font-size:10px!important;min-width:0!important}
+  .nav-icon{font-size:21px!important}
+  .toast{bottom:calc(76px + env(safe-area-inset-bottom))!important;max-width:calc(100vw - 32px)!important;text-align:center!important}
+  #bgProcessFeedback{margin:8px 0!important}
+  body.keyboard-open .editor-head{display:none!important}
+  body.keyboard-open .stage-wrap{position:fixed!important;top:var(--keyboard-preview-top,8px)!important;left:0!important;right:0!important;margin:0!important;padding:5px 10px 8px!important;z-index:45!important}
+  body.keyboard-open .stage{width:min(32vw,132px)!important;max-width:132px!important}
+  body.keyboard-open .live-preview-label{font-size:9px!important;margin-bottom:4px!important}
+  body.keyboard-open .bottom{display:none!important}
+  body.keyboard-open #create .panel{margin-top:0!important}
+  body.erase-mode #stage .layer{touch-action:none!important;cursor:crosshair!important}
+  body.erase-mode #stage .layer-media{pointer-events:none!important;touch-action:none!important;cursor:crosshair!important}
+  body.erase-mode #stage .layer .handle,body.erase-mode #stage .layer .delete{pointer-events:none!important}
+}
+@media(max-width:380px){
+  .editor-head h2{font-size:22px!important}
+  .stage{width:min(52vw,205px)!important;max-width:205px!important}
+  .panel-section{padding:10px!important}
+  .layer-tools{gap:4px!important}
+  .mini-action{font-size:10px!important;padding:7px 8px!important}
+}
+@media(min-width:800px){
+  .app{padding-bottom:0!important}
+  .stage-wrap{position:sticky!important;top:16px!important}
+  .stage{width:min(100%,520px)!important;max-width:520px!important}
+  .panel{min-width:0}
+}
+
 </style>
 </head>
 <body>
