@@ -560,6 +560,21 @@ body.erase-mode #stage .layer-media{cursor:crosshair!important;touch-action:none
 body.erase-mode #stage .layer{cursor:crosshair!important}
 #eraseModeBtn.active{background:#ff5038!important;color:#17110f!important;border-color:#ff5038!important}
 
+
+/* V21: clear, accessible feedback while removing the background */
+#bgProcessFeedback{display:none;margin:10px 0 4px;padding:12px;border:1px solid #454545;border-radius:13px;background:#242424}
+#bgProcessFeedback.active{display:block}
+#bgProcessFeedback .bgp-row{display:flex;align-items:center;gap:10px}
+#bgProcessFeedback .bgp-spinner{width:20px;height:20px;border:3px solid #555;border-top-color:#ff5038;border-radius:50%;animation:bgp-spin .8s linear infinite;flex:0 0 auto}
+#bgProcessFeedback .bgp-title{font-size:13px;font-weight:800;color:#fff}
+#bgProcessFeedback .bgp-sub{font-size:12px;color:#ddd;margin-top:3px;line-height:1.35}
+#bgProcessFeedback .bgp-track{height:6px;border-radius:8px;background:#454545;overflow:hidden;margin-top:10px}
+#bgProcessFeedback .bgp-track i{display:block;height:100%;width:4%;background:#ff5038;border-radius:8px;transition:width .25s ease}
+#bgProcessFeedback.done .bgp-spinner{border:0;width:20px;height:20px;background:#2a9d68;animation:none;position:relative}
+#bgProcessFeedback.done .bgp-spinner:after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;color:white;font-weight:900}
+@keyframes bgp-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#bgProcessFeedback .bgp-spinner{animation:none}}
+
 </style>
 </head>
 <body>
@@ -599,6 +614,10 @@ body.erase-mode #stage .layer{cursor:crosshair!important}
 <div class="tool-grid quick-tool-grid">
 <button class="tool" onclick="pasteFromClipboard()">Paste photo</button>
 <button class="tool" id="removeBgBtn" onclick="removeBackground()" disabled>Remove background</button>
+<div id="bgProcessFeedback" role="status" aria-live="polite">
+ <div class="bgp-row"><span class="bgp-spinner" aria-hidden="true"></span><div><div id="bgpTitle" class="bgp-title">Removing background…</div><div id="bgpSub" class="bgp-sub">Keep this screen open. This can take a little while on your first cutout.</div></div></div>
+ <div class="bgp-track"><i id="bgpProgress"></i></div>
+</div>
 <button class="tool" onclick="stickerize()">✦ Stickerize</button>
 <button class="tool" onclick="newCanvas()">New canvas</button>
 <button class="tool" onclick="copyPNG()">Copy sticker</button>
@@ -971,7 +990,7 @@ async function optimizeImage(file){let src,img,w0,h0;try{if(window.createImageBi
 window.handleFile=handleFile
 window.pasteFromClipboard=async()=>{try{if(!navigator.clipboard?.read)throw 0;const items=await navigator.clipboard.read();for(const item of items){const type=item.types.find(t=>t.startsWith('image/'));if(type){const b=await item.getType(type);return handleFile(b)}}toast('No image found in clipboard')}catch(e){toast('Clipboard permission blocked. Use paste from your keyboard.')}}
 document.addEventListener('paste',e=>{const item=[...(e.clipboardData?.items||[])].find(x=>x.type.startsWith('image/'));if(item){e.preventDefault();handleFile(item.getAsFile())}})
-window.removeBackground=async()=>{const l=selected();if(!l||l.type!=='image')return;try{$('removeBgBtn').disabled=true;$('status').textContent='Preparing cutout…';setProgress(5);const srcImg=await loadImg(l.src);const max=1024,sc=Math.min(1,max/Math.max(srcImg.naturalWidth,srcImg.naturalHeight));const cc=document.createElement('canvas');cc.width=Math.max(1,Math.round(srcImg.naturalWidth*sc));cc.height=Math.max(1,Math.round(srcImg.naturalHeight*sc));cc.getContext('2d').drawImage(srcImg,0,0,cc.width,cc.height);const input=await new Promise(r=>cc.toBlob(r,'image/png'));setProgress(12);$('status').textContent='Removing background…';const mod=await import('https://esm.sh/@imgly/background-removal@1.7.0');const fn=mod.default||mod.removeBackground;if(typeof fn!=='function')throw Error('unavailable');const blob=await fn(input,{progress:(k,c,t)=>{if(t)setProgress(Math.max(12,Math.min(96,Math.round(c/t*100))) )}});l.src=URL.createObjectURL(blob);if(l.assetId)assetStore.set(l.assetId,l.src);else{l.assetId=newId();assetStore.set(l.assetId,l.src)}l.fit='contain';l.name=(l.name||'photo').replace(/\.[^.]+$/,'')+' cutout.png';commitHistory();renderEditor();setProgress(100);$('status').textContent='Background removed. Outline is now ready.';setTimeout(()=>setProgress(0),700)}catch(e){console.error(e);$('status').textContent='Background removal could not load.';toast('Background removal unavailable');setProgress(0)}finally{$('removeBgBtn').disabled=false}}
+window.removeBackground=async()=>{const l=selected();if(!l||l.type!=='image')return;const fb=$('bgProcessFeedback'),title=$('bgpTitle'),sub=$('bgpSub'),bar=$('bgpProgress'),btn=$('removeBgBtn');let progressTimer;const show=(pct,msg,detail)=>{fb.classList.add('active');fb.classList.remove('done');title.textContent=msg;sub.textContent=detail;bar.style.width=pct+'%';setProgress(pct)};try{btn.disabled=true;btn.textContent='Removing…';show(3,'Preparing your cutout…','Keep this screen open. The first removal may take a little longer.');let n=5;progressTimer=setInterval(()=>{if(n<88){n+=n<20?3:n<55?1.2:.35;bar.style.width=Math.min(88,n)+'%';setProgress(Math.min(88,n))}},650);const srcImg=await loadImg(l.src);const max=1024,sc=Math.min(1,max/Math.max(srcImg.naturalWidth,srcImg.naturalHeight));const cc=document.createElement('canvas');cc.width=Math.max(1,Math.round(srcImg.naturalWidth*sc));cc.height=Math.max(1,Math.round(srcImg.naturalHeight*sc));cc.getContext('2d').drawImage(srcImg,0,0,cc.width,cc.height);const input=await new Promise((resolve,reject)=>cc.toBlob(b=>b?resolve(b):reject(Error('Could not prepare image')),'image/png'));show(12,'Removing the background…','Your image is being processed. You can keep waiting; it has not frozen.');const mod=await import('https://esm.sh/@imgly/background-removal@1.7.0');const fn=mod.default||mod.removeBackground;if(typeof fn!=='function')throw Error('unavailable');const blob=await fn(input,{progress:(k,c,t)=>{if(t){const pct=Math.max(12,Math.min(96,Math.round(c/t*100)));bar.style.width=pct+'%';setProgress(pct);sub.textContent='Processing image… '+pct+'%'}}});l.src=URL.createObjectURL(blob);if(l.assetId)assetStore.set(l.assetId,l.src);else{l.assetId=newId();assetStore.set(l.assetId,l.src)}l.fit='contain';l.name=(l.name||'photo').replace(/\.[^.]+$/,'')+' cutout.png';commitHistory();renderEditor();clearInterval(progressTimer);fb.classList.add('done');title.textContent='Background removed!';sub.textContent='Your cutout is ready. You can now erase any small leftovers.';bar.style.width='100%';setProgress(100);$('status').textContent='Background removed. Outline is now ready.';setTimeout(()=>{fb.classList.remove('active','done');setProgress(0)},2600)}catch(e){console.error(e);clearInterval(progressTimer);fb.classList.add('active');fb.classList.remove('done');title.textContent='Could not remove the background';sub.textContent='Check your connection and try again. Your original photo is still available.';bar.style.width='0%';$('status').textContent='Background removal could not load.';toast('Background removal unavailable');setProgress(0)}finally{clearInterval(progressTimer);btn.disabled=false;btn.textContent='Remove background'}}
 window.stickerize=async()=>{const l=selected();if(!l||l.type!=='image'){toast('Select a photo first');return}await removeBackground();const x=selected();if(x&&x.type==='image'){commitHistory();x.stickerOutline=7;x.stickerOutlineColor='#ffffff';x.stickerShadow=10;renderEditor();commitHistory();toast('Stickerized')}}
 function setProgress(n){$('progress').style.width=n+'%'}
 window.newCanvas=()=>{finishAllContinuousEdits();if(!layers.length)return;commitHistory();layers=[];selectedId=null;renderEditor();commitHistory();localStorage.removeItem('stickerStudioDraft');toast('New sticker')}
