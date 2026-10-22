@@ -464,6 +464,33 @@ header{border-color:#383838}
  .mini-action{font-size:11px!important;padding:7px 8px!important}
 }
 
+
+/* V16: keep the live canvas visible while the editing controls scroll */
+@media(max-width:799px){
+  .stage-wrap{
+    position:sticky!important;
+    top:0!important;
+    z-index:35!important;
+    margin:0 -12px!important;
+    padding:8px 12px 10px!important;
+    background:rgba(16,16,16,.97)!important;
+    border-bottom:1px solid #393939!important;
+    backdrop-filter:blur(14px)!important;
+    -webkit-backdrop-filter:blur(14px)!important;
+  }
+  .stage{width:min(56vw,230px)!important;max-width:230px!important}
+  /* Keep the canvas visible during text edits; only compact surrounding chrome. */
+  body:has(#textValue:focus) .stage-wrap,
+  body:has(.field input:focus) .stage-wrap,
+  body:has(.field textarea:focus) .stage-wrap{display:block!important}
+  body:has(#textValue:focus) .editor-head,
+  body:has(.field input:focus) .editor-head,
+  body:has(.field textarea:focus) .editor-head{display:none!important}
+}
+@media(max-width:380px){
+  .stage{width:min(52vw,205px)!important;max-width:205px!important}
+}
+
 </style>
 </head>
 <body>
