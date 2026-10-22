@@ -556,7 +556,7 @@ header{border-color:#383838}
 
 
 /* V20 manual cutout cleanup brush */
-body.erase-mode #stage .layer-media{cursor:crosshair!important;touch-action:none!important}
+body.erase-mode #stage .layer-media{cursor:crosshair!important;touch-action:none!important;pointer-events:none!important}body.erase-mode #stage .layer{touch-action:none!important;cursor:crosshair!important}body.erase-mode #stage .layer .handle,body.erase-mode #stage .layer .delete{pointer-events:none!important}
 body.erase-mode #stage .layer{cursor:crosshair!important}
 #eraseModeBtn.active{background:#ff5038!important;color:#17110f!important;border-color:#ff5038!important}
 
@@ -1111,7 +1111,7 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 })();
 </script>
 <script>
-/* Manual alpha eraser for cleaning small remnants after background removal. */
+/* Manual alpha eraser: capture gestures before layer dragging can start. */
 let eraseMode=false,eraseStroke=null;
 window.toggleEraseMode=async()=>{
  const l=selected();if(!l||l.type!=='image'){toast('Select a photo first');return}
@@ -1119,42 +1119,50 @@ window.toggleEraseMode=async()=>{
   if(!l.src)throw new Error('Missing image');
   const img=await loadImg(l.src);
   const c=document.createElement('canvas');c.width=img.naturalWidth||img.width;c.height=img.naturalHeight||img.height;
-  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  c.getContext('2d',{alpha:true}).drawImage(img,0,0,c.width,c.height);
   l.eraseCanvas=c;
   eraseMode=true;document.body.classList.add('erase-mode');
-  $('eraseModeBtn').classList.add('active');$('eraserSizeWrap').style.display='block';$('eraserHint').style.display='block';
-  $('status').textContent='Erase mode: paint over unwanted pixels on the photo.';
+  $('eraseModeBtn').classList.add('active');$('eraseModeBtn').textContent='Erasing…';$('eraserSizeWrap').style.display='block';$('eraserHint').style.display='block';
+  $('status').textContent='Erase mode on: paint directly over leftover background. The object will not move.';
  }catch(e){console.error(e);toast('Could not open cutout for editing')}
 };
 window.clearEraseMode=()=>{
  eraseMode=false;eraseStroke=null;document.body.classList.remove('erase-mode');
- $('eraseModeBtn')?.classList.remove('active');if($('eraserSizeWrap'))$('eraserSizeWrap').style.display='none';if($('eraserHint'))$('eraserHint').style.display='none';
+ $('eraseModeBtn')?.classList.remove('active');if($('eraseModeBtn'))$('eraseModeBtn').textContent='Erase leftovers';if($('eraserSizeWrap'))$('eraserSizeWrap').style.display='none';if($('eraserHint'))$('eraserHint').style.display='none';
  if($('status'))$('status').textContent='Cutout cleanup finished.';
 };
 function eraseAt(e){
  if(!eraseStroke)return;
  const r=eraseStroke.img.getBoundingClientRect(),c=eraseStroke.canvas,ctx=c.getContext('2d');
- const x=(e.clientX-r.left)/r.width*c.width,y=(e.clientY-r.top)/r.height*c.height;
+ if(!r.width||!r.height)return;
+ const x=Math.max(0,Math.min(c.width,(e.clientX-r.left)/r.width*c.width)),y=Math.max(0,Math.min(c.height,(e.clientY-r.top)/r.height*c.height));
  const radius=(+$('eraserSize').value/2)*(c.width/r.width);
  ctx.save();ctx.globalCompositeOperation='destination-out';ctx.beginPath();ctx.arc(x,y,Math.max(1,radius),0,Math.PI*2);ctx.fill();ctx.restore();
 }
 document.addEventListener('pointerdown',e=>{
- if(!eraseMode||!e.target.matches('#stage .layer-media'))return;
- const l=selected();if(!l||l.type!=='image'||!l.eraseCanvas)return;
- e.preventDefault();e.stopPropagation();commitHistory();
- eraseStroke={img:e.target,canvas:l.eraseCanvas,id:l.id};
- try{e.target.setPointerCapture(e.pointerId)}catch(_){}
+ if(!eraseMode)return;
+ const layerEl=e.target.closest?.('#stage .layer');
+ if(!layerEl)return;
+ const id=layerEl.dataset.id,l=layers.find(x=>x.id===id);
+ if(!l||l.type!=='image'||id!==selectedId||!l.eraseCanvas)return;
+ const img=layerEl.querySelector('.layer-media');if(!img)return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ commitHistory();
+ eraseStroke={img,canvas:l.eraseCanvas,id:l.id};
+ try{layerEl.setPointerCapture(e.pointerId)}catch(_){}
  eraseAt(e);
 },{capture:true});
-document.addEventListener('pointermove',e=>{if(eraseStroke){e.preventDefault();eraseAt(e)}},{capture:true});
-document.addEventListener('pointerup',e=>{
+document.addEventListener('pointermove',e=>{if(eraseStroke){e.preventDefault();e.stopPropagation();eraseAt(e)}},{capture:true});
+function finishEraseStroke(){
  if(!eraseStroke)return;
  const stroke=eraseStroke;eraseStroke=null;
  const l=layers.find(x=>x.id===stroke.id);if(!l)return;
  l.src=stroke.canvas.toDataURL('image/png');if(!l.assetId)l.assetId=newId();assetStore.set(l.assetId,l.src);
  l.name=(l.name||'photo').replace(/ cutout\.png$/,'')+' cutout.png';
  renderEditor();commitHistory();saveDraft();
-},{capture:true});
+}
+document.addEventListener('pointerup',finishEraseStroke,{capture:true});
+document.addEventListener('pointercancel',finishEraseStroke,{capture:true});
 </script>
 </body>
 </html>
