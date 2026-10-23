@@ -1825,3 +1825,53 @@ body.erase-mode #stage .layer.selected{
   body.keyboard-open #create .bottom{display:none!important}
 }
 </style>
+
+
+<style>
+/* V37: keep both the live preview and the text field usable with Android keyboard open */
+@media(max-width:799px){
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    scroll-margin-top:245px!important;
+  }
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    top:0!important;
+    padding:4px 10px 6px!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:min(34vw,148px)!important;
+    max-width:148px!important;
+    aspect-ratio:1!important;
+  }
+}
+</style>
+<script>
+/* V37: when Android opens the keyboard, bring the active text field into view below the pinned preview. */
+(function(){
+  let lastOpen=false;
+  function keepEditorVisible(){
+    const field=document.getElementById('textEntryField');
+    const input=document.getElementById('textValue');
+    if(!field||!input)return;
+    const focused=document.activeElement===input;
+    const vv=window.visualViewport;
+    const open=focused && !!vv && (vv.height < window.innerHeight*.78 || window.innerHeight-vv.height>140);
+    if(open){
+      document.body.classList.add('keyboard-open');
+      if(!lastOpen){
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+          field.scrollIntoView({behavior:'auto',block:'start'});
+        }));
+      }
+    }
+    lastOpen=open;
+  }
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',keepEditorVisible);
+    window.visualViewport.addEventListener('scroll',keepEditorVisible);
+  }
+  document.addEventListener('focusin',()=>setTimeout(keepEditorVisible,100));
+})();
+</script>
