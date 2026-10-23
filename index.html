@@ -947,6 +947,24 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
   <p class="sub">Add text, photos, or shapes. Make it yours, then export your sticker as a PNG.</p>
   <div class="actions"><button class="btn" onclick="show('create')">Start creating ↗</button></div>
 </div>
+<section class="home-quick-start" aria-labelledby="quickStartTitle">
+  <div class="home-section-heading"><div><div class="eyebrow">QUICK START</div><h2 id="quickStartTitle">What do you want to make?</h2></div></div>
+  <div class="home-action-grid">
+    <button class="home-action-card" onclick="show('create');addText('')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16M12 6v14M8 20h8"/></svg></span><strong>Text</strong><span>Add a bold message</span><i aria-hidden="true">↗</i></button>
+    <button class="home-action-card" onclick="show('create');document.getElementById('file').click()"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span><strong>Photo</strong><span>Turn a photo into a sticker</span><i aria-hidden="true">↗</i></button>
+    <button class="home-action-card" onclick="show('create');addShape('circle')"><span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="7" cy="7" r="4"/><rect x="12" y="12" width="9" height="9" rx="1"/><path d="m16 3 5 5h-5z"/></svg></span><strong>Shapes</strong><span>Add a graphic element</span><i aria-hidden="true">↗</i></button>
+  </div>
+</section>
+<section class="home-how-it-works" aria-label="How it works">
+  <div class="eyebrow">THREE SIMPLE STEPS</div>
+  <div class="home-steps">
+    <div class="home-step"><span>01</span><strong>Create</strong></div>
+    <span class="home-step-arrow" aria-hidden="true">→</span>
+    <div class="home-step"><span>02</span><strong>Customize</strong></div>
+    <span class="home-step-arrow" aria-hidden="true">→</span>
+    <div class="home-step"><span>03</span><strong>Export PNG</strong></div>
+  </div>
+</section>
 </section>
 
 <section id="create" class="view">
@@ -1886,5 +1904,77 @@ body.erase-mode #stage .layer.selected{
  .home-create-hero .sub{font-size:16px!important;max-width:32rem!important}
  .home-create-hero .actions{margin-top:22px!important}
  .home-create-hero .btn{width:100%!important}
+}
+</style>
+
+
+<style>
+/* V39: useful, action-led home below the primary CTA */
+.home-create-hero{
+  margin:clamp(20px,4vh,38px) 0 22px!important;
+  padding:clamp(24px,4vw,42px)!important;
+}
+.home-create-hero h1{font-size:clamp(40px,7vw,66px)!important;line-height:.94!important;margin:18px 0 14px!important}
+.home-create-hero .sub{font-size:clamp(15px,1.8vw,17px)!important;max-width:500px!important;line-height:1.5!important}
+.home-create-hero .actions{margin-top:20px!important}
+.home-create-hero .btn{min-height:50px!important}
+.home-quick-start{margin:24px 0 20px}
+.home-section-heading{display:flex;align-items:end;justify-content:space-between;margin:0 0 13px}
+.home-section-heading .eyebrow{margin:0 0 7px;color:#ff961a!important}
+.home-section-heading h2{margin:0;font-size:clamp(20px,3vw,26px);line-height:1.15;letter-spacing:-.035em}
+.home-action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.home-action-card{
+ position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+ min-width:0;min-height:148px;padding:18px 16px!important;text-align:left;
+ border:1px solid #4c4943!important;border-radius:17px!important;background:#30302f!important;color:#fffcf4!important;
+ transition:transform .15s ease,border-color .15s ease;
+}
+.home-action-card:active{transform:scale(.98)}
+.home-action-card:hover{border-color:#ff961a!important}
+.home-action-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:rgba(255,150,26,.12);color:#ff961a}
+.home-action-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.home-action-card strong{font-size:16px;line-height:1.1}
+.home-action-card>span:not(.home-action-icon){font-size:12px;line-height:1.35;color:#c7c2b9}
+.home-action-card i{position:absolute;right:13px;top:14px;color:#ff961a;font-size:15px;font-style:normal}
+.home-how-it-works{margin:24px 0 36px;padding:18px 0 0;border-top:1px solid #48453f}
+.home-how-it-works>.eyebrow{margin-bottom:14px;color:#aaa69f!important}
+.home-steps{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.home-step{display:flex;align-items:center;gap:9px;min-width:0}
+.home-step>span{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:#ff961a;color:#2c2c2c;font-size:10px;font-weight:900}
+.home-step strong{font-size:12px;white-space:nowrap}
+.home-step-arrow{color:#777168;font-size:17px}
+@media(max-width:799px){
+ .home-create-hero{margin:14px 0 20px!important;padding:23px 20px!important}
+ .home-create-hero h1{font-size:clamp(38px,10.5vw,54px)!important;margin:16px 0 13px!important}
+ .home-create-hero .sub{font-size:15px!important;line-height:1.45!important}
+ .home-create-hero .actions{margin-top:17px!important}
+ .home-quick-start{margin:22px 0 18px}
+ .home-section-heading h2{font-size:21px}
+ .home-action-grid{gap:8px}
+ .home-action-card{min-height:132px;padding:13px 10px!important;gap:7px;border-radius:14px!important}
+ .home-action-icon{width:34px;height:34px}
+ .home-action-card strong{font-size:14px}
+ .home-action-card>span:not(.home-action-icon){font-size:11px}
+ .home-action-card i{right:9px;top:10px}
+ .home-how-it-works{margin:20px 0 26px;padding-top:15px}
+ .home-step{gap:6px}
+ .home-step>span{width:24px;height:24px;flex-basis:24px}
+ .home-step strong{font-size:11px}
+ .home-step-arrow{font-size:13px}
+}
+@media(max-width:370px){
+ .home-action-grid{grid-template-columns:1fr}
+ .home-action-card{min-height:82px;display:grid;grid-template-columns:38px 1fr 18px;grid-template-rows:auto auto;column-gap:11px;align-items:center}
+ .home-action-icon{grid-row:1 / span 2}
+ .home-action-card strong{align-self:end}
+ .home-action-card>span:not(.home-action-icon){grid-column:2;align-self:start}
+ .home-action-card i{grid-column:3;grid-row:1 / span 2;position:static}
+ .home-steps{gap:5px}
+ .home-step{flex-direction:column;align-items:flex-start;gap:4px}
+}
+@media(min-width:800px){
+ .home-create-hero{margin-top:28px!important}
+ .home-action-card{min-height:165px;padding:22px!important}
+ .home-action-card>span:not(.home-action-icon){font-size:13px}
 }
 </style>
