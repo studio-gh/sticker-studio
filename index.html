@@ -1754,3 +1754,33 @@ body.erase-mode #stage .layer.selected{
  #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{width:38px!important;min-width:38px!important}
 }
 </style>
+
+
+<style>
+/* V35: keep hex, color swatch, and eyedropper aligned on one row */
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 42px 42px!important;
+  grid-template-rows:42px!important;
+  gap:7px!important;
+  align-items:stretch!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #colorHex{
+  grid-column:1!important;grid-row:1!important;width:100%!important;min-width:0!important;height:42px!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #color{
+  grid-column:2!important;grid-row:1!important;width:42px!important;min-width:42px!important;height:42px!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > .icon-eyedrop-btn{
+  grid-column:3!important;grid-row:1!important;width:42px!important;min-width:42px!important;height:42px!important;
+}
+@media(max-width:380px){
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+   grid-template-columns:minmax(0,1fr) 38px 38px!important;grid-template-rows:38px!important;gap:5px!important;
+ }
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #color,
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > .icon-eyedrop-btn{
+   width:38px!important;min-width:38px!important;height:38px!important;
+ }
+}
+</style>
