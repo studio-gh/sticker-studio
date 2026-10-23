@@ -1013,10 +1013,10 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 <div class="field"><label>Rotation <span id="rotationVal">0°</span></label><input id="rotation" type="range" min="-180" max="180" value="0" oninput="setProp('rotation',+this.value)"></div><div class="field"><label>Zoom <span id="zoomVal">100%</span></label><div class="zoom-controls"><button type="button" class="zoom-btn" onclick="adjustZoom(-0.1)">−</button><input id="zoom" type="range" min="25" max="300" value="100" oninput="setZoom(+this.value)"><button type="button" class="zoom-btn" onclick="adjustZoom(0.1)">+</button></div></div>
 <div class="field">
 <label>Color</label>
-<div class="custom-color">
+<div class="custom-color color-picker-row">
   <input id="colorHex" class="hex-input" type="text" value="#151515" maxlength="7" inputmode="text" spellcheck="false" aria-label="Hex color">
   <input id="color" class="native-color" type="color" value="#151515" aria-hidden="true" tabindex="-1">
-  <button class="eyedrop-btn" type="button" onclick="pickScreenColor()">Eyedropper</button>
+  <button class="eyedrop-btn icon-eyedrop-btn" type="button" onclick="pickScreenColor()" aria-label="Pick a color from the design" title="Pick a color from the design"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6 4 4M4 20l4.2-1 9.9-9.9a2.8 2.8 0 0 0-4-4l-9.9 9.9L4 20Z"/><path d="m12 8 4 4"/></svg></button>
 </div>
 </div>
 </div>
@@ -1728,3 +1728,29 @@ body.erase-mode #stage .layer.selected{
   body.keyboard-open #create .bottom{display:none!important}
 }
 /* A fresh text layer must start upright. The rotation control remains available afterward. */
+
+
+<style>
+/* V34: compact eyedropper icon beside the color swatch */
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 42px 42px!important;
+  gap:7px!important;align-items:center!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{
+  width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;
+  display:grid!important;place-items:center!important;padding:0!important;
+  border-radius:10px!important;background:#242424!important;color:#ff961a!important;
+}
+#create .icon-eyedrop-btn svg{
+  width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+#create .icon-eyedrop-btn:active{background:#ff961a!important;color:#2c2c2c!important}
+@media(max-width:380px){
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+  grid-template-columns:minmax(0,1fr) 38px 38px!important;gap:5px!important;
+ }
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{width:38px!important;min-width:38px!important}
+}
+</style>
