@@ -866,6 +866,50 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
   #create .stage-wrap{position:relative!important;top:auto!important;z-index:1!important}
 }
 
+
+/* V28 MOBILE POLISH: BRAND CONSISTENCY, DENSITY, AND PREVIEW SCALE */
+:root{--bg:#2c2c2c!important;--paper:#242424!important;--ink:#fffcf4!important;--muted:#c7c2b8!important;--line:#55524c!important;--accent:#ff9614!important;--stage:#dedbd3!important}
+html,body{background:#2c2c2c!important;color:#fffcf4!important}
+button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textarea,.field select{color:#fffcf4}
+.small-btn.dark,.btn.primary,.btn-primary,.export-btn{background:#ff9614!important;color:#2c2c2c!important;border-color:#ff9614!important}
+.small-btn.dark:disabled,.small-btn:disabled{opacity:.48}
+#status{color:#c7c2b8!important;font-size:13px!important;line-height:1.35!important;overflow-wrap:anywhere}
+.shape-grid{gap:7px!important}
+.shape-btn{min-height:88px!important;padding:9px 4px!important;gap:6px!important;background:#242424!important;border-color:#55524c!important;color:#fffcf4!important}
+.shape-btn svg{width:27px!important;height:27px!important}
+.panel-section{padding-top:13px!important;padding-bottom:13px!important}
+.panel-title{margin-bottom:9px!important}
+#selectionControls{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:12px!important}
+#selectionControls .field{min-width:0!important;margin:0!important}
+#selectionControls .field label{font-size:12px!important;letter-spacing:.07em!important}
+#selectionControls .field input[type=range]{width:100%!important;min-width:0!important}
+#selectionControls .field:has(#colorHex),#selectionControls .field:has(#eyedropper){grid-column:1/-1!important}
+#selectionControls .field:has(#eyedropper) button{width:100%!important}
+#selectionControls .status,#selectionControls .panel-title{grid-column:1/-1!important}
+#selectionControls .status{padding:10px 12px!important;margin:0!important;border-radius:12px!important;font-size:13px!important;line-height:1.4!important}
+#textControls .field,#textControls .control-row{margin-top:10px!important;margin-bottom:10px!important}
+#textControls .font-grid,#textControls .quick-styles,#textControls .effects-grid{gap:7px!important}
+#textControls button{min-height:44px!important}
+@media(max-width:799px){
+ #create .stage-wrap{padding:10px!important;margin-bottom:10px!important;border-radius:16px!important}
+ #create .stage{width:min(100%,360px)!important;max-width:360px!important;aspect-ratio:1!important}
+ #create .live-preview-label{font-size:10px!important;margin-bottom:7px!important}
+ #create .editor-head h2{font-size:clamp(25px,6.4vw,32px)!important;line-height:1.05!important}
+ #create .editor-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.2fr)!important;gap:6px!important;width:100%!important}
+ #create .editor-actions button{min-width:0!important;padding:10px 4px!important;font-size:clamp(10px,2.8vw,13px)!important;white-space:nowrap!important}
+ #create .editor-actions .small-btn.dark{font-size:clamp(9px,2.5vw,12px)!important}
+ #create .panel{padding:12px!important}
+ #create .panel-section{padding-top:11px!important;padding-bottom:11px!important}
+ #create .shape-btn{min-height:78px!important}
+ #selectionControls .status{font-size:12px!important}
+ #create .field label{font-size:12px!important}
+}
+@media(max-width:380px){
+ #create .stage{width:min(100%,320px)!important;max-width:320px!important}
+ #create .editor-actions{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ #create .editor-actions .small-btn.dark{grid-column:1/-1!important}
+}
+
 </style>
 </head>
 <body>
@@ -1302,7 +1346,7 @@ function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');set
 window.addEventListener('error',e=>{
   console.error('Sticker Studio runtime error:',e.error||e.message);
   const status=$('status');
-  if(status)status.textContent='A tool hit an error. The rest of the editor is still available.';
+  if(status)status.textContent='A feature ran into a problem. Your design is still here; try that action again.';
 });
 window.addEventListener('unhandledrejection',e=>{
   console.error('Sticker Studio async error:',e.reason);
