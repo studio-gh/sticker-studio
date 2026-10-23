@@ -941,21 +941,12 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 
 <main class="shell">
 <section id="home" class="view active">
-<div class="hero"><div class="eyebrow">DESIGN TOOLS FOR STORIES</div><h1>Make every Story<br><span class="headline-accent">stand out.</span></h1><p class="sub">Create bold Stories with photos, type and shapes.</p><div class="actions"><button class="btn" onclick="show('create')">Start creating ↗</button><button class="btn alt" onclick="show('explore')">Browse ideas</button></div><div class="hero-proof"><span>01 / PHOTO CUTOUTS</span><span>02 / BOLD TYPE</span><span>03 / SHAPES</span></div></div>
-<div class="section-head"><h3>Start with an idea</h3></div>
-<div class="value-grid">
-<button class="value-card" onclick="show('create');addText('MAKE IT MATTER')"><span class="value-number">01 / TYPE</span><strong>Make words<br>stand out.</strong><span class="value-sample sample-type">WOW!</span><span class="value-link">Create text ↗</span></button>
-<button class="value-card" onclick="show('create');addShape('circle')"><span class="value-number">02 / SHAPES</span><strong>Add graphic<br>impact.</strong><span class="value-sample sample-shapes"><i></i><b></b><em></em></span><span class="value-link">Add shapes ↗</span></button>
-<button class="value-card" onclick="show('create');document.getElementById('file').click()"><span class="value-number">03 / CUTOUTS</span><strong>Give photos<br>more impact.</strong><span class="value-sample sample-cutout">CUT<br>OUT</span><span class="value-link">Cut out a photo ↗</span></button>
+<div class="hero home-create-hero">
+  <div class="eyebrow">STICKER STUDIO</div>
+  <h1>Make your<br><span class="headline-accent">own sticker.</span></h1>
+  <p class="sub">Add text, photos, or shapes. Make it yours, then export your sticker as a PNG.</p>
+  <div class="actions"><button class="btn" onclick="show('create')">Start creating ↗</button></div>
 </div>
-<div class="section-head"><h3>Ready-to-remix ideas</h3><button class="link" onclick="show('explore')">View all ↗</button></div><div id="homeGrid" class="grid"></div>
-</section>
-
-<section id="explore" class="view">
-<div class="hero explore-hero" style="padding-bottom:18px"><div class="eyebrow">THE STICKER LIBRARY</div><h2>Find an idea.<br>Make it yours.</h2><p class="sub">Templates for launches, offers, creator updates and everyday messages. Remix any idea.</p></div>
-<label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" class="search" placeholder="Search ideas..." oninput="renderExplore()"></label><div class="explore-helper"><strong>Choose a category.</strong><span>Remix. Customize. Share.</span></div>
-<div class="chips"><button class="chip active" onclick="setCat('All',this)">All</button><button class="chip" onclick="setCat('Creatorss',this)">Creators</button><button class="chip" onclick="setCat('Sell',this)">Sell</button><button class="chip" onclick="setCat('Type',this)">Typography</button><button class="chip" onclick="setCat('Funny',this)">Funny</button><button class="chip" onclick="setCat('Shape',this)">Shapes</button></div>
-<div id="exploreGrid" class="grid"></div>
 </section>
 
 <section id="create" class="view">
@@ -1153,7 +1144,7 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 <nav class="bottom"><div class="nav-inner">
 <button class="nav-btn active" data-view="home" onclick="show('home')"><span class="nav-icon">⌂</span>Home</button>
 <button class="nav-btn" data-view="create" onclick="show('create')"><span class="nav-icon">＋</span>Create</button>
-<button class="nav-btn" data-view="explore" onclick="show('explore')"><span class="nav-icon">⌕</span>Explore</button>
+
 <button class="nav-btn" data-view="saved" onclick="show('saved')"><span class="nav-icon">♡</span>Saved</button>
 </div></nav>
 <div id="toast" class="toast"></div>
@@ -1875,3 +1866,25 @@ body.erase-mode #stage .layer.selected{
   document.addEventListener('focusin',()=>setTimeout(keepEditorVisible,100));
 })();
 </script>
+
+
+<style>
+/* V38: focused home, one clear path into creation */
+.home-create-hero{
+  min-height:0!important;
+  margin:clamp(28px,8vh,86px) 0 24px!important;
+  padding:clamp(26px,6vw,54px)!important;
+}
+.home-create-hero .eyebrow{margin-bottom:18px!important}
+.home-create-hero h1{max-width:650px!important}
+.home-create-hero .sub{max-width:440px!important;line-height:1.55!important}
+.home-create-hero .actions{display:block!important;margin-top:24px!important}
+.home-create-hero .btn{width:auto!important;min-width:190px;min-height:52px!important}
+@media(max-width:799px){
+ .home-create-hero{margin:20px 0 16px!important;padding:27px 22px!important}
+ .home-create-hero h1{font-size:clamp(42px,12vw,62px)!important}
+ .home-create-hero .sub{font-size:16px!important;max-width:32rem!important}
+ .home-create-hero .actions{margin-top:22px!important}
+ .home-create-hero .btn{width:100%!important}
+}
+</style>
