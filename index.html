@@ -833,6 +833,39 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
  .value-card strong{max-width:72%!important;font-size:22px!important}
 }
 
+
+/* V27 MOBILE EDITOR: REMOVE FLOATING PREVIEW, MATCH HOME SYSTEM */
+@media(max-width:799px){
+  #create .editor-head{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;padding:0 0 12px!important;margin:0!important}
+  #create .stage-wrap,
+  #create .stage-wrap:has(#stage){
+    position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;z-index:1!important;
+    display:block!important;order:initial!important;float:none!important;
+    margin:0 0 14px!important;padding:12px!important;
+    width:100%!important;height:auto!important;max-height:none!important;
+    overflow:visible!important;border:1px solid #56534d!important;border-radius:20px!important;
+    background:#353535!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    transform:none!important
+  }
+  #create .stage{width:100%!important;max-width:380px!important;aspect-ratio:1!important;margin:0 auto!important;border-radius:14px!important}
+  #create .workspace{display:flex!important;flex-direction:column!important;gap:12px!important}
+  #create .panel{position:relative!important;top:auto!important;max-height:none!important;overflow:visible!important}
+  #create .panel-section{scroll-margin-top:12px}
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap,
+  body:has(.field input:focus) #create .stage-wrap,
+  body:has(.field textarea:focus) #create .stage-wrap{
+    position:relative!important;top:auto!important;left:auto!important;right:auto!important;z-index:1!important;
+    margin:0 0 12px!important;padding:10px!important;display:block!important
+  }
+  #create .stage-wrap .live-preview-label{color:#fffcf4!important}
+  #create .panel-title,#create .field label,#create .status{color:#fffcf4!important}
+  #create .status{overflow-wrap:anywhere}
+}
+@media(min-width:800px){
+  #create .stage-wrap{position:relative!important;top:auto!important;z-index:1!important}
+}
+
 </style>
 </head>
 <body>
