@@ -910,6 +910,26 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
  #create .editor-actions .small-btn.dark{grid-column:1/-1!important}
 }
 
+
+/* V29: guided creation flow for first-time mobile users */
+.creation-dock{display:none}
+@media(max-width:799px){
+ .creation-dock{position:fixed;z-index:60;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:8px;background:rgba(36,36,36,.97);border:1px solid #56534d;border-radius:18px;box-shadow:0 10px 32px rgba(0,0,0,.28);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+ .creation-dock button{min-width:0;min-height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:1px solid #5a554c;border-radius:12px;background:#343434;color:#fffcf4;font-size:11px;line-height:1.1;padding:5px 3px}
+ .creation-dock button span{font-size:20px;font-weight:800;color:#ff9614}
+ .creation-dock button b{font-size:11px;font-weight:750}
+ .creation-dock button.dock-primary{background:#ff9614;border-color:#ff9614;color:#2c2c2c}
+ .creation-dock button.dock-primary span{color:#2c2c2c}
+ #create{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
+ #create .editor-head .editor-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #create .editor-head .editor-actions button{min-width:0!important;min-height:38px!important;font-size:11px!important;padding:7px 5px!important}
+ #create .editor-head .editor-actions #undoBtn,#create .editor-head .editor-actions #redoBtn{font-size:17px!important}
+ #textEntryField textarea{font-size:16px!important;min-height:68px!important}
+ #textEntryField label{color:#fffcf4!important}
+ #create .panel-section{scroll-margin-top:12px}
+ body.keyboard-open .creation-dock{display:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -939,7 +959,13 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 </section>
 
 <section id="create" class="view">
-<div class="editor-head"><h2>Make it stand out.</h2><div class="editor-actions"><button id="undoBtn" class="small-btn" onclick="undo()" disabled>↶ Undo</button><button id="redoBtn" class="small-btn" onclick="redo()" disabled>↷ Redo</button><button class="small-btn" onclick="addText()">+ Text</button><button class="small-btn" onclick="document.getElementById('file').click()">+ Photo</button><button class="small-btn dark" onclick="exportPNG()">Export PNG</button></div></div>
+<div class="editor-head"><h2>Make it stand out.</h2><div class="editor-actions"><button id="undoBtn" class="small-btn" onclick="undo()" disabled aria-label="Undo">↶</button><button id="redoBtn" class="small-btn" onclick="redo()" disabled aria-label="Redo">↷</button><button class="small-btn" onclick="addText()">+ Text</button><button class="small-btn" onclick="document.getElementById('file').click()">+ Photo</button><button class="small-btn dark" onclick="exportPNG()">Export PNG</button></div></div>
+<nav class="creation-dock" aria-label="Creation tools">
+<button onclick="startTextEditing()" class="dock-primary"><span aria-hidden="true">T</span><b>Text</b></button>
+<button onclick="document.getElementById('file').click()"><span aria-hidden="true">＋</span><b>Photo</b></button>
+<button onclick="addShape('rect')"><span aria-hidden="true">□</span><b>Shape</b></button>
+<button onclick="document.getElementById('shapeControls').scrollIntoView({behavior:'smooth',block:'start'})"><span aria-hidden="true">◉</span><b>Style</b></button>
+</nav>
 <input id="file" type="file" accept="image/*" hidden onchange="handleFile(this.files[0])">
 <div class="workspace">
 <div class="stage-wrap"><div class="live-preview-label" style="width:min(100%,380px);margin:0 auto 5px;padding:0 3px;font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--muted)">Preview</div><div id="stage" class="stage"><div id="guideV" class="guide v" style="display:none"></div><div id="guideH" class="guide h" style="display:none"></div></div></div>
@@ -1022,7 +1048,7 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 
 <div class="panel-section" id="textControls">
 <div class="panel-title">Text</div>
-<div class="field"><textarea id="textValue" rows="3" placeholder="Write something..." oninput="setText(this.value)"></textarea><div class="status" style="margin-top:6px">Press Enter to add a line break.</div></div>
+<div class="field" id="textEntryField"><label for="textValue">Your text</label><textarea id="textValue" rows="2" placeholder="Type your text here…" oninput="setText(this.value)"></textarea><div class="status" style="margin-top:6px">Your text updates on the preview as you type.</div></div>
 <div class="field"><label>Font</label><div class="fonts">
 <button class="font-btn active" style="font-family:'DM Sans'" onclick="setFont('DM Sans',this)">DM</button>
 <button class="font-btn" style="font-family:'Bebas Neue'" onclick="setFont('Bebas Neue',this)">Bebas</button>
@@ -1193,9 +1219,11 @@ function renderSaved(){$('savedGrid').innerHTML=saved.length?saved.map(card).joi
 window.setCat=(c,b)=>{cat=c;document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderExplore()}
 window.toggleSave=s=>{if(saved.some(x=>x.id===s.id))saved=saved.filter(x=>x.id!==s.id);else saved=[s,...saved];localStorage.setItem('stickerStudioSaved',JSON.stringify(saved));renderHome();renderExplore();renderSaved();toast(saved.some(x=>x.id===s.id)?'Saved':'Removed')}
 function newId(){return 'l'+Date.now()+Math.random().toString(16).slice(2)}
-function addText(text='YOUR TEXT'){commitHistory();let l={id:newId(),type:'text',text,fontFamily:'DM Sans',fontSize:54,textWidth:300,color:'#151515',opacity:1,scale:1,rotation:0,x:250,y:250,letterSpacing:0,lineHeight:1,textAlign:'center',outline:false,outlineWidth:3,outlineColor:'#ffffff',shadow:false,shadowBlur:8,shadowOffset:4,shadowColor:'#000000',curve:0,highlight:false,highlightPadding:10,highlightRadius:8,highlightColor:'#ffffff',highlightOpacity:.85,visible:true,locked:false};layers.push(l);selectedId=l.id;renderEditor();commitHistory()}
+function addText(text=''){commitHistory();let l={id:newId(),type:'text',text,fontFamily:'DM Sans',fontSize:54,textWidth:300,color:'#151515',opacity:1,scale:1,rotation:0,x:250,y:250,letterSpacing:0,lineHeight:1,textAlign:'center',outline:false,outlineWidth:3,outlineColor:'#ffffff',shadow:false,shadowBlur:8,shadowOffset:4,shadowColor:'#000000',curve:0,highlight:false,highlightPadding:10,highlightRadius:8,highlightColor:'#ffffff',highlightOpacity:.85,visible:true,locked:false};layers.push(l);selectedId=l.id;renderEditor();commitHistory();const field=$('textValue');if(field){field.value=text;field.focus({preventScroll:true});field.setSelectionRange(0,field.value.length);$('textControls').scrollIntoView({behavior:'smooth',block:'start'})}}
 function addImage(src,name='Photo',iw=1000,ih=1000){commitHistory();const max=330,ratio=Math.max(iw,ih)/max,w=Math.max(40,iw/ratio),h=Math.max(40,ih/ratio),assetId=newId();assetStore.set(assetId,src);let l={id:newId(),assetId,type:'image',src,name,opacity:1,scale:1,rotation:0,x:250,y:250,w,h,fit:'contain',cropRatio:null,cropX:50,cropY:50,stickerOutline:0,stickerOutlineColor:'#ffffff',stickerShadow:0,visible:true,locked:false};layers.push(l);selectedId=l.id;renderEditor();commitHistory()}
 window.addText=addText;
+window.startTextEditing=function(){addText('');};
+
 window.addShape=function(shape='circle'){commitHistory();const dims={circle:[150,150],square:[150,150],rounded:[190,125],triangle:[160,150],star:[155,155],speech:[190,145]};const [w,h]=dims[shape]||[150,150];const l={id:newId(),type:'shape',shape,name:shape.charAt(0).toUpperCase()+shape.slice(1),x:250,y:250,w,h,scale:1,rotation:0,opacity:1,color:'#ff4d2e',strokeColor:'#ff4d2e',strokeWidth:0,noFill:false,visible:true,locked:false};layers.push(l);selectedId=l.id;renderEditor();commitHistory();toast('Shape added')};
 function selected(){return layers.find(l=>l.id===selectedId)}
 function outlineFilter(l){if(!l.stickerOutline&&!l.stickerShadow)return 'none';const f=[];if(l.stickerOutline){const r=Math.max(1,Math.min(20,l.stickerOutline)),c=l.stickerOutlineColor||'#fff';for(let i=0;i<8;i++){const a=Math.PI*2*i/8;f.push(`drop-shadow(${Math.cos(a)*r}px ${Math.sin(a)*r}px 0 ${c})`)}}if(l.stickerShadow)f.push(`drop-shadow(${l.stickerShadow/2}px ${l.stickerShadow/2}px ${l.stickerShadow}px rgba(0,0,0,.35))`);return f.join(' ')}
