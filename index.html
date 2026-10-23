@@ -1057,21 +1057,28 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 <button class="font-btn" style="font-family:'Playfair Display'" onclick="setFont('Playfair Display',this)">Serif</button>
 <button class="font-btn" style="font-family:'Permanent Marker'" onclick="setFont('Permanent Marker',this)">Marker</button>
 </div></div>
-<div class="field"><label>Size <span id="fontSizeVal">54</span></label><input id="fontSize" type="range" min="12" max="140" value="54" oninput="setProp('fontSize',+this.value)"></div>
-<div class="field"><label>Text box width <span id="textWidthVal">300</span></label><input id="textWidth" type="range" min="80" max="480" value="300" oninput="setTextBoxWidth(+this.value)"><div class="status" style="margin-top:6px">Drag the side handles to change line wrapping.</div></div>
-<div class="field"><label>Alignment</label><div class="tool-grid align-grid"><button class="tool align-btn" data-align="left" onclick="setTextAlign('left')">Left</button><button class="tool align-btn" data-align="center" onclick="setTextAlign('center')">Center</button><button class="tool align-btn" data-align="right" onclick="setTextAlign('right')">Right</button></div></div>
+<div class="text-sizing-row">
+  <div class="field"><label><span>Size</span><span id="fontSizeVal">54</span></label><input id="fontSize" type="range" min="12" max="140" value="54" oninput="setProp('fontSize',+this.value)"></div>
+  <div class="field"><label><span>Text width</span><span id="textWidthVal">300</span></label><input id="textWidth" type="range" min="80" max="480" value="300" oninput="setTextBoxWidth(+this.value)"></div>
+</div>
+<div class="status text-width-hint">Adjust size and width to control how your text wraps.</div>
+<div class="field"><label>Alignment</label><div class="tool-grid align-grid icon-align-grid">
+<button class="tool align-btn" data-align="left" aria-label="Align left" title="Align left" onclick="setTextAlign('left')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M4 9h10M4 13h16M4 17h10M4 21h16" /></svg></button>
+<button class="tool align-btn" data-align="center" aria-label="Align center" title="Align center" onclick="setTextAlign('center')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M7 9h10M4 13h16M7 17h10M4 21h16" /></svg></button>
+<button class="tool align-btn" data-align="right" aria-label="Align right" title="Align right" onclick="setTextAlign('right')"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16M10 9h10M4 13h16M10 17h10M4 21h16" /></svg></button>
+</div></div>
 </div>
 
 
 <div class="panel-section" id="presetControls" style="display:none">
-<div class="panel-title">Quick styles</div>
-<div class="preset-grid">
-<button class="preset" onclick="applyTextPreset('meme')">Meme</button>
-<button class="preset" onclick="applyTextPreset('editorial')">Editorial</button>
-<button class="preset" onclick="applyTextPreset('impact')">Impact</button>
-<button class="preset" onclick="applyTextPreset('bubble')">Bubble</button>
-<button class="preset" onclick="applyTextPreset('marker')">Marker</button>
-<button class="preset" onclick="applyTextPreset('clean')">Clean</button>
+<div class="panel-title">Text looks</div>
+<div class="visual-preset-grid">
+<button class="visual-preset preset-meme" aria-label="Meme style" title="Meme style" onclick="applyTextPreset('meme')"><span class="preset-art">WOW!</span><span class="preset-caption">Meme</span></button>
+<button class="visual-preset preset-editorial" aria-label="Editorial style" title="Editorial style" onclick="applyTextPreset('editorial')"><span class="preset-art">Story</span><span class="preset-caption">Editorial</span></button>
+<button class="visual-preset preset-impact" aria-label="Impact style" title="Impact style" onclick="applyTextPreset('impact')"><span class="preset-art">BAM!</span><span class="preset-caption">Impact</span></button>
+<button class="visual-preset preset-bubble" aria-label="Bubble style" title="Bubble style" onclick="applyTextPreset('bubble')"><span class="preset-art">Hey!</span><span class="preset-caption">Bubble</span></button>
+<button class="visual-preset preset-marker" aria-label="Marker style" title="Marker style" onclick="applyTextPreset('marker')"><span class="preset-art">Note</span><span class="preset-caption">Marker</span></button>
+<button class="visual-preset preset-clean" aria-label="Clean style" title="Clean style" onclick="applyTextPreset('clean')"><span class="preset-art">hello</span><span class="preset-caption">Clean</span></button>
 </div></div>
 
 <div class="panel-section" id="textEffectsControls" style="display:none">
@@ -1602,5 +1609,46 @@ body.erase-mode #stage{
 }
 body.erase-mode #stage .layer.selected{
   outline:2px dashed #ff961a!important;
+}
+</style>
+
+
+<style>
+/* V31: compact typography controls and visual-first presets */
+#textControls .text-sizing-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:16px!important;
+  align-items:start!important;
+}
+#textControls .text-sizing-row .field{min-width:0!important;margin:0!important}
+#textControls .text-sizing-row .field label{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
+#textControls .text-sizing-row input[type=range]{width:100%;min-width:0}
+#textControls .text-width-hint{font-size:11px!important;padding:0!important;background:transparent!important}
+#textControls .icon-align-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+#textControls .icon-align-grid .align-btn{height:48px;min-height:48px!important;display:grid;place-items:center;padding:8px!important}
+#textControls .icon-align-grid svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#textControls .icon-align-grid .align-btn.on{background:#ff961a!important;border-color:#ff961a!important;color:#2c2c2c!important}
+#presetControls .visual-preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#presetControls .visual-preset{
+  min-width:0;min-height:82px;padding:8px 5px 7px!important;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  border:1px solid #55524c;border-radius:12px;background:#242424;color:#fffcf4;
+}
+#presetControls .preset-art{display:flex;align-items:center;justify-content:center;width:100%;min-height:37px;font-size:20px;line-height:1;letter-spacing:-.04em}
+#presetControls .preset-caption{font-size:10px;font-weight:800;line-height:1.1}
+#presetControls .preset-meme .preset-art{font-family:'Archivo Black',sans-serif;color:#fff;text-shadow:1px 2px 0 #ff961a,-1px -1px 0 #171717}
+#presetControls .preset-editorial .preset-art{font-family:'Playfair Display',serif;font-style:italic}
+#presetControls .preset-impact .preset-art{font-family:'Bebas Neue',sans-serif;font-size:27px;color:#ff961a;letter-spacing:.04em}
+#presetControls .preset-bubble .preset-art{font-family:'DM Sans',sans-serif;font-weight:900;border:2px solid currentColor;border-radius:14px;padding:7px 2px;max-width:74px}
+#presetControls .preset-marker .preset-art{font-family:'Permanent Marker',cursive;transform:rotate(-5deg)}
+#presetControls .preset-clean .preset-art{font-family:'DM Sans',sans-serif;font-weight:500;letter-spacing:0}
+#presetControls .visual-preset:active{transform:scale(.97)}
+@media(max-width:420px){
+ #textControls .text-sizing-row{gap:12px!important}
+ #textControls .text-sizing-row .field label{font-size:10px!important;letter-spacing:.02em!important}
+ #presetControls .visual-preset-grid{gap:6px}
+ #presetControls .visual-preset{min-height:76px}
+ #presetControls .preset-art{font-size:18px}
 }
 </style>
