@@ -2134,3 +2134,89 @@ body.erase-mode #stage .layer.selected{
   if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if(document.activeElement&&document.activeElement.id==='textValue')setTimeout(revealTextField,80)});
 })();
 </script>
+
+
+<style>
+/* V43: live preview stays visible while editing text or its formatting controls on mobile. */
+@media(max-width:799px){
+  #create .workspace{display:block!important;overflow:visible!important}
+  #create .stage-wrap{
+    position:sticky!important;
+    top:0!important;
+    z-index:80!important;
+    display:block!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    margin:0 0 10px!important;
+    padding:7px 10px 9px!important;
+    background:rgba(25,25,25,.98)!important;
+    border:1px solid #454545!important;
+    border-radius:0 0 16px 16px!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.24)!important;
+  }
+  #create .stage-wrap .live-preview-label{
+    display:block!important;
+    margin:0 auto 5px!important;
+    font-size:10px!important;
+    line-height:12px!important;
+    text-align:center!important;
+  }
+  #create .stage{
+    width:min(43vw,168px)!important;
+    max-width:168px!important;
+    aspect-ratio:1!important;
+    margin:0 auto!important;
+  }
+  #create .panel{overflow:visible!important;min-width:0!important}
+  #create #textControls{scroll-margin-top:190px!important}
+  #create #textEntryField{scroll-margin-top:190px!important}
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    position:fixed!important;
+    top:0!important;left:0!important;right:0!important;
+    width:100%!important;height:146px!important;max-height:146px!important;
+    margin:0!important;padding:4px 8px 6px!important;
+    border-radius:0!important;
+    z-index:1000!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    background:#242424!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:104px!important;height:104px!important;max-width:104px!important;
+    aspect-ratio:1!important;flex:0 0 104px!important;
+  }
+  body.keyboard-open #create #textControls,
+  body:has(#textValue:focus) #create #textControls{
+    margin-top:154px!important;scroll-margin-top:154px!important;
+  }
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    display:block!important;visibility:visible!important;opacity:1!important;
+  }
+}
+</style>
+<script>
+/* V43: preserve a visible preview when navigating text formatting options. */
+(function(){
+  const input=document.getElementById('textValue');
+  if(!input)return;
+  function keepPreviewAndField(){
+    if(document.activeElement!==input)return;
+    document.body.classList.add('keyboard-open');
+    const field=document.getElementById('textEntryField');
+    if(field){
+      requestAnimationFrame(()=>{
+        const r=field.getBoundingClientRect();
+        if(r.top<154 || r.top>window.innerHeight-150){
+          window.scrollBy({top:r.top-154,behavior:'auto'});
+        }
+      });
+    }
+  }
+  input.addEventListener('focus',()=>setTimeout(keepPreviewAndField,180));
+  if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{
+    if(document.activeElement===input)setTimeout(keepPreviewAndField,80);
+  });
+})();
+</script>
