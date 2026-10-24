@@ -2220,3 +2220,35 @@ body.erase-mode #stage .layer.selected{
   });
 })();
 </script>
+
+
+<style>
+/* V44: enlarge the live preview while the Android keyboard is open, with viewport-aware sizing. */
+@media(max-width:799px){
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    height:clamp(210px,34svh,270px)!important;
+    min-height:clamp(210px,34svh,270px)!important;
+    max-height:clamp(210px,34svh,270px)!important;
+    padding:6px 8px 8px!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:min(58vw,230px,calc(34svh - 32px))!important;
+    height:min(58vw,230px,calc(34svh - 32px))!important;
+    max-width:none!important;
+    max-height:none!important;
+    flex:0 0 auto!important;
+    aspect-ratio:1!important;
+  }
+  body.keyboard-open #create #textControls,
+  body:has(#textValue:focus) #create #textControls{
+    margin-top:clamp(218px,35svh,278px)!important;
+    scroll-margin-top:clamp(218px,35svh,278px)!important;
+  }
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    scroll-margin-top:clamp(218px,35svh,278px)!important;
+  }
+}
+</style>
