@@ -2644,3 +2644,55 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 <style id="curved-export-guard-v51">
 /* Keep exported curved text centered and avoid glyph collisions from equal-width character spacing. */
 </style>
+
+
+<style id="remove-all-dark-ui-v53">
+/* V53: hard override the remaining legacy dark blocks, while leaving artwork/export colors intact. */
+:root{color-scheme:light!important;--bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;--muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;--stage:#f1efea!important}
+#create .status,#create #status,#create .selection-hint,#create #selectionHint{
+ background:#f5f3ee!important;color:#77756f!important;border:1px solid #e9e6df!important;
+}
+#create #selectionControls,#create .selection-controls,#create .layer-controls{
+ background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create .text-look,#create .text-look-card,#create .look-card,#create .preset-card,
+#create #presetControls .preset,#create #presetControls .visual-preset-grid .preset,
+#create #presetControls .preset-art{
+ background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create #presetControls .preset-art{
+ color:#555650!important;text-shadow:none!important;border:0!important;
+}
+#create #presetControls .preset-meme .preset-art,
+#create #presetControls .preset-impact .preset-art{color:#ad8072!important;text-shadow:none!important}
+#create #presetControls .preset-editorial .preset-art{color:#555650!important}
+#create #presetControls .preset-bubble .preset-art{background:transparent!important;color:#555650!important}
+#create #presetControls .preset-marker .preset-art{color:#ad8072!important}
+#create .panel .small-btn.dark,#create .panel button.dark,
+#create .panel .layer-action,#create .panel .layer-actions button,
+#create #colorEditBtn,#create .icon-eyedrop-btn{
+ background:#f5f3ee!important;color:#77756f!important;border:1px solid #e9e6df!important;box-shadow:none!important;
+}
+#create .icon-eyedrop-btn svg{stroke:#ad8072!important}
+#create .align-btn,#create .icon-align-grid .align-btn{
+ background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create .align-btn.on,#create .icon-align-grid .align-btn.on{
+ background:#eeeae5!important;color:#555650!important;border-color:#d9d2c9!important;
+}
+#create #textEntryField,#create #textEntryField .field,
+#create #textEntryField .text-entry-card,#create #textEntryField .text-input-wrap{
+ background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create #textEntryField textarea,#create #textValue{
+ background:#fffefa!important;color:#41413d!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create #textEntryField textarea::placeholder,#create #textValue::placeholder{color:#a09d95!important}
+#create .tool:disabled,#create .small-btn:disabled,#create .preset:disabled,
+#create .font-btn:disabled{background:#f5f3ee!important;color:#a09d95!important;border-color:#e9e6df!important}
+#create .creation-dock button.active,#create .creation-dock button[aria-pressed=true]{
+ background:#eeeae5!important;color:#555650!important;border-color:#d9d2c9!important;
+}
+#home .home-action-card,#home .home-action-card:hover{background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important}
+#home .home-action-icon{background:#eeeae5!important;color:#ad8072!important}
+</style>
