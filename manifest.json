@@ -1,9 +1,9 @@
 {
-  "name": "Sticker Studio",
-  "short_name": "Sticker Studio",
+  "name": "Story Studio",
+  "short_name": "Story Studio",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f4f1eb",
   "theme_color": "#f4f1eb",
-  "description": "Create, discover and remix stickers."
+  "description": "Create expressive, original Stories. Create your Story. Your way."
 }
