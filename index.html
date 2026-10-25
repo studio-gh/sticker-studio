@@ -1685,6 +1685,69 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 }
 </style>
 
+
+<style id="soft-neutral-no-yellow-v52">
+:root{
+ color-scheme:light!important;
+ --bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;
+ --muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;
+ --accent-hover:#956c60!important;--stage:#f1efea!important;
+}
+/* Warm neutral surfaces; no yellow/orange interface chrome. */
+html,body,.app,main,.shell{background:#f7f6f2!important;color:#41413d!important}
+button,.btn,.small-btn,.tool,.preset,.font-btn,.shape-btn,.layer-row,.chip,
+input,textarea,select,.field input,.field textarea,.field select{
+ box-shadow:none!important;
+}
+header.shell,.bottom,#create .editor-head,#create .creation-dock{
+ background:rgba(255,254,250,.97)!important;border-color:#e9e6df!important;
+ box-shadow:0 1px 8px rgba(65,65,61,.035)!important;
+}
+#create .stage-wrap{
+ background:#f1efea!important;border:1px solid #e9e6df!important;
+ box-shadow:none!important;
+}
+#create .panel,#create .tool,#create .small-btn,#create .preset,
+#create .font-btn,#create .shape-btn,#create .layer-row,
+#create .field input,#create .field textarea,#create .field select,
+#create #textEntryField,#create #textValue,#create .hex-input,
+#create .zoom-btn,#create .creation-dock button,
+#create .shape-menu-trigger,#create #shapeOptionsMenu{
+ background:#fffefa!important;color:#555650!important;
+ border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create .panel-title,#create .field label,#create .status,#create #status,
+#create .live-preview-label{color:#85837d!important}
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,
+#create .chip.active,#create .font-btn.active,#create .align-btn.on,
+#create .creation-dock button.active{
+ background:#eeeae5!important;color:#555650!important;
+ border-color:#ddd7cf!important;box-shadow:none!important;
+}
+/* Replace orange/yellow accents and slider thumbs with muted clay. */
+button, .btn, .small-btn, .tool, .preset, .font-btn, .shape-btn,
+a,.tab.active,.nav-item.active{--accent:#ad8072!important}
+input[type=range],#create input[type=range]{accent-color:#ad8072!important}
+#create input[type=range]::-webkit-slider-thumb{background:#ad8072!important}
+#create input[type=range]::-moz-range-thumb{background:#ad8072!important}
+#create .creation-dock button span,#create .creation-dock button.dock-primary span,
+#create .shape-menu-trigger .icon{color:#ad8072!important}
+:focus-visible{outline-color:#c9b2a7!important}
+/* Remove charcoal filled cards from text looks and quick actions. */
+#create .text-look,#create .text-look-card,#create .look-card,
+#create .preset-card,#create .quick-tool-card{
+ background:#f5f3ee!important;color:#555650!important;
+ border:1px solid #e9e6df!important;box-shadow:none!important;
+}
+#create .text-look *,#create .text-look-card *,#create .look-card *,
+#create .preset-card *,#create .quick-tool-card *{text-shadow:none!important}
+.home-action-card{background:#f0eee8!important;color:#555650!important;border-color:#e6e2d9!important}
+.home-create-hero{background:#fffefa!important;border-color:#e9e6df!important;box-shadow:none!important}
+@media(prefers-color-scheme:dark){
+ html,body,.app{color-scheme:light!important;background:#f7f6f2!important;color:#41413d!important}
+}
+</style>
+
 </body>
 </html>
 
