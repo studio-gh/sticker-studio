@@ -2696,3 +2696,108 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 #home .home-action-card,#home .home-action-card:hover{background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important}
 #home .home-action-icon{background:#eeeae5!important;color:#ad8072!important}
 </style>
+
+
+<style id="artcraft-premium-editor-pass-v54">
+/* ArtCraft / FigCraft design pass: coherent light surfaces, hierarchy, no duplicated heavy containers. */
+:root{
+ color-scheme:light!important;
+ --bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;
+ --muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;
+ --stage:#f1efea!important;
+}
+#create{background:#f7f6f2!important;color:#41413d!important}
+#create .panel{
+ background:#fffefa!important;border:1px solid #e9e6df!important;
+ border-radius:18px!important;box-shadow:none!important;
+}
+#create .panel-section{
+ background:transparent!important;border-color:#e9e6df!important;
+ box-shadow:none!important;
+}
+#create .panel-title{color:#77766f!important;font-size:11px!important;letter-spacing:.13em!important;font-weight:600!important}
+#create .field label{color:#77766f!important;font-weight:500!important}
+#create .status,#create #status,#create #selectionControls{
+ background:#f5f3ee!important;color:#77766f!important;
+ border:1px solid #e9e6df!important;border-radius:10px!important;
+ box-shadow:none!important;padding:9px 12px!important;
+}
+#create #textControls{background:transparent!important;border:0!important;box-shadow:none!important}
+#create #textEntryField{
+ display:block!important;background:transparent!important;color:#555650!important;
+ border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important;
+}
+#create #textEntryField>label{
+ display:flex!important;justify-content:space-between!important;align-items:center!important;
+ color:#77766f!important;background:transparent!important;padding:0!important;margin:0 0 8px!important;
+}
+#create #textEntryField textarea,#create textarea#textValue{
+ display:block!important;width:100%!important;box-sizing:border-box!important;
+ min-height:84px!important;padding:13px 14px!important;
+ background:#fffefa!important;color:#41413d!important;
+ border:1px solid #ded9d0!important;border-radius:12px!important;
+ outline:0!important;box-shadow:none!important;
+}
+#create #textEntryField textarea:focus,#create textarea#textValue:focus{
+ border-color:#c6a99d!important;outline:2px solid rgba(173,128,114,.12)!important;
+}
+#create #textEntryField textarea::placeholder{color:#a09d95!important}
+#create #textEntryField .status{
+ background:transparent!important;border:0!important;border-radius:0!important;
+ padding:7px 0 0!important;color:#85837d!important;font-size:12px!important;
+}
+#create .fonts{gap:7px!important}
+#create .font-btn{
+ min-height:43px!important;background:#fffefa!important;color:#555650!important;
+ border:1px solid #e9e6df!important;border-radius:11px!important;
+ box-shadow:none!important;font-weight:500!important;
+}
+#create .font-btn.active{
+ background:#eeeae5!important;color:#41413d!important;border-color:#dcd5cc!important;
+}
+#create .visual-preset-grid{gap:8px!important}
+#create .visual-preset,#create #presetControls .visual-preset{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ flex-direction:column!important;gap:10px!important;min-height:94px!important;
+ padding:12px 8px!important;background:#f5f3ee!important;color:#555650!important;
+ border:1px solid #e9e6df!important;border-radius:13px!important;
+ box-shadow:none!important;overflow:hidden!important;
+}
+#create .visual-preset .preset-art,#create #presetControls .preset-art{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:36px!important;background:transparent!important;color:#555650!important;
+ border:0!important;box-shadow:none!important;text-shadow:none!important;
+}
+#create .visual-preset.preset-meme .preset-art,
+#create .visual-preset.preset-impact .preset-art,
+#create .visual-preset.preset-marker .preset-art{color:#ad8072!important;text-shadow:none!important}
+#create .visual-preset.preset-editorial .preset-art{color:#555650!important}
+#create .visual-preset .preset-caption{color:#77766f!important;font-size:11px!important;font-weight:500!important}
+#create .tool,#create .small-btn,#create .preset,#create .shape-btn,
+#create .layer-row,#create .field input,#create .field select,
+#create .hex-input,#create .zoom-btn,#create .align-btn,
+#create .icon-eyedrop-btn,#create .eyedrop-btn{
+ background:#fffefa!important;color:#555650!important;
+ border:1px solid #e9e6df!important;border-radius:11px!important;
+ box-shadow:none!important;
+}
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,
+#create .align-btn.on,#create .chip.active{
+ background:#eeeae5!important;color:#555650!important;
+ border-color:#dcd5cc!important;
+}
+#create #colorHex,#create .hex-input{background:#fffefa!important;color:#41413d!important}
+#create .icon-eyedrop-btn{background:#f5f3ee!important;color:#ad8072!important}
+#create input[type=range]{accent-color:#ad8072!important}
+#create input[type=range]::-webkit-slider-thumb{background:#ad8072!important}
+#create input[type=range]::-moz-range-thumb{background:#ad8072!important}
+#create .stage-wrap{background:#f1efea!important;border:1px solid #e9e6df!important;box-shadow:none!important}
+#create .creation-dock{background:rgba(255,254,250,.97)!important;border:1px solid #e9e6df!important;box-shadow:0 2px 12px rgba(65,65,61,.05)!important}
+#create .creation-dock button{background:#f7f6f2!important;color:#555650!important;border-color:#e9e6df!important}
+#create .creation-dock button.active{background:#eeeae5!important}
+@media(max-width:799px){
+ #create .panel{padding:16px!important}
+ #create #textEntryField textarea{min-height:76px!important}
+ #create .visual-preset,#create #presetControls .visual-preset{min-height:82px!important;padding:9px 6px!important}
+}
+</style>
