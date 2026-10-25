@@ -11,7 +11,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700;900&family=Archivo+Black&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Archivo+Black&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@400;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f4f1eb;--paper:#fffdf9;--ink:#151515;--muted:#77736d;--line:#d8d3ca;--accent:#ff961a;--stage:#e9e6df}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif}button,input,select{font:inherit}button{cursor:pointer}
@@ -931,6 +931,89 @@ button,.panel,.panel-section,.stage-wrap,.editor-head,.field input,.field textar
 }
 
 </style>
+
+<style id="editorial-design-system">
+/* V45: Story Studio editorial design system. Visual layer only; editor behavior is unchanged. */
+:root{
+  --bg:#f4f0e8;
+  --paper:#fffdf8;
+  --ink:#292b25;
+  --muted:#77776d;
+  --line:#ded9ce;
+  --accent:#bd654b;
+  --stage:#e8e4da;
+  --radius-card:18px;
+  color-scheme:light;
+}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:"DM Sans",system-ui,sans-serif;font-weight:400;letter-spacing:0}
+.logo{font-family:"DM Sans",system-ui,sans-serif;font-weight:700;letter-spacing:-.045em;color:var(--ink)}
+.logo i{color:var(--accent)}
+h1,h2,.hero h1,.home-create-hero h1,.section-head h3,.home-section-heading h2{
+  font-family:"Instrument Serif","Playfair Display",Georgia,serif;
+  font-weight:400;
+  letter-spacing:-.035em;
+}
+h1{line-height:.94}
+h2{line-height:1}
+.hero h1,.home-create-hero h1{letter-spacing:-.045em}
+.eyebrow,.panel-title,.field label{
+  font-weight:600;
+  letter-spacing:.12em;
+}
+.sub{font-weight:400;color:#686a61;line-height:1.65}
+.btn,.link,.small-btn,.tool,.preset,.font-btn,.shape-btn,.remix-btn,.mini-action,.nav-btn,.layer-name,.layer-order .mini{
+  font-weight:500;
+}
+.btn{background:var(--ink);border-color:var(--ink);color:#fffdf8;border-radius:999px}
+.btn.alt{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:hover,.small-btn.dark:hover,.tool.primary:hover{filter:brightness(1.06)}
+.btn:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px;
+}
+.card,.stage-wrap,.panel{border-color:var(--line)}
+.card{border-radius:18px}
+.stage-wrap{background:#eeebe3}
+.panel{background:var(--paper)}
+.panel-title{color:#747469}
+.tool.primary,.tool.on,.chip.active,.font-btn.active{
+  background:var(--ink);border-color:var(--ink);color:#fffdf8;
+}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.layer-row,.search,.field input[type=text],.field textarea,.field select,.hex-input,.native-color,.eyedrop-btn,.zoom-btn{
+  border-color:var(--line);
+}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.layer-row,.search,.field input[type=text],.field textarea,.field select,.hex-input,.native-color,.eyedrop-btn,.zoom-btn{
+  border-radius:11px;
+}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.layer-row{background:var(--paper)}
+.tool.primary,.small-btn.dark{background:var(--ink);border-color:var(--ink);color:#fffdf8}
+.field label{font-size:11px;color:#62645b}
+.field input[type=text],.field textarea,.field select,.hex-input{font-weight:400;color:var(--ink)}
+.layer-row.active{border-color:var(--accent)}
+.layer.selected{outline-color:var(--accent)}
+.resize-handle{background:var(--ink)}
+.rotate-handle,.layer .delete{background:var(--accent)}
+.progress i{background:var(--accent)}
+.bottom{background:rgba(244,240,232,.94);border-color:var(--line)}
+.nav-btn{font-weight:500}
+.nav-btn.active{color:var(--accent)}
+.toast{background:var(--ink);font-weight:500}
+.home-action-card{background:#30342e!important;border-color:#44493f!important}
+.home-action-card:hover{border-color:var(--accent)!important}
+.home-action-icon,.home-action-card i{color:#d58a70}
+.home-action-icon{background:rgba(189,101,75,.14)}
+.home-step>span{background:var(--accent);color:#fffaf3}
+.home-section-heading .eyebrow{color:var(--accent)!important}
+@media(max-width:799px){
+  .home-create-hero{background:var(--paper)!important;border-color:var(--line)!important}
+  .editor-head{background:rgba(244,240,232,.96)}
+  .stage-wrap{background:rgba(244,240,232,.97)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
