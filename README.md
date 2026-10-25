@@ -1,14 +1,16 @@
-# Sticker Studio V11.1 — Compact Preview
+# Story Studio
 
-This is a focused UI adjustment to V11. The preview canvas is reduced by 35% from its previous maximum size to give the editing controls more room on screen.
+**Create your Story. Your way.**
 
-- Mobile: preview canvas max width 234px (65% of the previous 360px maximum).
-- Desktop: preview canvas max width 403px (65% of the previous 620px maximum).
-- Canvas coordinate system and layer geometry are unchanged; object positions and scales continue to be calculated relative to the responsive canvas.
+Story Studio is a mobile-first visual editor for creating expressive Story graphics with typography, photo cutouts, shapes, layers and effects. Export transparent PNGs and add your designs to Stories and posts.
 
-Deploy by replacing the existing GitHub Pages files with the contents of this ZIP.
+## Product principles
 
+- Lead with the outcome: distinctive Stories, not sticker-making.
+- Keep creation approachable for frequent posters and content creators.
+- Preserve the fast, touch-friendly editor and its existing capabilities.
+- Support English and Brazilian Portuguese through the in-app language toggle.
 
-## Product redesign
+## Development notes
 
-The `redesign/stand-out-stories` branch begins a mobile-first redesign around the product promise **Make your Stories stand out.** See [`PRODUCT-REDESIGN.md`](PRODUCT-REDESIGN.md) for positioning, interaction principles, design tokens, screen structure and release quality gates. The `main` branch remains unchanged while this direction is reviewed.
+The current app is a single-page experience in `index.html`, with the web app manifest and SVG app icons at the repository root. Avoid broad CSS cleanup without checking mobile preview, text editing with the Android keyboard, and PNG export.
