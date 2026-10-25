@@ -1055,7 +1055,7 @@ h2{line-height:1}
 <nav class="creation-dock" aria-label="Creation tools">
 <button onclick="startTextEditing()" class="dock-primary"><span aria-hidden="true">T</span><b>Text</b></button>
 <button onclick="document.getElementById('file').click()"><span aria-hidden="true">＋</span><b>Photo</b></button>
-<button onclick="addShape('square')"><span aria-hidden="true">□</span><b>Shape</b></button>
+<button id="addShapeMenuToggle" onclick="toggleShapeMenu()"><span aria-hidden="true">＋</span><b>Add shape</b></button>
 <button onclick="document.getElementById('shapeControls').scrollIntoView({behavior:'smooth',block:'start'})"><span aria-hidden="true">◉</span><b>Style</b></button>
 </nav>
 <input id="file" type="file" accept="image/*" hidden onchange="handleFile(this.files[0])">
@@ -1076,17 +1076,17 @@ h2{line-height:1}
 <button class="tool" onclick="copyPNG()">Copy graphic</button>
 <button class="tool" onclick="sharePNG()">Share</button>
 </div>
-<div class="panel-title" style="margin-top:18px">Add shape</div>
-<div class="shape-grid">
-<button class="shape-btn" onclick="addShape('circle')"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="#ff961a"/></svg>Circle</button>
-<button class="shape-btn" onclick="addShape('square')"><svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" rx="2" fill="#151515"/></svg>Square</button>
-<button class="shape-btn" onclick="addShape('rectangle')"><svg viewBox="0 0 40 40"><rect x="2" y="10" width="36" height="20" rx="1" fill="#ff961a"/></svg>Rectangle</button>
-<button class="shape-btn" onclick="addShape('blob')"><svg viewBox="0 0 40 40"><path d="M7 11C11 3 18 8 22 6S33 8 34 16 30 23 32 29 21 36 15 32 5 30 7 23 2 17 7 11Z" fill="#ff961a"/></svg>Blob</button>
-<button class="shape-btn" onclick="addShape('rounded')"><svg viewBox="0 0 40 40"><rect x="4" y="8" width="32" height="24" rx="8" fill="#ff961a"/></svg>Rounded</button>
-<button class="shape-btn" onclick="addShape('triangle')"><svg viewBox="0 0 40 40"><path d="M20 4 L37 35 H3 Z" fill="#151515"/></svg>Triangle</button>
-<button class="shape-btn" onclick="addShape('star')"><svg viewBox="0 0 40 40"><path d="M20 2 L25 14 L38 15 L28 24 L31 37 L20 30 L9 37 L12 24 L2 15 L15 14 Z" fill="#ff961a"/></svg>Star</button>
-<button class="shape-btn" onclick="addShape('speech')"><svg viewBox="0 0 40 40"><path d="M5 5 H35 V28 H20 L10 36 V28 H5 Z" fill="#151515"/></svg>Bubble</button>
-</div>
+<div class="shape-menu-wrap"><button id="shapeMenuToggle" class="tool shape-menu-trigger" type="button" onclick="toggleShapeMenu()" aria-expanded="false">＋ Add shape</button>
+<div class="shape-grid" id="shapeOptionsMenu" hidden>
+<button class="shape-btn" onclick="addShape('circle');closeShapeMenu()"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="15" fill="#ff961a"/></svg>Circle</button>
+<button class="shape-btn" onclick="addShape('square');closeShapeMenu()"><svg viewBox="0 0 40 40"><rect x="5" y="5" width="30" height="30" rx="2" fill="#151515"/></svg>Square</button>
+<button class="shape-btn" onclick="addShape('rectangle');closeShapeMenu()"><svg viewBox="0 0 40 40"><rect x="2" y="10" width="36" height="20" rx="1" fill="#ff961a"/></svg>Rectangle</button>
+<button class="shape-btn" onclick="addShape('blob');closeShapeMenu()"><svg viewBox="0 0 40 40"><path d="M7 11C11 3 18 8 22 6S33 8 34 16 30 23 32 29 21 36 15 32 5 30 7 23 2 17 7 11Z" fill="#ff961a"/></svg>Blob</button>
+<button class="shape-btn" onclick="addShape('rounded');closeShapeMenu()"><svg viewBox="0 0 40 40"><rect x="4" y="8" width="32" height="24" rx="8" fill="#ff961a"/></svg>Rounded</button>
+<button class="shape-btn" onclick="addShape('triangle');closeShapeMenu()"><svg viewBox="0 0 40 40"><path d="M20 4 L37 35 H3 Z" fill="#151515"/></svg>Triangle</button>
+<button class="shape-btn" onclick="addShape('star');closeShapeMenu()"><svg viewBox="0 0 40 40"><path d="M20 2 L25 14 L38 15 L28 24 L31 37 L20 30 L9 37 L12 24 L2 15 L15 14 Z" fill="#ff961a"/></svg>Star</button>
+<button class="shape-btn" onclick="addShape('speech');closeShapeMenu()"><svg viewBox="0 0 40 40"><path d="M5 5 H35 V28 H20 L10 36 V28 H5 Z" fill="#a95f49"/></svg>Bubble</button>
+</div></div>
 <div class="status" id="status">Add text or a photo from the toolbar above. Paste image imports an image from your clipboard.</div><div class="progress"><i id="progress"></i></div>
 </div>
 
@@ -2457,3 +2457,79 @@ header.shell .round { font-size:20px!important; }
  #create .creation-dock { background:#fffdf8!important; }
 }
 </style>
+
+
+<style id="mobile-editor-redesign-v49">
+:root { color-scheme:light!important; --bg:#f5f2eb!important; --paper:#fffdf8!important; --ink:#343630!important; --muted:#77796f!important; --line:#e4dfd5!important; --accent:#ad715f!important; --accent-hover:#965b4b!important; --stage:#eeeae2!important; }
+html,body,.app { background:#f5f2eb!important; color:#343630!important; }
+header.shell { background:#f5f2eb!important; border-color:#e4dfd5!important; }
+header.shell .logo { color:#343630!important; font-weight:600!important; }
+header.shell .logo span { color:#ad715f!important; }
+header.shell .language-toggle,header.shell .round { background:#fffdf8!important; color:#343630!important; border-color:#e4dfd5!important; }
+.bottom { background:rgba(245,242,235,.97)!important; border-color:#e4dfd5!important; box-shadow:0 -4px 18px rgba(52,54,48,.035)!important; }
+.nav-btn { color:#85857b!important; }
+.nav-btn.active { color:#ad715f!important; }
+#create .editor-head h2 { color:#343630!important; font-size:24px!important; font-weight:400!important; }
+#create .stage-wrap { background:#eeeae2!important; border:1px solid #e4dfd5!important; box-shadow:none!important; }
+#create .stage { aspect-ratio:9/16!important; width:auto!important; height:auto!important; max-width:min(100%,calc((100svh - 250px)*9/16))!important; max-height:calc(100svh - 250px)!important; margin:0 auto!important; }
+#create .panel { background:#fffdf8!important; border-color:#e4dfd5!important; box-shadow:0 5px 18px rgba(52,54,48,.035)!important; }
+#create .panel-title,#create .field label { color:#77796f!important; font-weight:500!important; }
+#create .tool,#create .small-btn,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn { background:#fffdf8!important; color:#343630!important; border-color:#e4dfd5!important; box-shadow:none!important; }
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#e9e4d9!important; color:#343630!important; border-color:#d7cfc2!important; }
+#create input[type=range] { accent-color:#ad715f!important; }
+#create .creation-dock { background:rgba(255,253,248,.97)!important; border:1px solid #e4dfd5!important; box-shadow:0 4px 18px rgba(52,54,48,.08)!important; backdrop-filter:blur(14px)!important; }
+#create .creation-dock button { min-height:42px!important; background:#f5f2eb!important; color:#55574f!important; border-color:#e4dfd5!important; font-weight:500!important; }
+#create .creation-dock button span { color:#ad715f!important; }
+#create .creation-dock button.dock-primary { background:#e9e4d9!important; color:#343630!important; border-color:#d7cfc2!important; }
+#create .creation-dock button.dock-primary span { color:#ad715f!important; }
+#create .shape-menu-wrap { margin-top:14px!important; }
+#create .shape-menu-trigger { width:100%!important; min-height:44px!important; border-radius:12px!important; text-align:left!important; padding:10px 14px!important; background:#f5f2eb!important; color:#55574f!important; }
+#create #shapeOptionsMenu[hidden] { display:none!important; }
+#create #shapeOptionsMenu { margin-top:8px!important; padding:10px!important; border:1px solid #e4dfd5!important; border-radius:14px!important; background:#faf7f0!important; }
+#create #shapeOptionsMenu .shape-btn { min-height:66px!important; }
+@media(max-width:799px){
+ #create { padding-top:0!important; padding-bottom:calc(140px + env(safe-area-inset-bottom))!important; }
+ #create .editor-head { position:fixed!important; top:0!important; left:0!important; right:0!important; z-index:1100!important; display:flex!important; flex-wrap:nowrap!important; align-items:center!important; gap:6px!important; padding:calc(7px + env(safe-area-inset-top)) 10px 7px!important; margin:0!important; background:rgba(245,242,235,.97)!important; border-bottom:1px solid #e4dfd5!important; box-shadow:0 3px 12px rgba(52,54,48,.04)!important; backdrop-filter:blur(14px)!important; }
+ #create .editor-head h2 { flex:0 1 auto!important; min-width:0!important; max-width:35%!important; font-size:18px!important; white-space:nowrap!important; overflow:hidden!important; text-overflow:ellipsis!important; }
+ #create .editor-head .editor-actions { display:flex!important; flex:1 1 auto!important; min-width:0!important; flex-wrap:nowrap!important; justify-content:flex-end!important; gap:4px!important; }
+ #create .editor-head .small-btn { min-width:0!important; height:34px!important; padding:5px 8px!important; border-radius:9px!important; font-size:11px!important; white-space:nowrap!important; }
+ #create .editor-head .small-btn[aria-label="Undo"],#create .editor-head .small-btn[aria-label="Redo"] { width:30px!important; flex:0 0 30px!important; padding:0!important; }
+ #create .editor-head .small-btn.dark { flex:0 0 auto!important; }
+ #create .stage-wrap { position:relative!important; top:auto!important; margin-top:calc(58px + env(safe-area-inset-top))!important; padding:10px!important; border-radius:16px!important; }
+ #create .stage-wrap .live-preview-label { color:#77796f!important; font-weight:500!important; }
+ #create .stage { width:auto!important; height:min(54svh,calc((100vw - 64px)*16/9))!important; max-width:calc((100vw - 64px)*9/16)!important; max-height:54svh!important; aspect-ratio:9/16!important; }
+ #create .workspace { display:flex!important; flex-direction:column!important; gap:12px!important; }
+ #create .panel { margin-bottom:0!important; }
+ #create .creation-dock { position:fixed!important; z-index:1090!important; left:10px!important; right:10px!important; bottom:calc(66px + env(safe-area-inset-bottom))!important; display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr))!important; gap:5px!important; padding:6px!important; border-radius:15px!important; }
+ #create .creation-dock button { min-height:42px!important; border-radius:10px!important; gap:1px!important; font-size:10px!important; padding:4px 2px!important; }
+ #create .creation-dock button span { font-size:17px!important; }
+ #create .creation-dock button b { font-size:10px!important; font-weight:500!important; }
+ body.keyboard-open #create .editor-head,body:has(#textValue:focus) #create .editor-head { top:0!important; }
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap { position:relative!important; top:auto!important; left:auto!important; right:auto!important; height:auto!important; min-height:0!important; max-height:none!important; margin-top:calc(58px + env(safe-area-inset-top))!important; padding:8px!important; background:#eeeae2!important; border:1px solid #e4dfd5!important; border-radius:14px!important; box-shadow:none!important; }
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage { width:auto!important; height:min(35svh,calc((100vw - 72px)*16/9))!important; max-width:calc((100vw - 72px)*9/16)!important; max-height:35svh!important; aspect-ratio:9/16!important; flex:0 0 auto!important; }
+ body.keyboard-open #create #textControls,body:has(#textValue:focus) #create #textControls { margin-top:0!important; scroll-margin-top:calc(70px + env(safe-area-inset-top))!important; }
+ body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock { display:none!important; }
+ body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .bottom { display:none!important; }
+}
+</style>
+<script id="shape-menu-behavior-v49">
+function toggleShapeMenu(){
+ const menu=document.getElementById('shapeOptionsMenu');
+ const panelToggle=document.getElementById('shapeMenuToggle');
+ if(!menu)return;
+ const opening=menu.hidden;
+ menu.hidden=!opening;
+ if(panelToggle)panelToggle.setAttribute('aria-expanded',String(opening));
+ const dockToggle=document.getElementById('addShapeMenuToggle');
+ if(dockToggle)dockToggle.setAttribute('aria-expanded',String(opening));
+ if(opening)document.getElementById('shapeMenuToggle')?.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeShapeMenu(){
+ const menu=document.getElementById('shapeOptionsMenu');
+ const panelToggle=document.getElementById('shapeMenuToggle');
+ if(menu)menu.hidden=true;
+ if(panelToggle)panelToggle.setAttribute('aria-expanded','false');
+ const dockToggle=document.getElementById('addShapeMenuToggle');
+ if(dockToggle)dockToggle.setAttribute('aria-expanded','false');
+}
+</script>
