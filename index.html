@@ -2533,3 +2533,46 @@ function closeShapeMenu(){
  if(dockToggle)dockToggle.setAttribute('aria-expanded','false');
 }
 </script>
+
+
+<style id="light-theme-preview-fix-v50">
+:root { color-scheme:light!important; --bg:#f7f5ef!important; --paper:#fffefa!important; --ink:#3c3d38!important; --muted:#777970!important; --line:#e8e4dc!important; --accent:#b17d6b!important; --accent-hover:#986552!important; --stage:#f0ede6!important; }
+html,body,.app { background:#f7f5ef!important; color:#3c3d38!important; }
+header.shell { background:#f7f5ef!important; border-color:#e8e4dc!important; }
+header.shell .logo { color:#3c3d38!important; }
+header.shell .language-toggle,header.shell .round { background:#fffefa!important; color:#3c3d38!important; border-color:#e8e4dc!important; }
+.bottom { background:rgba(247,245,239,.98)!important; border-color:#e8e4dc!important; }
+#create .editor-head { background:rgba(247,245,239,.98)!important; border-color:#e8e4dc!important; box-shadow:0 2px 10px rgba(60,61,56,.025)!important; }
+#create .editor-head h2 { color:#3c3d38!important; }
+#create .editor-head .editor-actions .small-btn,
+#create .editor-head .editor-actions .small-btn.dark { background:#fffefa!important; color:#55574f!important; border-color:#e8e4dc!important; box-shadow:none!important; }
+#create .stage-wrap { background:#f0ede6!important; border:1px solid #e8e4dc!important; box-shadow:none!important; }
+#create .stage { background-color:#fffefa!important; }
+#create .panel { background:#fffefa!important; border:1px solid #e8e4dc!important; border-radius:20px!important; box-shadow:none!important; }
+#create .panel-section { border-color:#e8e4dc!important; }
+#create .panel-title,#create .field label { color:#777970!important; }
+#create .tool,#create .small-btn,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn,
+#create #textEntryField,#create #textValue { background:#fffefa!important; color:#3c3d38!important; border-color:#e8e4dc!important; box-shadow:none!important; }
+#create #textEntryField { border-radius:14px!important; }
+#create #textValue { outline-color:#c4a393!important; }
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#eee9df!important; color:#3c3d38!important; border-color:#ded7ca!important; }
+#create input[type=range] { accent-color:#b17d6b!important; }
+#create .creation-dock { background:rgba(255,254,250,.98)!important; border-color:#e8e4dc!important; box-shadow:0 2px 12px rgba(60,61,56,.06)!important; }
+#create .creation-dock button,#create .creation-dock button.dock-primary { background:#f7f5ef!important; color:#55574f!important; border-color:#e8e4dc!important; }
+#create .creation-dock button span,#create .creation-dock button.dock-primary span { color:#b17d6b!important; }
+#create .shape-menu-trigger,#create #shapeOptionsMenu { background:#f7f5ef!important; border-color:#e8e4dc!important; color:#55574f!important; }
+#create #shapeOptionsMenu .shape-btn svg [fill="#ff961a"],#create #shapeOptionsMenu .shape-btn svg [fill="#151515"] { fill:#b17d6b!important; }
+#create .status,#create #status { color:#777970!important; }
+@media(max-width:799px){
+ #create .editor-head { min-height:52px!important; padding:calc(7px + env(safe-area-inset-top)) 8px 7px!important; }
+ #create .editor-head h2 { max-width:0!important; flex:0 1 0!important; overflow:hidden!important; margin:0!important; }
+ #create .editor-head .editor-actions { justify-content:space-between!important; }
+ #create .editor-head .editor-actions .small-btn { height:34px!important; padding:5px 7px!important; font-size:11px!important; }
+ #create .stage-wrap { margin-top:calc(66px + env(safe-area-inset-top))!important; padding:8px!important; overflow:visible!important; }
+ #create .stage-wrap .live-preview-label { margin-bottom:6px!important; color:#777970!important; }
+ #create .stage { display:block!important; width:auto!important; height:auto!important; aspect-ratio:9/16!important; max-width:min(calc(100vw - 64px),calc((100svh - 210px)*9/16))!important; max-height:calc(100svh - 210px)!important; }
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap { margin-top:calc(66px + env(safe-area-inset-top))!important; }
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage { width:auto!important; height:auto!important; aspect-ratio:9/16!important; max-width:min(calc(100vw - 80px),calc((100svh - 300px)*9/16))!important; max-height:calc(100svh - 300px)!important; }
+ #create .creation-dock { bottom:calc(66px + env(safe-area-inset-bottom))!important; }
+}
+</style>
