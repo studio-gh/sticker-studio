@@ -1598,6 +1598,93 @@ function finishEraseStroke(){
 document.addEventListener('pointerup',finishEraseStroke,{capture:true});
 document.addEventListener('pointercancel',finishEraseStroke,{capture:true});
 </script>
+
+<style id="editorial-design-system-v2">
+/* V46: final cascade pass. This overrides older accumulated theme rules without changing editor logic. */
+:root{
+  --bg:#f3efe6!important;
+  --paper:#fffdf8!important;
+  --ink:#30332d!important;
+  --muted:#77796f!important;
+  --line:#e2ddd2!important;
+  --accent:#a95f49!important;
+  --stage:#e9e5db!important;
+}
+html,body,.app{background:#f3efe6!important;color:#30332d!important}
+header{border-color:#e2ddd2!important}
+.logo{font-weight:600!important;color:#30332d!important}
+.logo i,.logo span{color:#a95f49!important}
+.hero .eyebrow,.eyebrow{font-weight:500!important;letter-spacing:.13em!important;color:#77796f!important}
+h1,h2,.hero h1,.home-create-hero h1,.section-head h3,.home-section-heading h2,.editor-head h2{
+  font-family:"Instrument Serif","Playfair Display",Georgia,serif!important;
+  font-weight:400!important;
+  letter-spacing:-.025em!important;
+}
+.hero h1,.home-create-hero h1{line-height:.98!important}
+.sub{font-weight:400!important;color:#686b61!important;line-height:1.65!important}
+.btn,.link,.small-btn,.tool,.preset,.font-btn,.shape-btn,.remix-btn,.mini-action,.nav-btn,.layer-name,.layer-order .mini,.home-action-card strong,.home-step strong{
+  font-weight:400!important;
+}
+.btn{background:#30332d!important;border-color:#30332d!important;color:#fffdf8!important}
+.btn.alt{background:transparent!important;color:#30332d!important;border-color:#d8d2c7!important}
+.card,.stage-wrap,.panel{border-color:#e2ddd2!important}
+.card{background:#fffdf8!important}
+.stage-wrap{background:#eae6dd!important}
+.panel{background:#fffdf8!important}
+.panel-title{color:#77796f!important;font-weight:500!important;letter-spacing:.12em!important}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.layer-row,.search,.field input[type=text],.field textarea,.field select,.hex-input,.native-color,.eyedrop-btn,.zoom-btn{
+  border-color:#e2ddd2!important;
+  box-shadow:none!important;
+}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.layer-row,.search,.field input[type=text],.field textarea,.field select,.hex-input,.native-color,.eyedrop-btn,.zoom-btn{
+  border-radius:10px!important;
+}
+.tool,.small-btn,.preset,.font-btn,.shape-btn,.layer-row,.search,.field input[type=text],.field textarea,.field select,.hex-input,.native-color,.eyedrop-btn,.zoom-btn{
+  background:#fffdf8!important;color:#383a34!important;
+}
+.tool.primary,.tool.on,.chip.active,.font-btn.active,.small-btn.dark{
+  background:#30332d!important;border-color:#30332d!important;color:#fffdf8!important;
+}
+.field label{font-weight:500!important;color:#696b62!important;letter-spacing:.045em!important}
+.field input[type=text],.field textarea,.field select,.hex-input{font-weight:400!important;color:#30332d!important}
+.layer-row.active{border-color:#a95f49!important}
+.layer.selected{outline-color:#a95f49!important}
+.resize-handle{background:#30332d!important}
+.rotate-handle,.layer .delete{background:#a95f49!important}
+.progress{background:#e2ddd2!important}.progress i{background:#a95f49!important}
+.bottom{background:rgba(243,239,230,.97)!important;border-color:#e2ddd2!important}
+.nav-btn{font-weight:400!important;color:#77796f!important}
+.nav-btn.active{color:#a95f49!important}
+.toast{background:#30332d!important;font-weight:400!important}
+.home-create-hero{background:#fffdf8!important;border-color:#e2ddd2!important;box-shadow:0 10px 32px rgba(48,51,45,.035)!important}
+.home-action-card{
+  background:#e8e9df!important;
+  border:1px solid #d9dbcf!important;
+  color:#30332d!important;
+  box-shadow:none!important;
+}
+.home-action-card:hover{border-color:#a95f49!important;background:#e4e5d9!important}
+.home-action-card strong{color:#30332d!important}
+.home-action-card>span:not(.home-action-icon){color:#6e7167!important}
+.home-action-icon{background:#f4f0e8!important;color:#a95f49!important}
+.home-action-card i{color:#a95f49!important}
+.home-how-it-works{border-color:#e2ddd2!important}
+.home-how-it-works>.eyebrow{color:#77796f!important}
+.home-step>span{background:#a95f49!important;color:#fffdf8!important}
+.home-section-heading .eyebrow{color:#a95f49!important}
+.chip{font-weight:400!important;color:#55584f!important}
+.chip.active{color:#fffdf8!important}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+  outline:2px solid #a95f49!important;outline-offset:3px!important;
+}
+@media(max-width:799px){
+  .editor-head{background:rgba(243,239,230,.97)!important}
+  .stage-wrap{background:rgba(243,239,230,.97)!important}
+  .home-create-hero{background:#fffdf8!important}
+  .home-action-card{background:#e8e9df!important}
+}
+</style>
+
 </body>
 </html>
 
