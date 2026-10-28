@@ -1399,7 +1399,7 @@ let visualRaf=0;window.setImageProp=(k,v)=>{const l=selected();if(!l||l.type!=='
 window.setZoom=v=>{const l=selected();if(!l)return;beginContinuousEdit('zoom:'+l.id);l.scale=Math.max(.25,Math.min(3,v/100));$('zoomVal').textContent=Math.round(l.scale*100)+'%';updateLayerVisual(l.id);saveDraft()}
 window.adjustZoom=d=>{const l=selected();if(!l)return;setZoom(Math.round((l.scale+d)*100));finishContinuousEdit('zoom:'+l.id)}
 window.setScale=v=>{const l=selected();if(!l)return;beginContinuousEdit('scale:'+l.id);l.scale=+v;updateLayerVisual(l.id);$('scaleVal').textContent=Math.round(l.scale*100)+'%';saveDraft()}
-window.setText=v=>{const l=selected();if(!l||l.type!=='text')return;const max=120;const clipped=String(v).slice(0,max);const input=$('textValue');if(input&&input.value!==clipped)input.value=clipped;const count=$('textCharCount');if(count)count.textContent=clipped.length+' / '+max;beginContinuousEdit('text:'+l.id);l.text=clipped;const el=document.querySelector(`.layer[data-id="${l.id}"] .text-content`);if(el)el.textContent=clipped||'TEXT';else renderEditor();saveDraft()}
+window.setText=v=>{const l=selected();if(!l||l.type!=='text')return;const max=120;const clipped=String(v).slice(0,max);const input=$('textValue');if(input&&input.value!==clipped)input.value=clipped;const count=$('textCharCount');if(count)count.textContent=clipped.length+' / '+max;beginContinuousEdit('text:'+l.id);l.text=clipped;const layer=document.querySelector(`.layer[data-id="${l.id}"]`);if(l.curve){updateLayerVisual(l.id)}else{const el=layer&&layer.querySelector('.text-content');if(el)el.textContent=clipped||'TEXT'}saveDraft()}
 window.setTextBoxWidth=v=>{const l=selected();if(!l||l.type!=='text')return;beginContinuousEdit('textWidth:'+l.id);l.textWidth=Math.max(80,Math.min(480,v));$('textWidthVal').textContent=Math.round(l.textWidth);updateLayerVisual(l.id);saveDraft()};
 window.setTextAlign=align=>{const l=selected();if(!l||l.type!=='text')return;commitHistory();l.textAlign=align;updateLayerVisual(l.id);document.querySelectorAll('.align-btn').forEach(b=>b.classList.toggle('on',b.dataset.align===align));commitHistory();saveDraft()}
 function updateTextGeometry(l){const el=document.querySelector(`.layer[data-id="${l.id}"]`);if(!el)return;const unit=stageUnit();el.style.fontSize=(l.fontSize*unit)+'px';el.style.letterSpacing=(l.letterSpacing||0)+'px';el.style.width=((l.textWidth||300)*unit)+'px';el.style.textAlign=l.textAlign||'center'}
@@ -3373,3 +3373,46 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 
 
 
+
+
+<style id="mobile-preview-and-curved-text-hotfix-v59">
+/* V59: keep story canvas vertical, light, centered, and visible during keyboard use. */
+#create .stage-wrap{background:#f1efea!important;border-color:#e9e6df!important;box-shadow:none!important}
+#create .stage{background-color:#fffefa!important;overflow:hidden!important}
+#create .layer.text-layer{max-width:none!important;box-sizing:border-box}
+#create .layer.text-layer svg{display:block;max-width:none!important;overflow:visible!important}
+@media(max-width:799px){
+ #create .workspace{display:flex!important;flex-direction:column!important;gap:12px!important;overflow:visible!important}
+ #create .stage-wrap{
+  position:sticky!important;top:0!important;z-index:80!important;display:flex!important;
+  flex-direction:column!important;align-items:center!important;width:100%!important;
+  box-sizing:border-box!important;margin:0 0 10px!important;padding:7px 10px 9px!important;
+  background:#f1efea!important;border:1px solid #e9e6df!important;border-radius:0 0 16px 16px!important;
+ }
+ #create .stage{
+  position:relative!important;display:block!important;flex:0 0 auto!important;
+  width:min(calc(100vw - 70px),220px)!important;max-width:220px!important;
+  height:auto!important;aspect-ratio:9/16!important;max-height:none!important;
+  margin:0 auto!important;overflow:hidden!important;
+ }
+ #create .panel{position:relative!important;inset:auto!important;max-height:none!important;overflow:visible!important;transform:none!important;margin:0 0 100px!important}
+ #create .creation-dock{position:fixed!important;display:grid!important;left:10px!important;right:10px!important;bottom:calc(70px + env(safe-area-inset-bottom))!important;z-index:1090!important}
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;
+  height:154px!important;min-height:154px!important;max-height:154px!important;
+  padding:4px 8px 6px!important;margin:0!important;overflow:hidden!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  flex-direction:column!important;z-index:1200!important;background:#f7f6f2!important;
+  border:0!important;border-bottom:1px solid #e9e6df!important;border-radius:0!important;
+ }
+ body.keyboard-open #create .stage-wrap .live-preview-label,body:has(#textValue:focus) #create .stage-wrap .live-preview-label{display:block!important;margin:0 0 3px!important;font-size:9px!important;line-height:12px!important}
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage{
+  width:86px!important;max-width:86px!important;height:auto!important;max-height:none!important;
+  aspect-ratio:9/16!important;flex:0 0 auto!important;margin:0 auto!important;
+ }
+ body.keyboard-open #create .panel,body:has(#textValue:focus) #create .panel{margin-top:162px!important}
+ body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock,
+ body.keyboard-open .bottom,body:has(#textValue:focus) .bottom{display:none!important}
+ body.keyboard-open #create .panel #textEntryField,body:has(#textValue:focus) #create .panel #textEntryField{display:block!important;visibility:visible!important;opacity:1!important}
+}
+</style>
