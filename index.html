@@ -1713,6 +1713,7 @@ window.toggleLanguage=function(){
  lang=lang==="pt"?"en":"pt";
  try{localStorage.setItem("storyStudioLanguage",lang);localStorage.setItem("stickerStudioLanguage",lang)}catch(e){}
  applyLanguage();
+ window.refreshBrandCopy&&window.refreshBrandCopy();
  const b=document.getElementById("languageToggle");
  if(b){b.style.transform="scale(.97)";setTimeout(()=>b.style.transform="",120)}
 };
@@ -1721,24 +1722,25 @@ document.addEventListener("click",function(e){
  if(b){e.preventDefault();e.stopPropagation();window.toggleLanguage()}
 });
 const observer=new MutationObserver(records=>records.forEach(r=>r.addedNodes.forEach(n=>translateTree(n))));
+window.refreshBrandCopy=function(){
+ const hero=document.querySelector('#home .hero h1');
+ const sub=document.querySelector('#home .hero .sub');
+ const createBtn=document.querySelector('#home .hero .actions .btn');
+ if(lang==="pt"){
+  if(hero)hero.innerHTML='Faça seu Story<br><span class="headline-accent">se destacar.</span>';
+  if(sub)sub.textContent='Crie conteúdo que as pessoas parem para ver, com textos marcantes, fotos e elementos gráficos que tenham a sua cara.';
+  if(createBtn)createBtn.textContent='Criar meu Story ↗';
+  document.title="Story Studio — Faça seu Story se destacar";
+ }else{
+  if(hero)hero.innerHTML='Make your Story<br><span class="headline-accent">stand out.</span>';
+  if(sub)sub.textContent='Create content people stop to watch, with bold type, photos and graphic elements that feel unmistakably yours.';
+  if(createBtn)createBtn.textContent='Create my Story ↗';
+  document.title="Story Studio — Make your Story stand out";
+ }
+};
 function init(){
  applyLanguage();
- const paintCopy=()=>{
-  const hero=document.querySelector('#home .hero h1');
-  const sub=document.querySelector('#home .hero .sub');
-  const createBtn=document.querySelector('#home .hero .actions .btn');
-  if(lang==="pt"){
-   if(hero)hero.innerHTML='Faça seu Story<br><span class="headline-accent">se destacar.</span>';
-   if(sub)sub.textContent='Crie conteúdo que as pessoas parem para ver, com textos marcantes, fotos e elementos gráficos que tenham a sua cara.';
-   if(createBtn)createBtn.textContent='Criar meu Story ↗';
-  }else{
-   if(hero)hero.innerHTML='Make your Story<br><span class="headline-accent">stand out.</span>';
-   if(sub)sub.textContent='Create content people stop to watch, with bold type, photos and graphic elements that feel unmistakably yours.';
-   if(createBtn)createBtn.textContent='Create my Story ↗';
-  }
- };
- paintCopy();
- document.title=lang==="pt"?"Story Studio — Faça seu Story se destacar":"Story Studio — Make your Story stand out";
+ window.refreshBrandCopy();
  observer.observe(document.body,{subtree:true,childList:true});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
