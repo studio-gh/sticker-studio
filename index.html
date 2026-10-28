@@ -1452,20 +1452,10 @@ window.addEventListener('unhandledrejection',e=>{
 wireColors();
 try{
   // Start with a blank canvas only when no recoverable draft exists.
-  // Keep the legacy storage keys so existing work remains available.
-  let recoveredDraft=false;
-  try{
-    const draft=localStorage.getItem('stickerStudioDraft');
-    if(draft){
-      const parsed=JSON.parse(draft);
-      if(Array.isArray(parsed)&&parsed.length){
-        layers=parsed.map(layer=>layer&&typeof layer==='object'?layer:null).filter(Boolean);
-        selectedId=layers.length?layers[layers.length-1].id:null;
-        recoveredDraft=true;
-      }
-    }
-  }catch(e){console.warn('Draft recovery skipped:',e)}
-  if(!recoveredDraft){layers=[];selectedId=null}
+  // Keep an empty canvas on a fresh start. Existing saved compositions remain untouched.
+  // Autosaved drafts are retained as a recovery copy, not deleted on every boot.
+  layers=[];
+  selectedId=null;
   renderEditor();
   renderHome();renderSaved();
 }catch(e){
