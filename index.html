@@ -3363,7 +3363,7 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
     if(hint)hint.textContent=open?'Toque para recolher':'Toque para abrir';
     if(open && mode!=='close') {
       const active=mode==='text'?'#textControls':mode==='photo'?'#mediaControls':mode==='shape'?'#shapeControls':mode==='layers'?'#layers':'';
-      if(active){const target=panel.querySelector(active);if(target)target.scrollIntoView({block:'nearest',behavior:'auto'})}
+      if(active){const target=panel.querySelector(active);if(target){const panelRect=panel.getBoundingClientRect();const targetRect=target.getBoundingClientRect();panel.scrollTop+=targetRect.top-panelRect.top-54}}
     }
   };
   function sync(){
