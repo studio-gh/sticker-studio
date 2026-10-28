@@ -3260,133 +3260,53 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
  #create .visual-preset,#create #presetControls .visual-preset{min-height:82px!important;padding:9px 6px!important}
 }
 
-/* V56: preview-first responsive editor and stable text editing */
+/* V57: stable preview-first layout; no floating drawer overlays */
 @media(max-width:799px){
-  body.editor-sheet-open{overflow:hidden}
-  #create .workspace{display:block!important;min-height:0}
+  #create .workspace{display:flex!important;flex-direction:column!important;gap:10px!important;overflow:visible!important}
   #create .stage-wrap{
-    position:sticky!important;top:66px!important;z-index:35!important;
-    width:100%;margin:0!important;padding:7px 0 10px!important;
-    background:rgba(255,252,244,.97)!important;backdrop-filter:blur(14px);
+    position:sticky!important;top:0!important;z-index:25!important;
+    width:100%;margin:0!important;padding:6px 0 10px!important;
+    background:rgba(255,252,244,.98)!important;backdrop-filter:blur(12px);
     border:0!important;border-radius:0!important;
   }
   #create .stage{
-    width:min(68vw, min(350px, calc(100vw - 42px)))!important;
-    max-width:none!important;height:auto!important;aspect-ratio:1!important;
+    display:block!important;width:auto!important;height:auto!important;
+    aspect-ratio:9/16!important;
+    max-width:min(calc(100vw - 64px),calc((100svh - 240px)*9/16))!important;
+    max-height:calc(100svh - 240px)!important;
     margin:0 auto!important;border-radius:14px!important;
-    transition:width .18s ease;
+    transition:max-height .15s ease;
   }
-  #create .stage-wrap .live-preview-label{margin-bottom:4px!important}
   #create .panel{
-    position:fixed!important;left:10px!important;right:10px!important;
-    bottom:calc(76px + env(safe-area-inset-bottom))!important;z-index:58!important;
-    display:flex!important;flex-direction:column!important;gap:0!important;
-    max-height:min(52dvh,480px)!important;overflow-y:auto!important;overscroll-behavior:contain;
-    border:1px solid #e4dfd5!important;border-radius:20px!important;
-    background:rgba(255,254,250,.985)!important;box-shadow:0 14px 42px rgba(44,44,44,.16)!important;
-    padding:0!important;transform:translateY(calc(100% - 44px));transition:transform .22s ease;
-    -webkit-overflow-scrolling:touch;
+    position:relative!important;inset:auto!important;z-index:1!important;
+    display:flex!important;flex-direction:column!important;
+    width:100%!important;max-height:none!important;overflow:visible!important;
+    transform:none!important;transition:none!important;
+    border:1px solid #e4dfd5!important;border-radius:18px!important;
+    background:#fffefa!important;box-shadow:0 5px 20px rgba(44,44,44,.07)!important;
+    padding:0!important;margin:8px 0 90px!important;
   }
-  #create .panel.sheet-open{transform:translateY(0)}
-  #create .panel.sheet-closed{transform:translateY(calc(100% - 44px))}
-  #create .panel .panel-sheet-handle{
-    flex:0 0 43px;display:flex;align-items:center;justify-content:space-between;
-    gap:10px;padding:0 16px;position:sticky;top:0;z-index:4;
-    background:rgba(255,254,250,.98);border-bottom:1px solid #eee9df;
-    cursor:pointer;touch-action:manipulation;
+  #create .panel .panel-sheet-handle{display:none!important}
+  #create .panel .panel-section{flex:0 0 auto;padding:15px!important}
+  #create .creation-dock{display:none!important}
+  body.editor-sheet-open{overflow:auto!important}
+  body.keyboard-open #create .stage-wrap{top:0!important;padding:2px 0 6px!important}
+  body.keyboard-open #create .stage{
+    width:auto!important;max-width:min(calc(100vw - 40px),calc((100svh - 360px)*9/16))!important;
+    max-height:calc(100svh - 360px)!important;aspect-ratio:9/16!important;
   }
-  #create .panel-sheet-handle strong{font-size:12px;letter-spacing:.02em;color:#2c2c2c}
-  #create .panel-sheet-handle span{font-size:11px;color:#8a867e}
-  #create .panel-sheet-handle i{display:block;width:28px;height:4px;border-radius:4px;background:#c9c2b7;position:absolute;top:6px;left:calc(50% - 14px)}
-  #create .panel .panel-section{flex:0 0 auto}
-  #create .creation-dock{bottom:calc(76px + env(safe-area-inset-bottom))!important;z-index:62!important}
-  #create .panel.sheet-open{bottom:calc(76px + env(safe-area-inset-bottom))!important}
-  #create .panel.sheet-open .panel-sheet-handle{min-height:43px}
-  body.keyboard-open #create .panel{
-    bottom:0!important;max-height:31dvh!important;border-radius:18px 18px 0 0!important;
-    transform:translateY(0)!important;
-  }
-  body.keyboard-open #create .panel .panel-section{padding:12px 14px!important}
-  body.keyboard-open #create .stage-wrap{
-    top:0!important;padding-top:4px!important;padding-bottom:6px!important;
-  }
-  body.keyboard-open #create .stage{width:min(34vw,145px)!important;max-height:28dvh!important}
-  body.keyboard-open #create .live-preview-label{font-size:9px!important}
-  body.keyboard-open .bottom{display:none!important}
-  body.keyboard-open #create .editor-head{display:none!important}
-  body.keyboard-open #create .panel .panel-sheet-handle{display:none}
-  body.keyboard-open #create .panel #textControls{padding-top:8px!important}
-  body.keyboard-open #create .panel #textControls .panel-title,
-  body.keyboard-open #create .panel #textControls .fonts,
-  body.keyboard-open #create .panel #textControls .text-sizing-row,
-  body.keyboard-open #create .panel #textControls .text-width-hint,
-  body.keyboard-open #create .panel #textControls .field:not(#textEntryField){display:none!important}
-  body.keyboard-open #create .panel #textControls #textEntryField{margin:0!important}
-  body.keyboard-open #create .panel #textControls #textEntryField textarea{min-height:54px!important;height:54px!important}
+  body.keyboard-open #create .editor-head{display:flex!important;position:relative!important}
+  body.keyboard-open #create .panel{position:relative!important;max-height:none!important;overflow:visible!important}
+  body.keyboard-open #create .panel .panel-section{padding:12px!important}
 }
 @media(min-width:800px){
-  #create .workspace{align-items:start;grid-template-columns:minmax(0,1fr) minmax(330px,410px)!important;gap:22px!important}
+  #create .workspace{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(330px,410px)!important;align-items:start!important;gap:22px!important}
   #create .stage-wrap{position:sticky!important;top:16px!important;align-self:start}
-  #create .stage{width:min(100%,430px)!important;height:auto!important;aspect-ratio:1!important}
-  #create .panel{max-height:calc(100vh - 32px);overflow:auto;overscroll-behavior:contain}
+  #create .stage{width:auto!important;height:auto!important;aspect-ratio:9/16!important;max-width:min(100%,430px)!important;max-height:calc(100vh - 40px)!important}
+  #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;overscroll-behavior:contain}
 }
-@media(prefers-reduced-motion:reduce){
-  #create .panel,#create .stage{transition:none!important}
-}
-
+@media(prefers-reduced-motion:reduce){#create .stage{transition:none!important}}
 </style>
 
 
-<script id="v56-editor-panel">
-(function(){
-  const panel=document.querySelector('#create .panel');
-  if(!panel)return;
-  if(!panel.querySelector('.panel-sheet-handle')){
-    const handle=document.createElement('button');
-    handle.type='button';handle.className='panel-sheet-handle';
-    handle.setAttribute('aria-expanded','false');
-    handle.innerHTML='<i aria-hidden="true"></i><strong id="panelSheetTitle">Ferramentas de edição</strong><span id="panelSheetHint">Toque para abrir</span>';
-    handle.addEventListener('click',()=>window.openEditorPanel(panel.classList.contains('sheet-open')?'close':'text'));
-    panel.prepend(handle);
-  }
-  function isMobile(){return window.matchMedia('(max-width: 799px)').matches}
-  window.openEditorPanel=function(mode){
-    if(!isMobile())return;
-    const open=mode!=='close';
-    panel.classList.toggle('sheet-open',open);
-    panel.classList.toggle('sheet-closed',!open);
-    document.body.classList.toggle('editor-sheet-open',open);
-    const h=panel.querySelector('.panel-sheet-handle');
-    if(h){h.setAttribute('aria-expanded',String(open));}
-    const title=document.getElementById('panelSheetTitle'),hint=document.getElementById('panelSheetHint');
-    if(title)title.textContent=mode==='text'?'Editar texto':mode==='photo'?'Editar foto':mode==='shape'?'Editar forma':mode==='layers'?'Camadas':'Ferramentas de edição';
-    if(hint)hint.textContent=open?'Toque para recolher':'Toque para abrir';
-    if(open && mode!=='close') {
-      const active=mode==='text'?'#textControls':mode==='photo'?'#mediaControls':mode==='shape'?'#shapeControls':mode==='layers'?'#layers':'';
-      if(active){const target=panel.querySelector(active);if(target){const panelRect=panel.getBoundingClientRect();const targetRect=target.getBoundingClientRect();panel.scrollTop+=targetRect.top-panelRect.top-54}}
-    }
-  };
-  function sync(){
-    if(!isMobile()){panel.classList.remove('sheet-open','sheet-closed');document.body.classList.remove('editor-sheet-open');return}
-    if(!panel.classList.contains('sheet-open'))panel.classList.add('sheet-closed');
-  }
-  window.addEventListener('resize',sync,{passive:true});
-  document.addEventListener('focusin',e=>{
-    if(!isMobile())return;
-    if(e.target && (e.target.id==='textValue'||e.target.matches('#create .panel input[type="text"],#create .panel textarea'))){
-      window.openEditorPanel('text');
-    }
-  });
-  document.addEventListener('click',e=>{
-    if(!isMobile())return;
-    const b=e.target.closest('#create .creation-dock button');
-    if(!b)return;
-    const txt=(b.innerText||'').toLowerCase();
-    if(txt.includes('text')||txt.includes('texto'))window.openEditorPanel('text');
-    else if(txt.includes('photo')||txt.includes('foto'))window.openEditorPanel('photo');
-    else if(txt.includes('shape')||txt.includes('forma'))window.openEditorPanel('shape');
-    else if(txt.includes('style')||txt.includes('estilo'))window.openEditorPanel('shape');
-  },true);
-  sync();
-})();
-</script>
+
