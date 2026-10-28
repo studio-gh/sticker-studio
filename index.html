@@ -3154,6 +3154,115 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 }
 #home .home-action-card,#home .home-action-card:hover{background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important}
 #home .home-action-icon{background:#eeeae5!important;color:#ad8072!important}
+
+/* V58: restore preview-first mobile behavior from the last stable editor, with focused layout fixes */
+/* V43: live preview stays visible while editing text or its formatting controls on mobile. */
+@media(max-width:799px){
+  #create .workspace{display:block!important;overflow:visible!important}
+  #create .stage-wrap{
+    position:sticky!important;
+    top:0!important;
+    z-index:80!important;
+    display:block!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    margin:0 0 10px!important;
+    padding:7px 10px 9px!important;
+    background:rgba(25,25,25,.98)!important;
+    border:1px solid #454545!important;
+    border-radius:0 0 16px 16px!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.24)!important;
+  }
+  #create .stage-wrap .live-preview-label{
+    display:block!important;
+    margin:0 auto 5px!important;
+    font-size:10px!important;
+    line-height:12px!important;
+    text-align:center!important;
+  }
+  #create .stage{
+    width:min(43vw,168px)!important;
+    max-width:168px!important;
+    aspect-ratio:1!important;
+    margin:0 auto!important;
+  }
+  #create .panel{overflow:visible!important;min-width:0!important}
+  #create #textControls{scroll-margin-top:190px!important}
+  #create #textEntryField{scroll-margin-top:190px!important}
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    position:fixed!important;
+    top:0!important;left:0!important;right:0!important;
+    width:100%!important;height:146px!important;max-height:146px!important;
+    margin:0!important;padding:4px 8px 6px!important;
+    border-radius:0!important;
+    z-index:1000!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    background:#242424!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:104px!important;height:104px!important;max-width:104px!important;
+    aspect-ratio:1!important;flex:0 0 104px!important;
+  }
+  body.keyboard-open #create #textControls,
+  body:has(#textValue:focus) #create #textControls{
+    margin-top:154px!important;scroll-margin-top:154px!important;
+  }
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    display:block!important;visibility:visible!important;opacity:1!important;
+  }
+}
+
+@media(max-width:799px){
+ #create .workspace{display:flex!important;flex-direction:column!important;gap:12px!important;overflow:visible!important}
+ #create .stage-wrap{
+  position:sticky!important;top:0!important;z-index:80!important;
+  display:block!important;width:100%!important;box-sizing:border-box!important;
+  margin:0 0 10px!important;padding:7px 10px 9px!important;
+  background:#f1efea!important;border:1px solid #e9e6df!important;
+  border-radius:0 0 16px 16px!important;box-shadow:none!important;
+ }
+ #create .stage{
+  width:min(43vw,168px)!important;max-width:168px!important;
+  height:auto!important;aspect-ratio:9/16!important;margin:0 auto!important;
+ }
+ #create .panel{position:relative!important;inset:auto!important;max-height:none!important;overflow:visible!important;transform:none!important;margin:0 0 92px!important}
+ #create .creation-dock{
+  position:fixed!important;left:10px!important;right:10px!important;
+  bottom:calc(70px + env(safe-area-inset-bottom))!important;z-index:1090!important;
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important;padding:6px!important;border-radius:15px!important;
+  background:rgba(255,254,250,.97)!important;border:1px solid #e9e6df!important;
+  box-shadow:0 6px 20px rgba(65,65,61,.08)!important;
+ }
+ #create .creation-dock button{min-height:42px!important;border-radius:10px!important;gap:1px!important;font-size:10px!important;padding:4px 2px!important}
+ #create .creation-dock button span{font-size:17px!important}
+ #create .creation-dock button b{font-size:10px!important;font-weight:500!important}
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;
+  width:100%!important;height:146px!important;min-height:0!important;max-height:146px!important;
+  box-sizing:border-box!important;margin:0!important;padding:4px 8px 6px!important;
+  overflow:hidden!important;z-index:1000!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;
+  background:#f7f6f2!important;border:0!important;border-bottom:1px solid #e9e6df!important;border-radius:0!important;
+  box-shadow:none!important;
+ }
+ body.keyboard-open #create .stage-wrap .live-preview-label,body:has(#textValue:focus) #create .stage-wrap .live-preview-label{
+  display:block!important;flex:0 0 auto!important;margin:0 auto 3px!important;font-size:9px!important;line-height:12px!important;
+ }
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage{
+  width:82px!important;max-width:82px!important;height:126px!important;max-height:126px!important;
+  aspect-ratio:9/16!important;flex:0 0 auto!important;
+ }
+ body.keyboard-open #create .panel,body:has(#textValue:focus) #create .panel{margin-top:154px!important}
+ body.keyboard-open #create .panel #textControls,body:has(#textValue:focus) #create .panel #textControls{margin-top:0!important;scroll-margin-top:154px!important}
+ body.keyboard-open #create .panel #textEntryField,body:has(#textValue:focus) #create .panel #textEntryField{display:block!important;visibility:visible!important;opacity:1!important}
+ body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock,
+ body.keyboard-open .bottom,body:has(#textValue:focus) .bottom{display:none!important}
+ body.keyboard-open .app{padding-bottom:10px!important}
+}
 </style>
 
 
@@ -3260,53 +3369,7 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
  #create .visual-preset,#create #presetControls .visual-preset{min-height:82px!important;padding:9px 6px!important}
 }
 
-/* V57: stable preview-first layout; no floating drawer overlays */
-@media(max-width:799px){
-  #create .workspace{display:flex!important;flex-direction:column!important;gap:10px!important;overflow:visible!important}
-  #create .stage-wrap{
-    position:sticky!important;top:0!important;z-index:25!important;
-    width:100%;margin:0!important;padding:6px 0 10px!important;
-    background:rgba(255,252,244,.98)!important;backdrop-filter:blur(12px);
-    border:0!important;border-radius:0!important;
-  }
-  #create .stage{
-    display:block!important;width:auto!important;height:auto!important;
-    aspect-ratio:9/16!important;
-    max-width:min(calc(100vw - 64px),calc((100svh - 240px)*9/16))!important;
-    max-height:calc(100svh - 240px)!important;
-    margin:0 auto!important;border-radius:14px!important;
-    transition:max-height .15s ease;
-  }
-  #create .panel{
-    position:relative!important;inset:auto!important;z-index:1!important;
-    display:flex!important;flex-direction:column!important;
-    width:100%!important;max-height:none!important;overflow:visible!important;
-    transform:none!important;transition:none!important;
-    border:1px solid #e4dfd5!important;border-radius:18px!important;
-    background:#fffefa!important;box-shadow:0 5px 20px rgba(44,44,44,.07)!important;
-    padding:0!important;margin:8px 0 90px!important;
-  }
-  #create .panel .panel-sheet-handle{display:none!important}
-  #create .panel .panel-section{flex:0 0 auto;padding:15px!important}
-  #create .creation-dock{display:none!important}
-  body.editor-sheet-open{overflow:auto!important}
-  body.keyboard-open #create .stage-wrap{top:0!important;padding:2px 0 6px!important}
-  body.keyboard-open #create .stage{
-    width:auto!important;max-width:min(calc(100vw - 40px),calc((100svh - 360px)*9/16))!important;
-    max-height:calc(100svh - 360px)!important;aspect-ratio:9/16!important;
-  }
-  body.keyboard-open #create .editor-head{display:flex!important;position:relative!important}
-  body.keyboard-open #create .panel{position:relative!important;max-height:none!important;overflow:visible!important}
-  body.keyboard-open #create .panel .panel-section{padding:12px!important}
-}
-@media(min-width:800px){
-  #create .workspace{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(330px,410px)!important;align-items:start!important;gap:22px!important}
-  #create .stage-wrap{position:sticky!important;top:16px!important;align-self:start}
-  #create .stage{width:auto!important;height:auto!important;aspect-ratio:9/16!important;max-width:min(100%,430px)!important;max-height:calc(100vh - 40px)!important}
-  #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;overscroll-behavior:contain}
-}
-@media(prefers-reduced-motion:reduce){#create .stage{transition:none!important}}
-</style>
+
 
 
 
