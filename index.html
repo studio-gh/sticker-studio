@@ -1680,7 +1680,20 @@ const dict={
 "Shape layer selected.":"Forma selecionada.",
 "Move layer up":"Mover camada para cima",
 "Move layer down":"Mover camada para baixo",};
-let lang=(localStorage.getItem("storyStudioLanguage")||localStorage.getItem("stickerStudioLanguage")||"pt")==="en"?"en":"pt";
+let lang="pt";
+const languageVersion="ptbr-default-v1";
+try{
+ const savedVersion=localStorage.getItem("storyStudioLanguageVersion");
+ if(savedVersion!==languageVersion){
+  // Migrate existing installs: the new product default is Brazilian Portuguese.
+  localStorage.setItem("storyStudioLanguage","pt");
+  localStorage.setItem("stickerStudioLanguage","pt");
+  localStorage.setItem("storyStudioLanguageVersion",languageVersion);
+  lang="pt";
+ }else{
+  lang=(localStorage.getItem("storyStudioLanguage")||"pt")==="en"?"en":"pt";
+ }
+}catch(e){lang="pt";}
 const originalText=new WeakMap();
 function translateTextNode(node){
  if(!node||node.nodeType!==Node.TEXT_NODE)return;
@@ -1711,7 +1724,7 @@ function applyLanguage(){
 }
 window.toggleLanguage=function(){
  lang=lang==="pt"?"en":"pt";
- try{localStorage.setItem("storyStudioLanguage",lang);localStorage.setItem("stickerStudioLanguage",lang)}catch(e){}
+ try{localStorage.setItem("storyStudioLanguage",lang);localStorage.setItem("stickerStudioLanguage",lang);localStorage.setItem("storyStudioLanguageVersion",languageVersion)}catch(e){}
  applyLanguage();
  window.refreshBrandCopy&&window.refreshBrandCopy();
  const b=document.getElementById("languageToggle");
