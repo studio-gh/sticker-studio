@@ -62,6 +62,11 @@ jobs:
           page.on('pageerror', error => errors.push(error.message));
 
           await page.goto('http://127.0.0.1:4173/v60-preview.html', { waitUntil: 'domcontentloaded' });
+          await page.waitForTimeout(150);
+          const initialLanguage = await page.evaluate(() => ({lang:document.documentElement.lang,button:document.querySelector('#languageToggle')?.textContent,hero:document.querySelector('#home .hero h1')?.textContent}));
+          assert.equal(initialLanguage.lang, 'pt-BR', 'Fresh visit should default to Brazilian Portuguese');
+          assert.equal(initialLanguage.button, 'EN', 'Language button should show the next language');
+          assert.match(initialLanguage.hero||'', /Faça seu Story/, 'Landing heading should be in Portuguese on initial load');
           await page.locator('.nav-btn[data-view="create"]').click();
           await page.waitForTimeout(350);
           assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
@@ -87,7 +92,7 @@ jobs:
             stage: (() => { const r=document.querySelector('#stage').getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,clientWidth:document.querySelector('#stage').clientWidth,clientHeight:document.querySelector('#stage').clientHeight,display:getComputedStyle(document.querySelector('#stage')).display}; })(),
             layer: (() => { const el=document.querySelector('#stage .layer'); const r=el.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,top:el.style.top,left:el.style.left,transform:el.style.transform,style:el.style.cssText}; })(),
             logical: {x: selected()?.x, y: selected()?.y, canvasHeight: CANVAS_H, unit: document.querySelector('#stage').clientWidth/500},
-            language: {htmlLang:document.documentElement.lang,button:document.querySelector('#languageToggle')?.textContent,hero:document.querySelector('#home .hero h1')?.textContent}
+            language: {htmlLang:document.documentElement.lang,button:document.querySelector('#languageToggle')?.textContent,hero:document.querySelector('#home .hero h1')?.textContent,sub:document.querySelector('#home .hero .sub')?.textContent,docTitle:document.title}
           }));
           console.log('V60_GEOMETRY_DEBUG '+JSON.stringify({centerRatio,rect,layerRect,geometryDebug}));
           assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas: '+JSON.stringify({centerRatio,rect,layerRect,geometryDebug}));
