@@ -1,0 +1,121 @@
+name: V60 editor smoke test and visual capture
+
+on:
+  push:
+    branches:
+      - ux/mobile-editor-v60-recovery
+  pull_request:
+    branches:
+      - main
+    paths:
+      - index.html
+      - .github/workflows/v60-smoke.yml
+
+jobs:
+  mobile-editor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out the exact branch commit
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install browser test runner
+        run: |
+          npm init -y
+          npm install --no-save playwright
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory . > /tmp/story-studio-server.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/ >/dev/null && break
+            sleep 1
+          done
+
+      - name: Test mobile canvas, text editing, curve, and export; capture screenshots
+        run: |
+          mkdir -p artifacts
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import assert from 'node:assert/strict';
+
+          const browser = await chromium.launch({ headless: true });
+          const errors = [];
+          const context = await browser.newContext({
+            viewport: { width: 390, height: 844 },
+            deviceScaleFactor: 1,
+            isMobile: true,
+            hasTouch: true
+          });
+          const page = await context.newPage();
+          page.on('pageerror', error => errors.push(error.message));
+
+          await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+          await page.locator('.nav-btn[data-view="create"]').click();
+          await page.waitForTimeout(350);
+
+          const stage = page.locator('#stage');
+          await stage.waitFor({ state: 'visible' });
+          let rect = await stage.boundingBox();
+          assert.ok(rect && rect.width > 100 && rect.height > 170, 'Mobile canvas must be visible and usable');
+          assert.ok(Math.abs(rect.height / rect.width - 16 / 9) < 0.03, 'Canvas must keep 9:16 ratio');
+          await page.screenshot({ path: 'artifacts/v60-mobile-empty-canvas.png', fullPage: true });
+
+          await page.evaluate(() => window.addText('Story Studio V60'));
+          await page.waitForTimeout(150);
+          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V60', 'New text must be retained in input');
+          assert.ok(await page.locator('#stage .layer').count() === 1, 'Adding text must create a layer');
+          rect = await stage.boundingBox();
+          const layerRect = await page.locator('#stage .layer').boundingBox();
+          assert.ok(layerRect, 'Text layer must render on canvas');
+          const centerRatio = (layerRect.y + layerRect.height / 2 - rect.y) / rect.height;
+          assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas');
+          await page.screenshot({ path: 'artifacts/v60-mobile-text-focus.png', fullPage: true });
+
+          await page.evaluate(() => {
+            document.activeElement?.blur();
+            document.body.classList.remove('keyboard-open');
+            window.setProp('fontSize', 68);
+            window.setTextProp('curve', 30);
+          });
+          await page.waitForTimeout(150);
+          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V60', 'Size/curve changes must not remove text content');
+          const curved = await page.locator('#stage .layer svg textPath').textContent();
+          assert.equal(curved, 'Story Studio V60', 'Curved text must retain the full string in live preview');
+
+          const exported = await page.evaluate(async () => {
+            const blob = await window.renderBlob();
+            const bitmap = await createImageBitmap(blob);
+            return { width: bitmap.width, height: bitmap.height, size: blob.size };
+          });
+          assert.ok(exported.width > 0 && exported.height > 0 && exported.size > 100, 'PNG export rendering must return image pixels');
+          await page.screenshot({ path: 'artifacts/v60-mobile-curved-text.png', fullPage: true });
+
+          const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+          desktop.on('pageerror', error => errors.push(error.message));
+          await desktop.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+          await desktop.locator('.nav-btn[data-view="create"]').click();
+          const desktopStage = await desktop.locator('#stage').boundingBox();
+          assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
+          await desktop.screenshot({ path: 'artifacts/v60-desktop-empty-canvas.png', fullPage: true });
+
+          assert.deepEqual(errors, [], 'Page must not produce uncaught JavaScript errors');
+          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 4, errors }, null, 2));
+          await browser.close();
+          NODE
+
+      - name: Upload browser screenshots and test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: story-studio-v60-visual-evidence
+          path: artifacts/
+          if-no-files-found: warn
