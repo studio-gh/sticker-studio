@@ -134,7 +134,7 @@ jobs:
           assert.ok((circleGeometry.path.match(/ A /g) || []).length >= 2, 'Circular text path must close a full 360-degree loop');
           assert.ok(circleGeometry.textLength > 0, 'Circular text must distribute text around the full circumference');
           await page.evaluate(() => window.setTextProp('curveRadius', 150));
-          assert.equal(await page.locator('#curveRadius').inputValue(), '150', 'Circle radius control must update the selected text');
+          assert.equal(await page.locator('#curveRadiusVal').innerText(), '150', 'Circle radius control must update the selected text');
 
           const exported = await page.evaluate(async () => {
             const blob = await window.renderBlob();
