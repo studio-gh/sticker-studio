@@ -2038,6 +2038,10 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
   #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;transform:none!important}
 }
 </style>
+
+<style id="v60-empty-layer-controls">
+#create .layer-tools[hidden]{display:none!important}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2409,7 +2413,7 @@ $('stage').addEventListener('pointercancel',e=>{
 });
 function finishGesture(before){const after=stateJSON();if(before===after)return;history=history.slice(0,historyIndex+1);history.push(before,after);historyIndex=history.length-1;updateHistoryUI();saveDraft()}
 
-function renderLayers(){$('layers').innerHTML=layers.length?layers.slice().reverse().map(l=>`<div class="layer-row ${l.id===selectedId?'active':''}" onclick="selectLayer('${l.id}')"><div class="layer-thumb">${l.type==='image'?`<img src="${l.src}">`:l.type==='shape'?'◆':'T'}</div><div class="layer-name" title="${esc(l.type==='text'?l.text||'Text':l.type==='shape'?(l.name||'Shape'):l.name||'Photo')}">${esc(l.type==='text'?l.text||'Text':l.type==='shape'?(l.name||'Shape'):l.name||'Photo')}</div><div class="layer-order"><button type="button" class="mini" aria-label="Move layer up" title="Move layer up" onclick="event.stopPropagation();moveLayer('${l.id}',1)">↑</button><button type="button" class="mini" aria-label="Move layer down" title="Move layer down" onclick="event.stopPropagation();moveLayer('${l.id}',-1)">↓</button></div></div>`).join(''):`<div class="status">No layers yet.</div>`}
+function renderLayers(){const tools=document.querySelector('.layer-tools');const hasSelection=!!selected()&&layers.length>0;if(tools){tools.hidden=!hasSelection;tools.setAttribute('aria-hidden',String(!hasSelection))}$('layers').innerHTML=layers.length?layers.slice().reverse().map(l=>`<div class="layer-row ${l.id===selectedId?'active':''}" onclick="selectLayer('${l.id}')"><div class="layer-thumb">${l.type==='image'?`<img src="${l.src}">`:l.type==='shape'?'◆':'T'}</div><div class="layer-name" title="${esc(l.type==='text'?l.text||'Text':l.type==='shape'?(l.name||'Shape'):l.name||'Photo')}">${esc(l.type==='text'?l.text||'Text':l.type==='shape'?(l.name||'Shape'):l.name||'Photo')}</div><div class="layer-order"><button type="button" class="mini" aria-label="Move layer up" title="Move layer up" onclick="event.stopPropagation();moveLayer('${l.id}',1)">↑</button><button type="button" class="mini" aria-label="Move layer down" title="Move layer down" onclick="event.stopPropagation();moveLayer('${l.id}',-1)">↓</button></div></div>`).join(''):`<div class="status">No layers yet.</div>`}
 window.selectLayer=id=>{selectedId=id;renderEditor()}
 window.moveLayer=(id,dir)=>{const i=layers.findIndex(x=>x.id===id),j=i+dir;if(i<0||j<0||j>=layers.length)return;commitHistory();[layers[i],layers[j]]=[layers[j],layers[i]];selectedId=id;renderEditor();commitHistory()}
 function deleteLayer(id){commitHistory();layers=layers.filter(x=>x.id!==id);if(selectedId===id)selectedId=layers.length?layers[layers.length-1].id:null;renderEditor();commitHistory()}
