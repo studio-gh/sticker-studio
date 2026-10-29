@@ -2038,6 +2038,14 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
   #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;transform:none!important}
 }
 #create .layer.text-layer svg{display:block!important;width:100%!important;height:100%!important;max-width:none!important;overflow:visible!important}
+
+  #create .workspace:has(.panel.v60-open) .stage-wrap{top:104px!important}
+  #create .workspace:has(.panel.v60-open) .stage{width:min(32vw,124px)!important;max-width:124px!important}
+  #create .panel.v60-open{max-height:min(36dvh,320px)!important}
+  @media(max-height:740px){
+    #create .workspace:has(.panel.v60-open) .stage{width:104px!important;max-width:104px!important}
+    #create .panel.v60-open{max-height:30dvh!important}
+  }
 </style>
 
 <style id="v60-empty-layer-controls">
@@ -3454,7 +3462,7 @@ function closeShapeMenu(){
   if(row){window.v60SetPanel(true,'layers');return}
   const layer=e.target.closest('.layer');
   if(layer){
-   const item=(window.__v60Layers||[]).find(l=>l.id===layer.dataset.id);
+   const item=layers.find(l=>l.id===layer.dataset.id);
    window.v60SetPanel(true,item?.type==='image'?'photo':item?.type==='shape'?'shape':'text');
   }
  },true);
