@@ -3250,5 +3250,190 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 
 
 
+
+<style id="v60-mobile-editor-layout">
+/* V60: single authoritative responsive editor layout. */
+:root{--v60-paper:#fffefa;--v60-bg:#f7f6f2;--v60-ink:#41413d;--v60-muted:#85837d;--v60-line:#e9e6df;--v60-accent:#ad8072}
+#create .stage-wrap{background:var(--v60-bg)!important;border:1px solid var(--v60-line)!important;box-shadow:none!important}
+#create .stage{background:var(--v60-paper)!important;aspect-ratio:9/16!important;position:relative!important;overflow:hidden!important}
+#create .panel{background:var(--v60-paper)!important;border:1px solid var(--v60-line)!important}
+#create .panel-sheet-handle{display:none}
+@media(max-width:799px){
+  #create{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
+  #create .editor-head{
+    position:sticky!important;top:0!important;z-index:90!important;
+    display:flex!important;flex-wrap:wrap!important;gap:7px!important;
+    padding:8px 0 10px!important;margin:0!important;
+    background:rgba(247,246,242,.97)!important;backdrop-filter:blur(12px)!important;
+  }
+  #create .editor-head h2{flex:1 1 100%!important;font-size:24px!important;line-height:1.05!important;margin:0!important}
+  #create .editor-actions{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;gap:5px!important}
+  #create .editor-actions .small-btn{min-width:0!important;min-height:38px!important;padding:6px 3px!important;font-size:10px!important;white-space:nowrap!important}
+  #create .workspace{display:flex!important;flex-direction:column!important;gap:10px!important;overflow:visible!important}
+  #create .stage-wrap{
+    position:sticky!important;top:104px!important;z-index:45!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    width:100%!important;box-sizing:border-box!important;min-width:0!important;
+    margin:0!important;padding:7px 10px 9px!important;
+    background:rgba(247,246,242,.97)!important;backdrop-filter:blur(12px)!important;
+    border:1px solid var(--v60-line)!important;border-radius:16px!important;
+    box-shadow:0 3px 12px rgba(44,44,44,.04)!important;
+  }
+  #create .stage-wrap .live-preview-label{display:block!important;align-self:flex-start!important;margin:0 0 6px!important;font-size:10px!important;color:var(--v60-muted)!important}
+  #create .stage{
+    display:block!important;width:min(54vw,220px)!important;max-width:220px!important;
+    height:auto!important;aspect-ratio:9/16!important;max-height:none!important;flex:0 0 auto!important;
+    margin:0 auto!important;border-radius:8px!important;
+  }
+  #create .panel{
+    position:fixed!important;left:10px!important;right:10px!important;
+    bottom:calc(138px + env(safe-area-inset-bottom))!important;z-index:100!important;
+    display:flex!important;flex-direction:column!important;gap:0!important;
+    max-height:min(46dvh,420px)!important;overflow-y:auto!important;overscroll-behavior:contain;
+    transform:translateY(calc(100% - 48px))!important;transition:transform .18s ease!important;
+    border-radius:18px!important;padding:0!important;margin:0!important;
+    background:rgba(255,254,250,.99)!important;box-shadow:0 10px 36px rgba(44,44,44,.13)!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #create .panel.v60-open{transform:translateY(0)!important}
+  #create .panel .panel-sheet-handle{
+    display:flex!important;flex:0 0 48px!important;align-items:center!important;justify-content:space-between!important;
+    position:sticky!important;top:0!important;z-index:8!important;
+    padding:0 15px!important;background:rgba(255,254,250,.99)!important;
+    border:0!important;border-bottom:1px solid var(--v60-line)!important;border-radius:18px 18px 0 0!important;
+    touch-action:manipulation;
+  }
+  #create .panel .panel-sheet-handle:before{content:"";position:absolute;top:6px;left:calc(50% - 16px);width:32px;height:4px;background:#d5cfc5;border-radius:4px}
+  #create .panel .panel-sheet-handle strong{font-size:12px;font-weight:600;color:var(--v60-ink)!important}
+  #create .panel .panel-sheet-handle span{font-size:11px;color:var(--v60-muted)!important}
+  #create .panel .panel-section{flex:0 0 auto!important;padding:14px!important}
+  #create .panel .panel-section:last-child{padding-bottom:20px!important}
+  #create .panel .panel-section[hidden]{display:none!important}
+  #create .creation-dock{
+    position:fixed!important;left:10px!important;right:10px!important;
+    bottom:calc(68px + env(safe-area-inset-bottom))!important;z-index:110!important;
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;
+    padding:6px!important;border-radius:16px!important;border:1px solid var(--v60-line)!important;
+    background:rgba(255,254,250,.97)!important;box-shadow:0 7px 24px rgba(44,44,44,.09)!important;
+    backdrop-filter:blur(14px)!important;
+  }
+  #create .creation-dock button{min-width:0!important;min-height:44px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;padding:4px 2px!important;border-radius:10px!important;font-size:10px!important}
+  #create .creation-dock button b{font-size:10px!important;font-weight:600!important}
+  #create .creation-dock button span{font-size:16px!important}
+  #create .creation-dock button.dock-primary{background:#eeeae5!important;border-color:#dcd5cc!important}
+  #create .bottom{z-index:105!important}
+  body.keyboard-open #create .editor-head,
+  body:has(#textValue:focus) #create .editor-head{display:none!important}
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    position:fixed!important;top:0!important;left:0!important;right:0!important;
+    z-index:1200!important;height:184px!important;min-height:184px!important;max-height:184px!important;
+    width:100%!important;box-sizing:border-box!important;margin:0!important;padding:5px 8px 7px!important;
+    border:0!important;border-bottom:1px solid var(--v60-line)!important;border-radius:0!important;
+    display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-direction:column!important;
+    background:rgba(247,246,242,.99)!important;box-shadow:0 4px 18px rgba(44,44,44,.04)!important;
+  }
+  body.keyboard-open #create .stage-wrap .live-preview-label,
+  body:has(#textValue:focus) #create .stage-wrap .live-preview-label{display:block!important;align-self:center!important;margin:0 0 4px!important;font-size:9px!important;line-height:12px!important}
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:100px!important;max-width:100px!important;height:auto!important;aspect-ratio:9/16!important;
+    max-height:none!important;flex:0 0 auto!important;border-radius:5px!important;margin:0 auto!important;
+  }
+  body.keyboard-open #create .panel,
+  body:has(#textValue:focus) #create .panel{
+    position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;
+    transform:none!important;max-height:none!important;overflow:visible!important;
+    margin:190px 10px 12px!important;display:block!important;border-radius:14px!important;
+  }
+  body.keyboard-open #create .panel .panel-sheet-handle,
+  body:has(#textValue:focus) #create .panel .panel-sheet-handle{display:none!important}
+  body.keyboard-open #create .panel .panel-section,
+  body:has(#textValue:focus) #create .panel .panel-section{display:none!important}
+  body.keyboard-open #create .panel #textControls,
+  body:has(#textValue:focus) #create .panel #textControls{display:block!important;padding:12px!important;border:0!important}
+  body.keyboard-open #create .panel #textControls .panel-title,
+  body:has(#textValue:focus) #create .panel #textControls .panel-title{display:none!important}
+  body.keyboard-open #create .panel #textControls .fonts,
+  body:has(#textValue:focus) #create .panel #textControls .fonts,
+  body.keyboard-open #create .panel #textControls .text-sizing-row,
+  body:has(#textValue:focus) #create .panel #textControls .text-sizing-row,
+  body.keyboard-open #create .panel #textControls .text-width-hint,
+  body:has(#textValue:focus) #create .panel #textControls .text-width-hint,
+  body.keyboard-open #create .panel #textControls .field:not(#textEntryField),
+  body:has(#textValue:focus) #create .panel #textControls .field:not(#textEntryField){display:none!important}
+  body.keyboard-open #create .panel #textEntryField textarea,
+  body:has(#textValue:focus) #create .panel #textEntryField textarea{display:block!important;min-height:66px!important;height:66px!important;font-size:16px!important}
+  body.keyboard-open #create .creation-dock,
+  body:has(#textValue:focus) #create .creation-dock,
+  body.keyboard-open .bottom,
+  body:has(#textValue:focus) .bottom{display:none!important}
+}
+@media(min-width:800px){
+  #create .workspace{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(330px,410px)!important;align-items:start!important;gap:22px!important}
+  #create .stage-wrap{position:sticky!important;top:16px!important;align-self:start!important;min-width:0!important}
+  #create .stage{display:block!important;width:auto!important;height:auto!important;aspect-ratio:9/16!important;max-width:min(100%,420px)!important;max-height:calc(100vh - 40px)!important;margin:0 auto!important}
+  #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;transform:none!important}
+}
+</style>
+<script id="v60-panel-interaction">
+(function(){
+ const panel=document.querySelector('#create .panel');
+ if(!panel)return;
+ if(!panel.querySelector('.panel-sheet-handle')){
+  const handle=document.createElement('button');
+  handle.type='button';handle.className='panel-sheet-handle';
+  handle.innerHTML='<strong id="v60PanelTitle">Ferramentas</strong><span id="v60PanelHint">Toque para abrir</span>';
+  handle.setAttribute('aria-expanded','false');panel.insertBefore(handle,panel.firstChild);
+  handle.addEventListener('click',()=>window.v60SetPanel(!panel.classList.contains('v60-open'),'tools'));
+ }
+ function mobile(){return window.matchMedia('(max-width:799px)').matches}
+ window.v60SetPanel=function(open,mode){
+  if(!mobile())return;
+  panel.classList.toggle('v60-open',!!open);
+  const h=panel.querySelector('.panel-sheet-handle');
+  if(h)h.setAttribute('aria-expanded',String(!!open));
+  const title=document.getElementById('v60PanelTitle'),hint=document.getElementById('v60PanelHint');
+  if(title)title.textContent=mode==='text'?'Editar texto':mode==='photo'?'Editar foto':mode==='shape'?'Editar formas':mode==='layers'?'Camadas':'Ferramentas';
+  if(hint)hint.textContent=open?'Toque para recolher':'Toque para abrir';
+ };
+ function openForButton(button){
+  const label=(button.innerText||'').toLowerCase();
+  if(label.includes('text')||label.includes('texto'))window.v60SetPanel(true,'text');
+  else if(label.includes('photo')||label.includes('foto'))window.v60SetPanel(true,'photo');
+  else if(label.includes('shape')||label.includes('forma')||label.includes('style')||label.includes('estilo'))window.v60SetPanel(true,'shape');
+ }
+ document.addEventListener('click',e=>{
+  if(!mobile())return;
+  const b=e.target.closest('#create .creation-dock button');
+  if(b)openForButton(b);
+ },true);
+ document.addEventListener('focusin',e=>{
+  if(!mobile())return;
+  if(e.target&&e.target.id==='textValue'){
+   window.v60SetPanel(true,'text');
+   document.body.classList.add('keyboard-open');
+   setTimeout(()=>{
+    const panelBox=panel.getBoundingClientRect(),field=document.getElementById('textEntryField');
+    if(field&&panelBox.height>0){
+     const d=field.getBoundingClientRect().top-panelBox.top;
+     if(Math.abs(d)>4)panel.scrollTop+=d-8;
+    }
+   },80);
+  }
+ });
+ document.addEventListener('focusout',e=>{
+  if(e.target&&e.target.id==='textValue')setTimeout(()=>{
+   if(!document.activeElement||document.activeElement.id!=='textValue'){
+    if(!(window.visualViewport&&window.visualViewport.height<window.innerHeight*.8))document.body.classList.remove('keyboard-open');
+   }
+  },120);
+ });
+ window.addEventListener('resize',()=>{
+  if(!mobile()){panel.classList.remove('v60-open');document.body.classList.remove('keyboard-open')}
+ });
+})();
+</script>
+
 </body>
 </html>
