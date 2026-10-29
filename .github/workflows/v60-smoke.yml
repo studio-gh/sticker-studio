@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - index.html
+      - v60-preview.html
       - .github/workflows/v60-smoke.yml
 
 jobs:
