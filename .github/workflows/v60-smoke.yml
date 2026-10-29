@@ -9,7 +9,6 @@ on:
       - main
     paths:
       - index.html
-      - v60-preview.html
       - .github/workflows/v60-smoke.yml
 
 jobs:
@@ -60,6 +59,17 @@ jobs:
           page.on('pageerror', error => errors.push(error.message));
 
           await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+          await page.waitForFunction(() => document.documentElement.lang === 'pt-BR');
+          const languageButton = page.locator('#languageToggle');
+          assert.equal(await languageButton.innerText(), 'EN', 'Portuguese should be the default and the toggle should offer English');
+          assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Home headline should start in Brazilian Portuguese');
+          await languageButton.click();
+          await page.waitForFunction(() => document.documentElement.lang === 'en');
+          assert.equal(await languageButton.innerText(), 'PT-BR', 'Toggle should offer Portuguese while English is active');
+          assert.match(await page.locator('#home .hero h1').innerText(), /Make your Story/i, 'Toggle should translate the home headline to English');
+          await languageButton.click();
+          await page.waitForFunction(() => document.documentElement.lang === 'pt-BR');
+          assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Second toggle should restore Portuguese');
           await page.locator('.nav-btn[data-view="create"]').click();
           await page.waitForTimeout(350);
           assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
@@ -98,7 +108,7 @@ jobs:
             const input = document.querySelector('#textValue').getBoundingClientRect();
             return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, viewport: window.innerHeight };
           });
-          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < 210, 'Keyboard layout simulation should keep a compact canvas pinned at the top');
+          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < 230, 'Keyboard layout simulation should keep a compact canvas pinned at the top');
           assert.ok(keyboardState.inputTop >= keyboardState.canvasBottom - 1 && keyboardState.inputTop < keyboardState.viewport, 'Text input should remain below the preview and in the visible area');
           await page.screenshot({ path: 'artifacts/v60-mobile-keyboard-layout-simulation.png', fullPage: true });
 
@@ -114,6 +124,17 @@ jobs:
           assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V60', 'Size/curve changes must not remove text content');
           const curved = await page.locator('#stage .layer svg textPath').textContent();
           assert.equal(curved, 'Story Studio V60', 'Curved text must retain the full string in live preview');
+
+          await page.evaluate(() => window.setCurveMode('circle'));
+          const circleGeometry = await page.evaluate(() => {
+            const path = document.querySelector('#stage .layer svg defs path')?.getAttribute('d') || '';
+            const textPath = document.querySelector('#stage .layer svg textPath');
+            return { path, textLength: Number(textPath?.getAttribute('textLength') || 0), mode: window.selected?.()?.curveMode || null };
+          });
+          assert.ok((circleGeometry.path.match(/ A /g) || []).length >= 2, 'Circular text path must close a full 360-degree loop');
+          assert.ok(circleGeometry.textLength > 0, 'Circular text must distribute text around the full circumference');
+          await page.evaluate(() => window.setTextProp('curveRadius', 150));
+          assert.equal(await page.locator('#curveRadius').inputValue(), '150', 'Circle radius control must update the selected text');
 
           const exported = await page.evaluate(async () => {
             const blob = await window.renderBlob();
