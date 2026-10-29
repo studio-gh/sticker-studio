@@ -2085,7 +2085,7 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 <button onclick="startTextEditing()" class="dock-primary"><span aria-hidden="true">T</span><b>Text</b></button>
 <button onclick="document.getElementById('file').click()"><span aria-hidden="true">＋</span><b>Photo</b></button>
 <button id="addShapeMenuToggle" onclick="toggleShapeMenu()"><span aria-hidden="true">＋</span><b>Add shape</b></button>
-<button onclick="document.getElementById('shapeControls').scrollIntoView({behavior:'smooth',block:'start'})"><span aria-hidden="true">◉</span><b>Style</b></button>
+<button onclick="window.v60SetPanel(true,'shape')"><span aria-hidden="true">◉</span><b>Style</b></button>
 </nav>
 <input id="file" type="file" accept="image/*" hidden onchange="handleFile(this.files[0])">
 <div class="workspace">
@@ -3387,6 +3387,7 @@ function closeShapeMenu(){
 (function(){
  const panel=document.querySelector('#create .panel');
  if(!panel)return;
+ try{renderLayers()}catch(e){console.warn('Layer panel initialisation skipped',e)}
  const sectionIds=['textControls','presetControls','textEffectsControls','outlineControls','shadowControls','curveControls','highlightControls','imageControls','shapeControls','selectionControls'];
  const revealForMode=mode=>{
    const chosen=mode==='text'?['textControls','presetControls','textEffectsControls','outlineControls','shadowControls','curveControls','highlightControls']:
@@ -3448,8 +3449,13 @@ function closeShapeMenu(){
  });
  document.addEventListener('click',e=>{
   if(!mobile())return;
-  const layer=e.target.closest('.layer,.layer-row');
-  if(layer)window.v60SetPanel(true,'text');
+  const row=e.target.closest('.layer-row');
+  if(row){window.v60SetPanel(true,'layers');return}
+  const layer=e.target.closest('.layer');
+  if(layer){
+   const item=(window.__v60Layers||[]).find(l=>l.id===layer.dataset.id);
+   window.v60SetPanel(true,item?.type==='image'?'photo':item?.type==='shape'?'shape':'text');
+  }
  },true);
  const resizeObserver=new ResizeObserver(()=>{if(!mobile()||!document.body.classList.contains('keyboard-open'))return;});
  window.addEventListener('resize',()=>{if(!mobile()){panel.classList.remove('v60-open');document.body.classList.remove('keyboard-open');sectionIds.forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=false})}});
