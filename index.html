@@ -3386,6 +3386,18 @@ function closeShapeMenu(){
 (function(){
  const panel=document.querySelector('#create .panel');
  if(!panel)return;
+ const sectionIds=['textControls','presetControls','textEffectsControls','outlineControls','shadowControls','curveControls','highlightControls','imageControls','shapeControls','selectionControls'];
+ const revealForMode=mode=>{
+   const chosen=mode==='text'?['textControls','presetControls','textEffectsControls','outlineControls','shadowControls','curveControls','highlightControls']:
+      mode==='photo'?['imageControls','selectionControls']:
+      mode==='shape'?['shapeControls','selectionControls']:
+      mode==='layers'?['layers']:sectionIds;
+   sectionIds.forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=!chosen.includes(id)});
+   const layersSection=document.getElementById('layers')?.closest('.panel-section');
+   if(layersSection)layersSection.hidden=mode!=='layers'&&mode!=='tools';
+   const quickSection=panel.querySelector(':scope > .panel-section');
+   if(quickSection&&quickSection.querySelector('.quick-tool-grid'))quickSection.hidden=mode!=='tools';
+ };
  if(!panel.querySelector('.panel-sheet-handle')){
   const handle=document.createElement('button');
   handle.type='button';handle.className='panel-sheet-handle';
@@ -3397,18 +3409,20 @@ function closeShapeMenu(){
  window.v60SetPanel=function(open,mode){
   if(!mobile())return;
   panel.classList.toggle('v60-open',!!open);
+  if(open)revealForMode(mode||'tools');
   const h=panel.querySelector('.panel-sheet-handle');
   if(h)h.setAttribute('aria-expanded',String(!!open));
   const title=document.getElementById('v60PanelTitle'),hint=document.getElementById('v60PanelHint');
   if(title)title.textContent=mode==='text'?'Editar texto':mode==='photo'?'Editar foto':mode==='shape'?'Editar formas':mode==='layers'?'Camadas':'Ferramentas';
   if(hint)hint.textContent=open?'Toque para recolher':'Toque para abrir';
  };
- function openForButton(button){
+ const openForButton=button=>{
   const label=(button.innerText||'').toLowerCase();
   if(label.includes('text')||label.includes('texto'))window.v60SetPanel(true,'text');
   else if(label.includes('photo')||label.includes('foto'))window.v60SetPanel(true,'photo');
   else if(label.includes('shape')||label.includes('forma')||label.includes('style')||label.includes('estilo'))window.v60SetPanel(true,'shape');
- }
+  else window.v60SetPanel(true,'tools');
+ };
  document.addEventListener('click',e=>{
   if(!mobile())return;
   const b=e.target.closest('#create .creation-dock button');
@@ -3419,27 +3433,30 @@ function closeShapeMenu(){
   if(e.target&&e.target.id==='textValue'){
    window.v60SetPanel(true,'text');
    document.body.classList.add('keyboard-open');
-   setTimeout(()=>{
-    const panelBox=panel.getBoundingClientRect(),field=document.getElementById('textEntryField');
-    if(field&&panelBox.height>0){
-     const d=field.getBoundingClientRect().top-panelBox.top;
-     if(Math.abs(d)>4)panel.scrollTop+=d-8;
-    }
-   },80);
   }
  });
  document.addEventListener('focusout',e=>{
   if(e.target&&e.target.id==='textValue')setTimeout(()=>{
    if(!document.activeElement||document.activeElement.id!=='textValue'){
-    if(!(window.visualViewport&&window.visualViewport.height<window.innerHeight*.8))document.body.classList.remove('keyboard-open');
+    if(!(window.visualViewport&&window.visualViewport.height<window.innerHeight*.8)){
+      document.body.classList.remove('keyboard-open');
+      if(mobile())window.v60SetPanel(true,'text');
+    }
    }
-  },120);
+  },140);
  });
- window.addEventListener('resize',()=>{
-  if(!mobile()){panel.classList.remove('v60-open');document.body.classList.remove('keyboard-open')}
- });
-})();
-</script>
+ document.addEventListener('click',e=>{
+  if(!mobile())return;
+  const layer=e.target.closest('.layer,.layer-row');
+  if(layer)window.v60SetPanel(true,'text');
+ },true);
+ const resizeObserver=new ResizeObserver(()=>{if(!mobile()||!document.body.classList.contains('keyboard-open'))return;});
+ window.addEventListener('resize',()=>{if(!mobile()){panel.classList.remove('v60-open');document.body.classList.remove('keyboard-open');sectionIds.forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=false})}});
+ if(mobile()){
+  panel.classList.remove('v60-open');
+  revealForMode('tools');
+ }
+})();</script>
 
 
 </body>
