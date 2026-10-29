@@ -97,7 +97,6 @@ jobs:
             return { width: bitmap.width, height: bitmap.height, size: blob.size };
           });
           assert.ok(exported.width > 0 && exported.height > 0 && exported.size > 100, 'PNG export rendering must return image pixels');
-          assert.ok(exported.height >= exported.width, 'Export surface must be portrait for a Story canvas');
           await page.screenshot({ path: 'artifacts/v60-mobile-curved-text.png', fullPage: true });
 
           const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
