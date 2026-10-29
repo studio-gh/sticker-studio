@@ -1014,6 +1014,1030 @@ h2{line-height:1}
 }
 </style>
 
+<style>
+/* V30: brand cleanup + live editing ergonomics */
+:root{
+  --accent:#ff961a!important;
+  --accent-hover:#ffad3d!important;
+}
+input[type="range"], input[type="checkbox"], input[type="radio"]{accent-color:#ff961a!important}
+.field input:focus,.field textarea:focus,.field select:focus,.hex-input:focus{
+  outline:3px solid #ff961a!important;
+  outline-offset:2px!important;
+  border-color:#ff961a!important;
+}
+#eraseModeBtn.active{
+  background:#ff961a!important;
+  color:#2c2c2c!important;
+  border-color:#ff961a!important;
+}
+/* When typing, reserve a clear, persistent preview zone above the keyboard. */
+@media(max-width:799px){
+  body.keyboard-open #create .stage-wrap{
+    display:block!important;
+    position:fixed!important;
+    top:calc(env(safe-area-inset-top, 0px) + 6px)!important;
+    left:0!important;right:0!important;
+    width:100%!important;
+    margin:0!important;
+    padding:8px 10px 10px!important;
+    z-index:100!important;
+    background:rgba(36,36,36,.98)!important;
+    border:0!important;
+    border-bottom:1px solid #55524c!important;
+    box-shadow:0 8px 24px rgba(0,0,0,.25)!important;
+  }
+  body.keyboard-open #create .stage-wrap .live-preview-label{
+    display:block!important;
+    width:100%!important;
+    max-width:none!important;
+    color:#ff961a!important;
+    text-align:center!important;
+    margin:0 auto 5px!important;
+    font-size:10px!important;
+  }
+  body.keyboard-open #create .stage{
+    width:min(42vw,178px)!important;
+    max-width:178px!important;
+    margin:0 auto!important;
+  }
+  body.keyboard-open #create .panel{
+    padding-top:calc(min(42vw,178px) + 36px)!important;
+  }
+  body.keyboard-open .creation-dock{display:none!important}
+}
+/* Eraser instructions must describe a manual gesture, not imply automatic cleanup. */
+#eraserHint{
+  display:none;
+  border:1px solid #ff961a!important;
+  border-radius:12px!important;
+  padding:10px 12px!important;
+  color:#fffcf4!important;
+  background:#332b20!important;
+  line-height:1.45!important;
+}
+body.erase-mode #stage{
+  outline:3px solid #ff961a!important;
+  outline-offset:3px!important;
+  cursor:crosshair!important;
+}
+body.erase-mode #stage .layer.selected{
+  outline:2px dashed #ff961a!important;
+}
+</style>
+<style>
+/* V31: compact typography controls and visual-first presets */
+#textControls .text-sizing-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:16px!important;
+  align-items:start!important;
+}
+#textControls .text-sizing-row .field{min-width:0!important;margin:0!important}
+#textControls .text-sizing-row .field label{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
+#textControls .text-sizing-row input[type=range]{width:100%;min-width:0}
+#textControls .text-width-hint{font-size:11px!important;padding:0!important;background:transparent!important}
+#textControls .icon-align-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+#textControls .icon-align-grid .align-btn{height:48px;min-height:48px!important;display:grid;place-items:center;padding:8px!important}
+#textControls .icon-align-grid svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#textControls .icon-align-grid .align-btn.on{background:#ff961a!important;border-color:#ff961a!important;color:#2c2c2c!important}
+#presetControls .visual-preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#presetControls .visual-preset{
+  min-width:0;min-height:82px;padding:8px 5px 7px!important;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  border:1px solid #55524c;border-radius:12px;background:#242424;color:#fffcf4;
+}
+#presetControls .preset-art{display:flex;align-items:center;justify-content:center;width:100%;min-height:37px;font-size:20px;line-height:1;letter-spacing:-.04em}
+#presetControls .preset-caption{font-size:10px;font-weight:800;line-height:1.1}
+#presetControls .preset-meme .preset-art{font-family:'Archivo Black',sans-serif;color:#fff;text-shadow:1px 2px 0 #ff961a,-1px -1px 0 #171717}
+#presetControls .preset-editorial .preset-art{font-family:'Playfair Display',serif;font-style:italic}
+#presetControls .preset-impact .preset-art{font-family:'Bebas Neue',sans-serif;font-size:27px;color:#ff961a;letter-spacing:.04em}
+#presetControls .preset-bubble .preset-art{font-family:'DM Sans',sans-serif;font-weight:900;border:2px solid currentColor;border-radius:14px;padding:7px 2px;max-width:74px}
+#presetControls .preset-marker .preset-art{font-family:'Permanent Marker',cursive;transform:rotate(-5deg)}
+#presetControls .preset-clean .preset-art{font-family:'DM Sans',sans-serif;font-weight:500;letter-spacing:0}
+#presetControls .visual-preset:active{transform:scale(.97)}
+@media(max-width:420px){
+ #textControls .text-sizing-row{gap:12px!important}
+ #textControls .text-sizing-row .field label{font-size:10px!important;letter-spacing:.02em!important}
+ #presetControls .visual-preset-grid{gap:6px}
+ #presetControls .visual-preset{min-height:76px}
+ #presetControls .preset-art{font-size:18px}
+}
+</style>
+<style>
+/* V32: reduce utility-panel noise and keep color controls on one row */
+#create .panel-section:has(>#selectionControls) > #selectionControls{
+  display:block!important;
+  min-height:0!important;
+  padding:7px 10px!important;
+  margin:0 0 10px!important;
+  border:1px solid #45423d!important;
+  border-radius:10px!important;
+  background:#242424!important;
+  color:#bdb7ad!important;
+  font-size:11px!important;
+  line-height:1.3!important;
+  letter-spacing:.01em!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .custom-color{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 42px minmax(96px,auto)!important;
+  gap:7px!important;
+  align-items:center!important;
+}
+#create #colorHex{min-width:0!important;height:42px!important;padding:0 10px!important;font-size:12px!important}
+#create #color{width:42px!important;height:42px!important;min-width:42px!important;padding:3px!important}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .eyedrop-btn{
+  width:100%!important;min-width:0!important;height:42px!important;
+  padding:0 9px!important;font-size:11px!important;white-space:nowrap!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) label{
+  margin-bottom:6px!important;
+}
+@media(max-width:380px){
+  #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .custom-color{
+    grid-template-columns:minmax(0,1fr) 38px minmax(82px,auto)!important;gap:5px!important;
+  }
+  #create #color{width:38px!important;min-width:38px!important}
+  #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .eyedrop-btn{padding:0 5px!important;font-size:10px!important}
+}
+</style>
+<style>
+/* V33: keep a compact live canvas visible while the mobile keyboard is open */
+@media(max-width:799px){
+  body.keyboard-open #create .stage-wrap{
+    position:fixed!important;
+    top:calc(env(safe-area-inset-top, 0px) + 4px)!important;
+    left:0!important;right:0!important;
+    width:100%!important;
+    height:auto!important;
+    margin:0!important;
+    padding:5px 10px 7px!important;
+    z-index:100!important;
+    background:rgba(36,36,36,.98)!important;
+    border:0!important;border-bottom:1px solid #55524c!important;
+    border-radius:0!important;
+  }
+  body.keyboard-open #create .stage-wrap .live-preview-label{
+    display:block!important;margin:0 auto 4px!important;
+    color:#ff961a!important;text-align:center!important;font-size:9px!important;
+  }
+  body.keyboard-open #create .stage{
+    width:min(29vw,118px)!important;max-width:118px!important;
+    aspect-ratio:1!important;margin:0 auto!important;
+  }
+  /* The preview is fixed, so offset the scrolling content by its actual compact height. */
+  body.keyboard-open #create .panel{
+    padding-top:0!important;
+    margin-top:138px!important;
+  }
+  body.keyboard-open #create .panel-section:first-child{margin-top:0!important}
+  body.keyboard-open #create .creation-dock{display:none!important}
+  body.keyboard-open #create .bottom{display:none!important}
+}
+/* A fresh text layer must start upright. The rotation control remains available afterward. */
+</style>
+<style>
+/* V34: compact eyedropper icon beside the color swatch */
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 42px 42px!important;
+  gap:7px!important;align-items:center!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{
+  width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;
+  display:grid!important;place-items:center!important;padding:0!important;
+  border-radius:10px!important;background:#242424!important;color:#ff961a!important;
+}
+#create .icon-eyedrop-btn svg{
+  width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+#create .icon-eyedrop-btn:active{background:#ff961a!important;color:#2c2c2c!important}
+@media(max-width:380px){
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+  grid-template-columns:minmax(0,1fr) 38px 38px!important;gap:5px!important;
+ }
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{width:38px!important;min-width:38px!important}
+}
+</style>
+<style>
+/* V35: keep hex, color swatch, and eyedropper aligned on one row */
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 42px 42px!important;
+  grid-template-rows:42px!important;
+  gap:7px!important;
+  align-items:stretch!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #colorHex{
+  grid-column:1!important;grid-row:1!important;width:100%!important;min-width:0!important;height:42px!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #color{
+  grid-column:2!important;grid-row:1!important;width:42px!important;min-width:42px!important;height:42px!important;
+}
+#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > .icon-eyedrop-btn{
+  grid-column:3!important;grid-row:1!important;width:42px!important;min-width:42px!important;height:42px!important;
+}
+@media(max-width:380px){
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
+   grid-template-columns:minmax(0,1fr) 38px 38px!important;grid-template-rows:38px!important;gap:5px!important;
+ }
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #color,
+ #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > .icon-eyedrop-btn{
+   width:38px!important;min-width:38px!important;height:38px!important;
+ }
+}
+</style>
+<style>
+/* V36: keyboard preview is anchored to the visible viewport, not a stale offset */
+@media(max-width:799px){
+  body:has(#textValue:focus) #create .stage-wrap,
+  body.keyboard-open #create .stage-wrap{
+    display:block!important;
+    position:fixed!important;
+    top:4px!important;
+    left:0!important;right:0!important;
+    width:100%!important;
+    height:auto!important;
+    margin:0!important;
+    padding:5px 10px 7px!important;
+    z-index:1000!important;
+    background:rgba(36,36,36,.98)!important;
+    border:0!important;border-bottom:1px solid #55524c!important;
+    border-radius:0!important;
+    box-shadow:0 6px 18px rgba(0,0,0,.24)!important;
+  }
+  body:has(#textValue:focus) #create .stage-wrap .live-preview-label,
+  body.keyboard-open #create .stage-wrap .live-preview-label{
+    display:block!important;margin:0 auto 4px!important;
+    color:#ff961a!important;text-align:center!important;font-size:9px!important;
+  }
+  body:has(#textValue:focus) #create .stage,
+  body.keyboard-open #create .stage{
+    width:min(31vw,124px)!important;max-width:124px!important;
+    aspect-ratio:1!important;margin:0 auto!important;
+  }
+  body:has(#textValue:focus) #create .panel,
+  body.keyboard-open #create .panel{
+    margin-top:0!important;padding-top:0!important;
+  }
+  body:has(#textValue:focus) #create .creation-dock,
+  body.keyboard-open #create .creation-dock,
+  body:has(#textValue:focus) #create .bottom,
+  body.keyboard-open #create .bottom{display:none!important}
+}
+</style>
+<style>
+/* V37: keep both the live preview and the text field usable with Android keyboard open */
+@media(max-width:799px){
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    scroll-margin-top:245px!important;
+  }
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    top:0!important;
+    padding:4px 10px 6px!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:min(34vw,148px)!important;
+    max-width:148px!important;
+    aspect-ratio:1!important;
+  }
+}
+</style>
+<style>
+/* V38: focused home, one clear path into creation */
+.home-create-hero{
+  min-height:0!important;
+  margin:clamp(28px,8vh,86px) 0 24px!important;
+  padding:clamp(26px,6vw,54px)!important;
+}
+.home-create-hero .eyebrow{margin-bottom:18px!important}
+.home-create-hero h1{max-width:650px!important}
+.home-create-hero .sub{max-width:440px!important;line-height:1.55!important}
+.home-create-hero .actions{display:block!important;margin-top:24px!important}
+.home-create-hero .btn{width:auto!important;min-width:190px;min-height:52px!important}
+@media(max-width:799px){
+ .home-create-hero{margin:20px 0 16px!important;padding:27px 22px!important}
+ .home-create-hero h1{font-size:clamp(42px,12vw,62px)!important}
+ .home-create-hero .sub{font-size:16px!important;max-width:32rem!important}
+ .home-create-hero .actions{margin-top:22px!important}
+ .home-create-hero .btn{width:100%!important}
+}
+</style>
+<style>
+/* V39: useful, action-led home below the primary CTA */
+.home-create-hero{
+  margin:clamp(20px,4vh,38px) 0 22px!important;
+  padding:clamp(24px,4vw,42px)!important;
+}
+.home-create-hero h1{font-size:clamp(40px,7vw,66px)!important;line-height:.94!important;margin:18px 0 14px!important}
+.home-create-hero .sub{font-size:clamp(15px,1.8vw,17px)!important;max-width:500px!important;line-height:1.5!important}
+.home-create-hero .actions{margin-top:20px!important}
+.home-create-hero .btn{min-height:50px!important}
+.home-quick-start{margin:24px 0 20px}
+.home-section-heading{display:flex;align-items:end;justify-content:space-between;margin:0 0 13px}
+.home-section-heading .eyebrow{margin:0 0 7px;color:#ff961a!important}
+.home-section-heading h2{margin:0;font-size:clamp(20px,3vw,26px);line-height:1.15;letter-spacing:-.035em}
+.home-action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.home-action-card{
+ position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+ min-width:0;min-height:148px;padding:18px 16px!important;text-align:left;
+ border:1px solid #4c4943!important;border-radius:17px!important;background:#30302f!important;color:#fffcf4!important;
+ transition:transform .15s ease,border-color .15s ease;
+}
+.home-action-card:active{transform:scale(.98)}
+.home-action-card:hover{border-color:#ff961a!important}
+.home-action-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:rgba(255,150,26,.12);color:#ff961a}
+.home-action-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.home-action-card strong{font-size:16px;line-height:1.1}
+.home-action-card>span:not(.home-action-icon){font-size:12px;line-height:1.35;color:#c7c2b9}
+.home-action-card i{position:absolute;right:13px;top:14px;color:#ff961a;font-size:15px;font-style:normal}
+.home-how-it-works{margin:24px 0 36px;padding:18px 0 0;border-top:1px solid #48453f}
+.home-how-it-works>.eyebrow{margin-bottom:14px;color:#aaa69f!important}
+.home-steps{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.home-step{display:flex;align-items:center;gap:9px;min-width:0}
+.home-step>span{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:#ff961a;color:#2c2c2c;font-size:10px;font-weight:900}
+.home-step strong{font-size:12px;white-space:nowrap}
+.home-step-arrow{color:#777168;font-size:17px}
+@media(max-width:799px){
+ .home-create-hero{margin:14px 0 20px!important;padding:23px 20px!important}
+ .home-create-hero h1{font-size:clamp(38px,10.5vw,54px)!important;margin:16px 0 13px!important}
+ .home-create-hero .sub{font-size:15px!important;line-height:1.45!important}
+ .home-create-hero .actions{margin-top:17px!important}
+ .home-quick-start{margin:22px 0 18px}
+ .home-section-heading h2{font-size:21px}
+ .home-action-grid{gap:8px}
+ .home-action-card{min-height:132px;padding:13px 10px!important;gap:7px;border-radius:14px!important}
+ .home-action-icon{width:34px;height:34px}
+ .home-action-card strong{font-size:14px}
+ .home-action-card>span:not(.home-action-icon){font-size:11px}
+ .home-action-card i{right:9px;top:10px}
+ .home-how-it-works{margin:20px 0 26px;padding-top:15px}
+ .home-step{gap:6px}
+ .home-step>span{width:24px;height:24px;flex-basis:24px}
+ .home-step strong{font-size:11px}
+ .home-step-arrow{font-size:13px}
+}
+@media(max-width:370px){
+ .home-action-grid{grid-template-columns:1fr}
+ .home-action-card{min-height:82px;display:grid;grid-template-columns:38px 1fr 18px;grid-template-rows:auto auto;column-gap:11px;align-items:center}
+ .home-action-icon{grid-row:1 / span 2}
+ .home-action-card strong{align-self:end}
+ .home-action-card>span:not(.home-action-icon){grid-column:2;align-self:start}
+ .home-action-card i{grid-column:3;grid-row:1 / span 2;position:static}
+ .home-steps{gap:5px}
+ .home-step{flex-direction:column;align-items:flex-start;gap:4px}
+}
+@media(min-width:800px){
+ .home-create-hero{margin-top:28px!important}
+ .home-action-card{min-height:165px;padding:22px!important}
+ .home-action-card>span:not(.home-action-icon){font-size:13px}
+}
+</style>
+<style>
+/* V40: bring text editing immediately below the preview on mobile and compact shape choices */
+@media(max-width:799px){
+  #create .panel{display:flex!important;flex-direction:column!important;gap:10px!important}
+  #create #textControls{order:-2!important;margin-top:0!important}
+  #create #selectionControls{order:-1!important}
+  #create .panel-section{padding:10px!important;margin:0!important}
+  #create .panel-title{font-size:11px!important;letter-spacing:.13em!important;margin-bottom:8px!important}
+  #create .shape-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
+  #create .shape-btn{min-width:0!important;min-height:68px!important;padding:7px 3px!important;gap:4px!important;font-size:10px!important;line-height:1.1!important;border-radius:12px!important}
+  #create .shape-btn svg{width:27px!important;height:27px!important;flex:0 0 27px!important}
+}
+@media(max-width:390px){
+  #create .shape-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+  #create .shape-btn{font-size:9px!important;min-height:62px!important;padding:5px 2px!important}
+  #create .shape-btn svg{width:24px!important;height:24px!important;flex-basis:24px!important}
+}
+/* Put the text field at the top of the editor panel without changing desktop layout. */
+</style>
+<style>
+/* V41: keep the text field discoverable, cap layer copy, and protect layer-order controls */
+#textEntryField{display:block}
+#textEntryField textarea{width:100%;box-sizing:border-box}
+.text-char-count{float:right;font-size:11px;letter-spacing:0;color:#aaa69f;font-weight:700}
+.layer-row{min-width:0}
+.layer-name{min-width:0;flex:1 1 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer-order{flex:0 0 auto;display:flex;align-items:center;gap:2px;margin-left:auto}
+.layer-order .mini{flex:0 0 28px;width:28px;min-width:28px;height:32px;padding:3px;font-size:16px;display:grid;place-items:center}
+@media(max-width:799px){
+ #create #textControls{order:-2!important}
+ #create #textEntryField{display:block!important;margin-top:0!important}
+ #create #textEntryField textarea{min-height:64px!important;font-size:16px!important}
+ #create .layer-row{gap:6px!important}
+ #create .layer-name{font-size:12px!important}
+ #create .layer-order .mini{flex-basis:30px;width:30px;min-width:30px;height:36px}
+}
+</style>
+<style>
+/* V42: Android typing layout - keep the live preview compact and the text field fully visible below it. */
+@media(max-width:799px){
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    position:fixed!important;
+    top:0!important;left:0!important;right:0!important;
+    width:100%!important;
+    height:158px!important;min-height:0!important;max-height:158px!important;
+    box-sizing:border-box!important;
+    padding:4px 10px 6px!important;
+    margin:0!important;
+    overflow:hidden!important;
+    z-index:1000!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    justify-content:flex-start!important;
+    background:#242424!important;
+    border:0!important;border-bottom:1px solid #55524c!important;
+    border-radius:0!important;
+  }
+  body.keyboard-open #create .stage-wrap .live-preview-label,
+  body:has(#textValue:focus) #create .stage-wrap .live-preview-label{
+    display:block!important;flex:0 0 auto!important;
+    margin:0 auto 3px!important;font-size:9px!important;line-height:12px!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:112px!important;max-width:112px!important;
+    height:112px!important;max-height:112px!important;
+    aspect-ratio:1!important;flex:0 0 112px!important;
+    margin:0 auto!important;
+  }
+  body.keyboard-open #create .panel,
+  body:has(#textValue:focus) #create .panel{
+    margin-top:0!important;padding-top:0!important;
+  }
+  body.keyboard-open #create #textControls,
+  body:has(#textValue:focus) #create #textControls{
+    position:relative!important;display:block!important;
+    margin-top:166px!important;order:-2!important;
+    padding-top:0!important;
+    z-index:1!important;
+  }
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    display:block!important;position:relative!important;
+    scroll-margin-top:166px!important;
+    opacity:1!important;visibility:visible!important;
+    background:#1b1b1b!important;
+    border-radius:12px!important;
+    padding:10px!important;
+  }
+  body.keyboard-open #create #textValue,
+  body:has(#textValue:focus) #create #textValue{
+    display:block!important;width:100%!important;min-height:72px!important;
+    box-sizing:border-box!important;font-size:16px!important;
+    color:#fffcf4!important;background:#252525!important;
+    opacity:1!important;visibility:visible!important;
+  }
+  body.keyboard-open #create .creation-dock,
+  body.keyboard-open #create .bottom,
+  body:has(#textValue:focus) #create .creation-dock,
+  body:has(#textValue:focus) #create .bottom{display:none!important}
+}
+</style>
+<style>
+/* V43: live preview stays visible while editing text or its formatting controls on mobile. */
+@media(max-width:799px){
+  #create .workspace{display:block!important;overflow:visible!important}
+  #create .stage-wrap{
+    position:sticky!important;
+    top:0!important;
+    z-index:80!important;
+    display:block!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+    margin:0 0 10px!important;
+    padding:7px 10px 9px!important;
+    background:rgba(25,25,25,.98)!important;
+    border:1px solid #454545!important;
+    border-radius:0 0 16px 16px!important;
+    box-shadow:0 8px 18px rgba(0,0,0,.24)!important;
+  }
+  #create .stage-wrap .live-preview-label{
+    display:block!important;
+    margin:0 auto 5px!important;
+    font-size:10px!important;
+    line-height:12px!important;
+    text-align:center!important;
+  }
+  #create .stage{
+    width:min(43vw,168px)!important;
+    max-width:168px!important;
+    aspect-ratio:1!important;
+    margin:0 auto!important;
+  }
+  #create .panel{overflow:visible!important;min-width:0!important}
+  #create #textControls{scroll-margin-top:190px!important}
+  #create #textEntryField{scroll-margin-top:190px!important}
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    position:fixed!important;
+    top:0!important;left:0!important;right:0!important;
+    width:100%!important;height:146px!important;max-height:146px!important;
+    margin:0!important;padding:4px 8px 6px!important;
+    border-radius:0!important;
+    z-index:1000!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    background:#242424!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:104px!important;height:104px!important;max-width:104px!important;
+    aspect-ratio:1!important;flex:0 0 104px!important;
+  }
+  body.keyboard-open #create #textControls,
+  body:has(#textValue:focus) #create #textControls{
+    margin-top:154px!important;scroll-margin-top:154px!important;
+  }
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    display:block!important;visibility:visible!important;opacity:1!important;
+  }
+}
+</style>
+<style>
+/* V44: enlarge the live preview while the Android keyboard is open, with viewport-aware sizing. */
+@media(max-width:799px){
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    height:clamp(210px,34svh,270px)!important;
+    min-height:clamp(210px,34svh,270px)!important;
+    max-height:clamp(210px,34svh,270px)!important;
+    padding:6px 8px 8px!important;
+  }
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:min(58vw,230px,calc(34svh - 32px))!important;
+    height:min(58vw,230px,calc(34svh - 32px))!important;
+    max-width:none!important;
+    max-height:none!important;
+    flex:0 0 auto!important;
+    aspect-ratio:1!important;
+  }
+  body.keyboard-open #create #textControls,
+  body:has(#textValue:focus) #create #textControls{
+    margin-top:clamp(218px,35svh,278px)!important;
+    scroll-margin-top:clamp(218px,35svh,278px)!important;
+  }
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{
+    scroll-margin-top:clamp(218px,35svh,278px)!important;
+  }
+}
+</style>
+<style id="home-contrast-hotfix-v47">
+/* V47: fix homepage contrast after legacy theme blocks that load later in the document. */
+#home .home-create-hero,
+#home .hero.home-create-hero { background:#fffdf8!important; color:#30332d!important; }
+#home .home-create-hero h1,
+#home .home-create-hero h1 * { color:#30332d!important; }
+#home .home-create-hero h1 .headline-accent { color:#a95f49!important; }
+#home .home-create-hero .eyebrow { color:#77796f!important; }
+#home .home-create-hero .sub { color:#686b61!important; }
+#home .home-action-grid .home-action-card,
+#home .home-action-grid .home-action-card:hover {
+  background:#e8e9df!important; border-color:#d9dbcf!important; color:#30332d!important;
+}
+#home .home-action-grid .home-action-card strong { color:#30332d!important; }
+#home .home-action-grid .home-action-card>span:not(.home-action-icon) { color:#62665c!important; }
+#home .home-action-grid .home-action-icon { background:#f4f0e8!important; color:#a95f49!important; }
+#home .home-action-grid .home-action-card i { color:#a95f49!important; }
+#home .home-create-hero .btn { background:#30332d!important; color:#fffdf8!important; border-color:#30332d!important; }
+header .logo { color:#30332d!important; font-weight:600!important; }
+header .logo i, header .logo span { color:#a95f49!important; }
+header .language-toggle, header .round { background:transparent!important; color:#30332d!important; border-color:#d8d2c7!important; }
+</style>
+<style id="global-theme-consistency-v48">
+/* V48: align every app view to one palette; keep the canvas checkerboard intact. */
+:root { color-scheme:light!important; --accent:#a95f49!important; --accent-hover:#8f4c3a!important; --ink:#30332d!important; --muted:#77796f!important; --line:#e2ddd2!important; --bg:#f3efe6!important; --paper:#fffdf8!important; --stage:#e9e5db!important; }
+html,body,.app { background:#f3efe6!important; color:#30332d!important; }
+header.shell { background:#f3efe6!important; border-bottom:1px solid #e2ddd2!important; }
+header.shell .logo { color:#30332d!important; font-size:20px!important; font-weight:600!important; letter-spacing:-.04em!important; }
+header.shell .logo span { color:#a95f49!important; }
+header.shell .language-toggle,header.shell .round { background:#fffdf8!important; color:#30332d!important; border:1px solid #d8d2c7!important; }
+header.shell .language-toggle { font-size:12px!important; font-weight:500!important; }
+header.shell .round { font-size:20px!important; }
+#home .home-create-hero { background:#fffdf8!important; color:#30332d!important; }
+#home .home-create-hero h1 { color:#30332d!important; }
+#home .home-create-hero h1 .headline-accent { color:#a95f49!important; }
+#home .home-create-hero .sub { color:#686b61!important; }
+#home .home-action-card,#home .home-action-card:hover { background:#e8e9df!important; border-color:#d9dbcf!important; color:#30332d!important; }
+#home .home-action-card strong { color:#30332d!important; }
+#home .home-action-card>span:not(.home-action-icon) { color:#62665c!important; }
+#home .home-action-icon { background:#f4f0e8!important; color:#a95f49!important; }
+#home .home-action-card i { color:#a95f49!important; }
+#create .editor-head { background:transparent!important; }
+#create .editor-head h2 { color:#30332d!important; }
+#create .stage-wrap { background:#e9e5db!important; border-color:#d8d2c7!important; box-shadow:none!important; }
+#create .stage { background-color:#fffdf8!important; }
+#create .panel { background:#fffdf8!important; color:#30332d!important; border-color:#e2ddd2!important; box-shadow:0 8px 24px rgba(48,51,45,.05)!important; }
+#create .panel-title,#create .field label { color:#686b61!important; }
+#create .small-btn,#create .tool,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .search,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn { background:#fffdf8!important; color:#30332d!important; border-color:#e2ddd2!important; }
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#30332d!important; color:#fffdf8!important; border-color:#30332d!important; }
+#create input[type=range] { accent-color:#a95f49!important; }
+#create .creation-dock { background:#fffdf8!important; border:1px solid #e2ddd2!important; box-shadow:0 8px 24px rgba(48,51,45,.08)!important; }
+#create .creation-dock button { background:#f3efe6!important; color:#30332d!important; border-color:#e2ddd2!important; }
+#create .creation-dock button.active,#create .creation-dock button[aria-pressed=true],#create .creation-dock .dock-primary { background:#a95f49!important; color:#fffdf8!important; border-color:#a95f49!important; }
+.bottom { background:rgba(243,239,230,.98)!important; border-color:#e2ddd2!important; }
+.nav-btn { color:#77796f!important; }
+.nav-btn.active { color:#a95f49!important; }
+@media(max-width:799px){
+ header.shell { background:#f3efe6!important; }
+ #create .stage-wrap { background:#e9e5db!important; border-radius:14px!important; box-shadow:none!important; }
+ #create .stage-wrap .live-preview-label { color:#30332d!important; }
+ #create .creation-dock { background:#fffdf8!important; }
+}
+</style>
+<style id="mobile-editor-redesign-v49">
+:root { color-scheme:light!important; --bg:#f5f2eb!important; --paper:#fffdf8!important; --ink:#343630!important; --muted:#77796f!important; --line:#e4dfd5!important; --accent:#ad715f!important; --accent-hover:#965b4b!important; --stage:#eeeae2!important; }
+html,body,.app { background:#f5f2eb!important; color:#343630!important; }
+header.shell { background:#f5f2eb!important; border-color:#e4dfd5!important; }
+header.shell .logo { color:#343630!important; font-weight:600!important; }
+header.shell .logo span { color:#ad715f!important; }
+header.shell .language-toggle,header.shell .round { background:#fffdf8!important; color:#343630!important; border-color:#e4dfd5!important; }
+.bottom { background:rgba(245,242,235,.97)!important; border-color:#e4dfd5!important; box-shadow:0 -4px 18px rgba(52,54,48,.035)!important; }
+.nav-btn { color:#85857b!important; }
+.nav-btn.active { color:#ad715f!important; }
+#create .editor-head h2 { color:#343630!important; font-size:24px!important; font-weight:400!important; }
+#create .stage-wrap { background:#eeeae2!important; border:1px solid #e4dfd5!important; box-shadow:none!important; }
+#create .stage { aspect-ratio:9/16!important; width:auto!important; height:auto!important; max-width:min(100%,calc((100svh - 250px)*9/16))!important; max-height:calc(100svh - 250px)!important; margin:0 auto!important; }
+#create .panel { background:#fffdf8!important; border-color:#e4dfd5!important; box-shadow:0 5px 18px rgba(52,54,48,.035)!important; }
+#create .panel-title,#create .field label { color:#77796f!important; font-weight:500!important; }
+#create .tool,#create .small-btn,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn { background:#fffdf8!important; color:#343630!important; border-color:#e4dfd5!important; box-shadow:none!important; }
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#e9e4d9!important; color:#343630!important; border-color:#d7cfc2!important; }
+#create input[type=range] { accent-color:#ad715f!important; }
+#create .creation-dock { background:rgba(255,253,248,.97)!important; border:1px solid #e4dfd5!important; box-shadow:0 4px 18px rgba(52,54,48,.08)!important; backdrop-filter:blur(14px)!important; }
+#create .creation-dock button { min-height:42px!important; background:#f5f2eb!important; color:#55574f!important; border-color:#e4dfd5!important; font-weight:500!important; }
+#create .creation-dock button span { color:#ad715f!important; }
+#create .creation-dock button.dock-primary { background:#e9e4d9!important; color:#343630!important; border-color:#d7cfc2!important; }
+#create .creation-dock button.dock-primary span { color:#ad715f!important; }
+#create .shape-menu-wrap { margin-top:14px!important; }
+#create .shape-menu-trigger { width:100%!important; min-height:44px!important; border-radius:12px!important; text-align:left!important; padding:10px 14px!important; background:#f5f2eb!important; color:#55574f!important; }
+#create #shapeOptionsMenu[hidden] { display:none!important; }
+#create #shapeOptionsMenu { margin-top:8px!important; padding:10px!important; border:1px solid #e4dfd5!important; border-radius:14px!important; background:#faf7f0!important; }
+#create #shapeOptionsMenu .shape-btn { min-height:66px!important; }
+@media(max-width:799px){
+ #create { padding-top:0!important; padding-bottom:calc(140px + env(safe-area-inset-bottom))!important; }
+ #create .editor-head { position:fixed!important; top:0!important; left:0!important; right:0!important; z-index:1100!important; display:flex!important; flex-wrap:nowrap!important; align-items:center!important; gap:6px!important; padding:calc(7px + env(safe-area-inset-top)) 10px 7px!important; margin:0!important; background:rgba(245,242,235,.97)!important; border-bottom:1px solid #e4dfd5!important; box-shadow:0 3px 12px rgba(52,54,48,.04)!important; backdrop-filter:blur(14px)!important; }
+ #create .editor-head h2 { flex:0 1 auto!important; min-width:0!important; max-width:35%!important; font-size:18px!important; white-space:nowrap!important; overflow:hidden!important; text-overflow:ellipsis!important; }
+ #create .editor-head .editor-actions { display:flex!important; flex:1 1 auto!important; min-width:0!important; flex-wrap:nowrap!important; justify-content:flex-end!important; gap:4px!important; }
+ #create .editor-head .small-btn { min-width:0!important; height:34px!important; padding:5px 8px!important; border-radius:9px!important; font-size:11px!important; white-space:nowrap!important; }
+ #create .editor-head .small-btn[aria-label="Undo"],#create .editor-head .small-btn[aria-label="Redo"] { width:30px!important; flex:0 0 30px!important; padding:0!important; }
+ #create .editor-head .small-btn.dark { flex:0 0 auto!important; }
+ #create .stage-wrap { position:relative!important; top:auto!important; margin-top:calc(58px + env(safe-area-inset-top))!important; padding:10px!important; border-radius:16px!important; }
+ #create .stage-wrap .live-preview-label { color:#77796f!important; font-weight:500!important; }
+ #create .stage { width:auto!important; height:min(54svh,calc((100vw - 64px)*16/9))!important; max-width:calc((100vw - 64px)*9/16)!important; max-height:54svh!important; aspect-ratio:9/16!important; }
+ #create .workspace { display:flex!important; flex-direction:column!important; gap:12px!important; }
+ #create .panel { margin-bottom:0!important; }
+ #create .creation-dock { position:fixed!important; z-index:1090!important; left:10px!important; right:10px!important; bottom:calc(66px + env(safe-area-inset-bottom))!important; display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr))!important; gap:5px!important; padding:6px!important; border-radius:15px!important; }
+ #create .creation-dock button { min-height:42px!important; border-radius:10px!important; gap:1px!important; font-size:10px!important; padding:4px 2px!important; }
+ #create .creation-dock button span { font-size:17px!important; }
+ #create .creation-dock button b { font-size:10px!important; font-weight:500!important; }
+ body.keyboard-open #create .editor-head,body:has(#textValue:focus) #create .editor-head { top:0!important; }
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap { position:relative!important; top:auto!important; left:auto!important; right:auto!important; height:auto!important; min-height:0!important; max-height:none!important; margin-top:calc(58px + env(safe-area-inset-top))!important; padding:8px!important; background:#eeeae2!important; border:1px solid #e4dfd5!important; border-radius:14px!important; box-shadow:none!important; }
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage { width:auto!important; height:min(35svh,calc((100vw - 72px)*16/9))!important; max-width:calc((100vw - 72px)*9/16)!important; max-height:35svh!important; aspect-ratio:9/16!important; flex:0 0 auto!important; }
+ body.keyboard-open #create #textControls,body:has(#textValue:focus) #create #textControls { margin-top:0!important; scroll-margin-top:calc(70px + env(safe-area-inset-top))!important; }
+ body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock { display:none!important; }
+ body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .bottom { display:none!important; }
+}
+</style>
+<style id="light-theme-preview-fix-v50">
+:root { color-scheme:light!important; --bg:#f7f5ef!important; --paper:#fffefa!important; --ink:#3c3d38!important; --muted:#777970!important; --line:#e8e4dc!important; --accent:#b17d6b!important; --accent-hover:#986552!important; --stage:#f0ede6!important; }
+html,body,.app { background:#f7f5ef!important; color:#3c3d38!important; }
+header.shell { background:#f7f5ef!important; border-color:#e8e4dc!important; }
+header.shell .logo { color:#3c3d38!important; }
+header.shell .language-toggle,header.shell .round { background:#fffefa!important; color:#3c3d38!important; border-color:#e8e4dc!important; }
+.bottom { background:rgba(247,245,239,.98)!important; border-color:#e8e4dc!important; }
+#create .editor-head { background:rgba(247,245,239,.98)!important; border-color:#e8e4dc!important; box-shadow:0 2px 10px rgba(60,61,56,.025)!important; }
+#create .editor-head h2 { color:#3c3d38!important; }
+#create .editor-head .editor-actions .small-btn,
+#create .editor-head .editor-actions .small-btn.dark { background:#fffefa!important; color:#55574f!important; border-color:#e8e4dc!important; box-shadow:none!important; }
+#create .stage-wrap { background:#f0ede6!important; border:1px solid #e8e4dc!important; box-shadow:none!important; }
+#create .stage { background-color:#fffefa!important; }
+#create .panel { background:#fffefa!important; border:1px solid #e8e4dc!important; border-radius:20px!important; box-shadow:none!important; }
+#create .panel-section { border-color:#e8e4dc!important; }
+#create .panel-title,#create .field label { color:#777970!important; }
+#create .tool,#create .small-btn,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn,
+#create #textEntryField,#create #textValue { background:#fffefa!important; color:#3c3d38!important; border-color:#e8e4dc!important; box-shadow:none!important; }
+#create #textEntryField { border-radius:14px!important; }
+#create #textValue { outline-color:#c4a393!important; }
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#eee9df!important; color:#3c3d38!important; border-color:#ded7ca!important; }
+#create input[type=range] { accent-color:#b17d6b!important; }
+#create .creation-dock { background:rgba(255,254,250,.98)!important; border-color:#e8e4dc!important; box-shadow:0 2px 12px rgba(60,61,56,.06)!important; }
+#create .creation-dock button,#create .creation-dock button.dock-primary { background:#f7f5ef!important; color:#55574f!important; border-color:#e8e4dc!important; }
+#create .creation-dock button span,#create .creation-dock button.dock-primary span { color:#b17d6b!important; }
+#create .shape-menu-trigger,#create #shapeOptionsMenu { background:#f7f5ef!important; border-color:#e8e4dc!important; color:#55574f!important; }
+#create #shapeOptionsMenu .shape-btn svg [fill="#ff961a"],#create #shapeOptionsMenu .shape-btn svg [fill="#151515"] { fill:#b17d6b!important; }
+#create .status,#create #status { color:#777970!important; }
+@media(max-width:799px){
+ #create .editor-head { min-height:52px!important; padding:calc(7px + env(safe-area-inset-top)) 8px 7px!important; }
+ #create .editor-head h2 { max-width:0!important; flex:0 1 0!important; overflow:hidden!important; margin:0!important; }
+ #create .editor-head .editor-actions { justify-content:space-between!important; }
+ #create .editor-head .editor-actions .small-btn { height:34px!important; padding:5px 7px!important; font-size:11px!important; }
+ #create .stage-wrap { margin-top:calc(66px + env(safe-area-inset-top))!important; padding:8px!important; overflow:visible!important; }
+ #create .stage-wrap .live-preview-label { margin-bottom:6px!important; color:#777970!important; }
+ #create .stage { display:block!important; width:auto!important; height:auto!important; aspect-ratio:9/16!important; max-width:min(calc(100vw - 64px),calc((100svh - 210px)*9/16))!important; max-height:calc(100svh - 210px)!important; }
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap { margin-top:calc(66px + env(safe-area-inset-top))!important; }
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage { width:auto!important; height:auto!important; aspect-ratio:9/16!important; max-width:min(calc(100vw - 80px),calc((100svh - 300px)*9/16))!important; max-height:calc(100svh - 300px)!important; }
+ #create .creation-dock { bottom:calc(66px + env(safe-area-inset-bottom))!important; }
+}
+</style>
+<style id="curved-export-guard-v51">
+/* Keep exported curved text centered and avoid glyph collisions from equal-width character spacing. */
+</style>
+<style id="remove-all-dark-ui-v53">
+/* V53: hard override the remaining legacy dark blocks, while leaving artwork/export colors intact. */
+:root{color-scheme:light!important;--bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;--muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;--stage:#f1efea!important}
+#create .status,#create #status,#create .selection-hint,#create #selectionHint{
+ background:#f5f3ee!important;color:#77756f!important;border:1px solid #e9e6df!important;
+}
+#create #selectionControls,#create .selection-controls,#create .layer-controls{
+ background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create .text-look,#create .text-look-card,#create .look-card,#create .preset-card,
+#create #presetControls .preset,#create #presetControls .visual-preset-grid .preset,
+#create #presetControls .preset-art{
+ background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create #presetControls .preset-art{
+ color:#555650!important;text-shadow:none!important;border:0!important;
+}
+#create #presetControls .preset-meme .preset-art,
+#create #presetControls .preset-impact .preset-art{color:#ad8072!important;text-shadow:none!important}
+#create #presetControls .preset-editorial .preset-art{color:#555650!important}
+#create #presetControls .preset-bubble .preset-art{background:transparent!important;color:#555650!important}
+#create #presetControls .preset-marker .preset-art{color:#ad8072!important}
+#create .panel .small-btn.dark,#create .panel button.dark,
+#create .panel .layer-action,#create .panel .layer-actions button,
+#create #colorEditBtn,#create .icon-eyedrop-btn{
+ background:#f5f3ee!important;color:#77756f!important;border:1px solid #e9e6df!important;box-shadow:none!important;
+}
+#create .icon-eyedrop-btn svg{stroke:#ad8072!important}
+#create .align-btn,#create .icon-align-grid .align-btn{
+ background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create .align-btn.on,#create .icon-align-grid .align-btn.on{
+ background:#eeeae5!important;color:#555650!important;border-color:#d9d2c9!important;
+}
+#create #textEntryField,#create #textEntryField .field,
+#create #textEntryField .text-entry-card,#create #textEntryField .text-input-wrap{
+ background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create #textEntryField textarea,#create #textValue{
+ background:#fffefa!important;color:#41413d!important;border-color:#e9e6df!important;box-shadow:none!important;
+}
+#create #textEntryField textarea::placeholder,#create #textValue::placeholder{color:#a09d95!important}
+#create .tool:disabled,#create .small-btn:disabled,#create .preset:disabled,
+#create .font-btn:disabled{background:#f5f3ee!important;color:#a09d95!important;border-color:#e9e6df!important}
+#create .creation-dock button.active,#create .creation-dock button[aria-pressed=true]{
+ background:#eeeae5!important;color:#555650!important;border-color:#d9d2c9!important;
+}
+#home .home-action-card,#home .home-action-card:hover{background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important}
+#home .home-action-icon{background:#eeeae5!important;color:#ad8072!important}
+
+</style>
+<style id="artcraft-premium-editor-pass-v54">
+/* ArtCraft / FigCraft design pass: coherent light surfaces, hierarchy, no duplicated heavy containers. */
+:root{
+ color-scheme:light!important;
+ --bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;
+ --muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;
+ --stage:#f1efea!important;
+}
+#create{background:#f7f6f2!important;color:#41413d!important}
+#create .panel{
+ background:#fffefa!important;border:1px solid #e9e6df!important;
+ border-radius:18px!important;box-shadow:none!important;
+}
+#create .panel-section{
+ background:transparent!important;border-color:#e9e6df!important;
+ box-shadow:none!important;
+}
+#create .panel-title{color:#77766f!important;font-size:11px!important;letter-spacing:.13em!important;font-weight:600!important}
+#create .field label{color:#77766f!important;font-weight:500!important}
+#create .status,#create #status,#create #selectionControls{
+ background:#f5f3ee!important;color:#77766f!important;
+ border:1px solid #e9e6df!important;border-radius:10px!important;
+ box-shadow:none!important;padding:9px 12px!important;
+}
+#create #textControls{background:transparent!important;border:0!important;box-shadow:none!important}
+#create #textEntryField{
+ display:block!important;background:transparent!important;color:#555650!important;
+ border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important;
+}
+#create #textEntryField>label{
+ display:flex!important;justify-content:space-between!important;align-items:center!important;
+ color:#77766f!important;background:transparent!important;padding:0!important;margin:0 0 8px!important;
+}
+#create #textEntryField textarea,#create textarea#textValue{
+ display:block!important;width:100%!important;box-sizing:border-box!important;
+ min-height:84px!important;padding:13px 14px!important;
+ background:#fffefa!important;color:#41413d!important;
+ border:1px solid #ded9d0!important;border-radius:12px!important;
+ outline:0!important;box-shadow:none!important;
+}
+#create #textEntryField textarea:focus,#create textarea#textValue:focus{
+ border-color:#c6a99d!important;outline:2px solid rgba(173,128,114,.12)!important;
+}
+#create #textEntryField textarea::placeholder{color:#a09d95!important}
+#create #textEntryField .status{
+ background:transparent!important;border:0!important;border-radius:0!important;
+ padding:7px 0 0!important;color:#85837d!important;font-size:12px!important;
+}
+#create .fonts{gap:7px!important}
+#create .font-btn{
+ min-height:43px!important;background:#fffefa!important;color:#555650!important;
+ border:1px solid #e9e6df!important;border-radius:11px!important;
+ box-shadow:none!important;font-weight:500!important;
+}
+#create .font-btn.active{
+ background:#eeeae5!important;color:#41413d!important;border-color:#dcd5cc!important;
+}
+#create .visual-preset-grid{gap:8px!important}
+#create .visual-preset,#create #presetControls .visual-preset{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ flex-direction:column!important;gap:10px!important;min-height:94px!important;
+ padding:12px 8px!important;background:#f5f3ee!important;color:#555650!important;
+ border:1px solid #e9e6df!important;border-radius:13px!important;
+ box-shadow:none!important;overflow:hidden!important;
+}
+#create .visual-preset .preset-art,#create #presetControls .preset-art{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:36px!important;background:transparent!important;color:#555650!important;
+ border:0!important;box-shadow:none!important;text-shadow:none!important;
+}
+#create .visual-preset.preset-meme .preset-art,
+#create .visual-preset.preset-impact .preset-art,
+#create .visual-preset.preset-marker .preset-art{color:#ad8072!important;text-shadow:none!important}
+#create .visual-preset.preset-editorial .preset-art{color:#555650!important}
+#create .visual-preset .preset-caption{color:#77766f!important;font-size:11px!important;font-weight:500!important}
+#create .tool,#create .small-btn,#create .preset,#create .shape-btn,
+#create .layer-row,#create .field input,#create .field select,
+#create .hex-input,#create .zoom-btn,#create .align-btn,
+#create .icon-eyedrop-btn,#create .eyedrop-btn{
+ background:#fffefa!important;color:#555650!important;
+ border:1px solid #e9e6df!important;border-radius:11px!important;
+ box-shadow:none!important;
+}
+#create .small-btn.dark,#create .tool.primary,#create .tool.on,
+#create .align-btn.on,#create .chip.active{
+ background:#eeeae5!important;color:#555650!important;
+ border-color:#dcd5cc!important;
+}
+#create #colorHex,#create .hex-input{background:#fffefa!important;color:#41413d!important}
+#create .icon-eyedrop-btn{background:#f5f3ee!important;color:#ad8072!important}
+#create input[type=range]{accent-color:#ad8072!important}
+#create input[type=range]::-webkit-slider-thumb{background:#ad8072!important}
+#create input[type=range]::-moz-range-thumb{background:#ad8072!important}
+#create .stage-wrap{background:#f1efea!important;border:1px solid #e9e6df!important;box-shadow:none!important}
+#create .creation-dock{background:rgba(255,254,250,.97)!important;border:1px solid #e9e6df!important;box-shadow:0 2px 12px rgba(65,65,61,.05)!important}
+#create .creation-dock button{background:#f7f6f2!important;color:#555650!important;border-color:#e9e6df!important}
+#create .creation-dock button.active{background:#eeeae5!important}
+@media(max-width:799px){
+ #create .panel{padding:16px!important}
+ #create #textEntryField textarea{min-height:76px!important}
+ #create .visual-preset,#create #presetControls .visual-preset{min-height:82px!important;padding:9px 6px!important}
+}
+
+
+
+
+
+
+
+
+
+
+<style id="v60-mobile-editor-layout">
+/* V60: single authoritative responsive editor layout. */
+:root{--v60-paper:#fffefa;--v60-bg:#f7f6f2;--v60-ink:#41413d;--v60-muted:#85837d;--v60-line:#e9e6df;--v60-accent:#ad8072}
+#create .stage-wrap{background:var(--v60-bg)!important;border:1px solid var(--v60-line)!important;box-shadow:none!important}
+#create .stage{background:var(--v60-paper)!important;aspect-ratio:9/16!important;position:relative!important;overflow:hidden!important}
+#create .panel{background:var(--v60-paper)!important;border:1px solid var(--v60-line)!important}
+#create .panel-sheet-handle{display:none}
+@media(max-width:799px){
+  #create{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
+  #create .editor-head{
+    position:sticky!important;top:0!important;z-index:90!important;
+    display:flex!important;flex-wrap:wrap!important;gap:7px!important;
+    padding:8px 0 10px!important;margin:0!important;
+    background:rgba(247,246,242,.97)!important;backdrop-filter:blur(12px)!important;
+  }
+  #create .editor-head h2{flex:1 1 100%!important;font-size:24px!important;line-height:1.05!important;margin:0!important}
+  #create .editor-actions{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;gap:5px!important}
+  #create .editor-actions .small-btn{min-width:0!important;min-height:38px!important;padding:6px 3px!important;font-size:10px!important;white-space:nowrap!important}
+  #create .workspace{display:flex!important;flex-direction:column!important;gap:10px!important;overflow:visible!important}
+  #create .stage-wrap{
+    position:sticky!important;top:104px!important;z-index:45!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    width:100%!important;box-sizing:border-box!important;min-width:0!important;
+    margin:0!important;padding:7px 10px 9px!important;
+    background:rgba(247,246,242,.97)!important;backdrop-filter:blur(12px)!important;
+    border:1px solid var(--v60-line)!important;border-radius:16px!important;
+    box-shadow:0 3px 12px rgba(44,44,44,.04)!important;
+  }
+  #create .stage-wrap .live-preview-label{display:block!important;align-self:flex-start!important;margin:0 0 6px!important;font-size:10px!important;color:var(--v60-muted)!important}
+  #create .stage{
+    display:block!important;width:min(54vw,220px)!important;max-width:220px!important;
+    height:auto!important;aspect-ratio:9/16!important;max-height:none!important;flex:0 0 auto!important;
+    margin:0 auto!important;border-radius:8px!important;
+  }
+  #create .panel{
+    position:fixed!important;left:10px!important;right:10px!important;
+    bottom:calc(138px + env(safe-area-inset-bottom))!important;z-index:100!important;
+    display:flex!important;flex-direction:column!important;gap:0!important;
+    max-height:min(46dvh,420px)!important;overflow-y:auto!important;overscroll-behavior:contain;
+    transform:translateY(calc(100% - 48px))!important;transition:transform .18s ease!important;
+    border-radius:18px!important;padding:0!important;margin:0!important;
+    background:rgba(255,254,250,.99)!important;box-shadow:0 10px 36px rgba(44,44,44,.13)!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  #create .panel.v60-open{transform:translateY(0)!important}
+  #create .panel .panel-sheet-handle{
+    display:flex!important;flex:0 0 48px!important;align-items:center!important;justify-content:space-between!important;
+    position:sticky!important;top:0!important;z-index:8!important;
+    padding:0 15px!important;background:rgba(255,254,250,.99)!important;
+    border:0!important;border-bottom:1px solid var(--v60-line)!important;border-radius:18px 18px 0 0!important;
+    touch-action:manipulation;
+  }
+  #create .panel .panel-sheet-handle:before{content:"";position:absolute;top:6px;left:calc(50% - 16px);width:32px;height:4px;background:#d5cfc5;border-radius:4px}
+  #create .panel .panel-sheet-handle strong{font-size:12px;font-weight:600;color:var(--v60-ink)!important}
+  #create .panel .panel-sheet-handle span{font-size:11px;color:var(--v60-muted)!important}
+  #create .panel .panel-section{flex:0 0 auto!important;padding:14px!important}
+  #create .panel .panel-section:last-child{padding-bottom:20px!important}
+  #create .panel .panel-section[hidden]{display:none!important}
+  #create .creation-dock{
+    position:fixed!important;left:10px!important;right:10px!important;
+    bottom:calc(68px + env(safe-area-inset-bottom))!important;z-index:110!important;
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;
+    padding:6px!important;border-radius:16px!important;border:1px solid var(--v60-line)!important;
+    background:rgba(255,254,250,.97)!important;box-shadow:0 7px 24px rgba(44,44,44,.09)!important;
+    backdrop-filter:blur(14px)!important;
+  }
+  #create .creation-dock button{min-width:0!important;min-height:44px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;padding:4px 2px!important;border-radius:10px!important;font-size:10px!important}
+  #create .creation-dock button b{font-size:10px!important;font-weight:600!important}
+  #create .creation-dock button span{font-size:16px!important}
+  #create .creation-dock button.dock-primary{background:#eeeae5!important;border-color:#dcd5cc!important}
+  #create .bottom{z-index:105!important}
+  body.keyboard-open #create .editor-head,
+  body:has(#textValue:focus) #create .editor-head{display:none!important}
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    position:fixed!important;top:0!important;left:0!important;right:0!important;
+    z-index:1200!important;height:184px!important;min-height:184px!important;max-height:184px!important;
+    width:100%!important;box-sizing:border-box!important;margin:0!important;padding:5px 8px 7px!important;
+    border:0!important;border-bottom:1px solid var(--v60-line)!important;border-radius:0!important;
+    display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-direction:column!important;
+    background:rgba(247,246,242,.99)!important;box-shadow:0 4px 18px rgba(44,44,44,.04)!important;
+  }
+  body.keyboard-open #create .stage-wrap .live-preview-label,
+  body:has(#textValue:focus) #create .stage-wrap .live-preview-label{display:block!important;align-self:center!important;margin:0 0 4px!important;font-size:9px!important;line-height:12px!important}
+  body.keyboard-open #create .stage,
+  body:has(#textValue:focus) #create .stage{
+    width:100px!important;max-width:100px!important;height:auto!important;aspect-ratio:9/16!important;
+    max-height:none!important;flex:0 0 auto!important;border-radius:5px!important;margin:0 auto!important;
+  }
+  body.keyboard-open #create .panel,
+  body:has(#textValue:focus) #create .panel{
+    position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;
+    transform:none!important;max-height:none!important;overflow:visible!important;
+    margin:190px 10px 12px!important;display:block!important;border-radius:14px!important;
+  }
+  body.keyboard-open #create .panel .panel-sheet-handle,
+  body:has(#textValue:focus) #create .panel .panel-sheet-handle{display:none!important}
+  body.keyboard-open #create .panel .panel-section,
+  body:has(#textValue:focus) #create .panel .panel-section{display:none!important}
+  body.keyboard-open #create .panel #textControls,
+  body:has(#textValue:focus) #create .panel #textControls{display:block!important;padding:12px!important;border:0!important}
+  body.keyboard-open #create .panel #textControls .panel-title,
+  body:has(#textValue:focus) #create .panel #textControls .panel-title{display:none!important}
+  body.keyboard-open #create .panel #textControls .fonts,
+  body:has(#textValue:focus) #create .panel #textControls .fonts,
+  body.keyboard-open #create .panel #textControls .text-sizing-row,
+  body:has(#textValue:focus) #create .panel #textControls .text-sizing-row,
+  body.keyboard-open #create .panel #textControls .text-width-hint,
+  body:has(#textValue:focus) #create .panel #textControls .text-width-hint,
+  body.keyboard-open #create .panel #textControls .field:not(#textEntryField),
+  body:has(#textValue:focus) #create .panel #textControls .field:not(#textEntryField){display:none!important}
+  body.keyboard-open #create .panel #textEntryField textarea,
+  body:has(#textValue:focus) #create .panel #textEntryField textarea{display:block!important;min-height:66px!important;height:66px!important;font-size:16px!important}
+  body.keyboard-open #create .creation-dock,
+  body:has(#textValue:focus) #create .creation-dock,
+  body.keyboard-open .bottom,
+  body:has(#textValue:focus) .bottom{display:none!important}
+}
+@media(min-width:800px){
+  #create .workspace{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(330px,410px)!important;align-items:start!important;gap:22px!important}
+  #create .stage-wrap{position:sticky!important;top:16px!important;align-self:start!important;min-width:0!important}
+  #create .stage{display:block!important;width:auto!important;height:auto!important;aspect-ratio:9/16!important;max-width:min(100%,420px)!important;max-height:calc(100vh - 40px)!important;margin:0 auto!important}
+  #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;transform:none!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -2211,313 +3235,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 
 
 
-<style>
-/* V30: brand cleanup + live editing ergonomics */
-:root{
-  --accent:#ff961a!important;
-  --accent-hover:#ffad3d!important;
-}
-input[type="range"], input[type="checkbox"], input[type="radio"]{accent-color:#ff961a!important}
-.field input:focus,.field textarea:focus,.field select:focus,.hex-input:focus{
-  outline:3px solid #ff961a!important;
-  outline-offset:2px!important;
-  border-color:#ff961a!important;
-}
-#eraseModeBtn.active{
-  background:#ff961a!important;
-  color:#2c2c2c!important;
-  border-color:#ff961a!important;
-}
-/* When typing, reserve a clear, persistent preview zone above the keyboard. */
-@media(max-width:799px){
-  body.keyboard-open #create .stage-wrap{
-    display:block!important;
-    position:fixed!important;
-    top:calc(env(safe-area-inset-top, 0px) + 6px)!important;
-    left:0!important;right:0!important;
-    width:100%!important;
-    margin:0!important;
-    padding:8px 10px 10px!important;
-    z-index:100!important;
-    background:rgba(36,36,36,.98)!important;
-    border:0!important;
-    border-bottom:1px solid #55524c!important;
-    box-shadow:0 8px 24px rgba(0,0,0,.25)!important;
-  }
-  body.keyboard-open #create .stage-wrap .live-preview-label{
-    display:block!important;
-    width:100%!important;
-    max-width:none!important;
-    color:#ff961a!important;
-    text-align:center!important;
-    margin:0 auto 5px!important;
-    font-size:10px!important;
-  }
-  body.keyboard-open #create .stage{
-    width:min(42vw,178px)!important;
-    max-width:178px!important;
-    margin:0 auto!important;
-  }
-  body.keyboard-open #create .panel{
-    padding-top:calc(min(42vw,178px) + 36px)!important;
-  }
-  body.keyboard-open .creation-dock{display:none!important}
-}
-/* Eraser instructions must describe a manual gesture, not imply automatic cleanup. */
-#eraserHint{
-  display:none;
-  border:1px solid #ff961a!important;
-  border-radius:12px!important;
-  padding:10px 12px!important;
-  color:#fffcf4!important;
-  background:#332b20!important;
-  line-height:1.45!important;
-}
-body.erase-mode #stage{
-  outline:3px solid #ff961a!important;
-  outline-offset:3px!important;
-  cursor:crosshair!important;
-}
-body.erase-mode #stage .layer.selected{
-  outline:2px dashed #ff961a!important;
-}
-</style>
 
-
-<style>
-/* V31: compact typography controls and visual-first presets */
-#textControls .text-sizing-row{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
-  gap:16px!important;
-  align-items:start!important;
-}
-#textControls .text-sizing-row .field{min-width:0!important;margin:0!important}
-#textControls .text-sizing-row .field label{display:flex;justify-content:space-between;gap:6px;white-space:nowrap}
-#textControls .text-sizing-row input[type=range]{width:100%;min-width:0}
-#textControls .text-width-hint{font-size:11px!important;padding:0!important;background:transparent!important}
-#textControls .icon-align-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
-#textControls .icon-align-grid .align-btn{height:48px;min-height:48px!important;display:grid;place-items:center;padding:8px!important}
-#textControls .icon-align-grid svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-#textControls .icon-align-grid .align-btn.on{background:#ff961a!important;border-color:#ff961a!important;color:#2c2c2c!important}
-#presetControls .visual-preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-#presetControls .visual-preset{
-  min-width:0;min-height:82px;padding:8px 5px 7px!important;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
-  border:1px solid #55524c;border-radius:12px;background:#242424;color:#fffcf4;
-}
-#presetControls .preset-art{display:flex;align-items:center;justify-content:center;width:100%;min-height:37px;font-size:20px;line-height:1;letter-spacing:-.04em}
-#presetControls .preset-caption{font-size:10px;font-weight:800;line-height:1.1}
-#presetControls .preset-meme .preset-art{font-family:'Archivo Black',sans-serif;color:#fff;text-shadow:1px 2px 0 #ff961a,-1px -1px 0 #171717}
-#presetControls .preset-editorial .preset-art{font-family:'Playfair Display',serif;font-style:italic}
-#presetControls .preset-impact .preset-art{font-family:'Bebas Neue',sans-serif;font-size:27px;color:#ff961a;letter-spacing:.04em}
-#presetControls .preset-bubble .preset-art{font-family:'DM Sans',sans-serif;font-weight:900;border:2px solid currentColor;border-radius:14px;padding:7px 2px;max-width:74px}
-#presetControls .preset-marker .preset-art{font-family:'Permanent Marker',cursive;transform:rotate(-5deg)}
-#presetControls .preset-clean .preset-art{font-family:'DM Sans',sans-serif;font-weight:500;letter-spacing:0}
-#presetControls .visual-preset:active{transform:scale(.97)}
-@media(max-width:420px){
- #textControls .text-sizing-row{gap:12px!important}
- #textControls .text-sizing-row .field label{font-size:10px!important;letter-spacing:.02em!important}
- #presetControls .visual-preset-grid{gap:6px}
- #presetControls .visual-preset{min-height:76px}
- #presetControls .preset-art{font-size:18px}
-}
-</style>
-
-
-<style>
-/* V32: reduce utility-panel noise and keep color controls on one row */
-#create .panel-section:has(>#selectionControls) > #selectionControls{
-  display:block!important;
-  min-height:0!important;
-  padding:7px 10px!important;
-  margin:0 0 10px!important;
-  border:1px solid #45423d!important;
-  border-radius:10px!important;
-  background:#242424!important;
-  color:#bdb7ad!important;
-  font-size:11px!important;
-  line-height:1.3!important;
-  letter-spacing:.01em!important;
-}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .custom-color{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) 42px minmax(96px,auto)!important;
-  gap:7px!important;
-  align-items:center!important;
-}
-#create #colorHex{min-width:0!important;height:42px!important;padding:0 10px!important;font-size:12px!important}
-#create #color{width:42px!important;height:42px!important;min-width:42px!important;padding:3px!important}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .eyedrop-btn{
-  width:100%!important;min-width:0!important;height:42px!important;
-  padding:0 9px!important;font-size:11px!important;white-space:nowrap!important;
-}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) label{
-  margin-bottom:6px!important;
-}
-@media(max-width:380px){
-  #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .custom-color{
-    grid-template-columns:minmax(0,1fr) 38px minmax(82px,auto)!important;gap:5px!important;
-  }
-  #create #color{width:38px!important;min-width:38px!important}
-  #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .eyedrop-btn{padding:0 5px!important;font-size:10px!important}
-}
-</style>
-
-
-<style>
-/* V33: keep a compact live canvas visible while the mobile keyboard is open */
-@media(max-width:799px){
-  body.keyboard-open #create .stage-wrap{
-    position:fixed!important;
-    top:calc(env(safe-area-inset-top, 0px) + 4px)!important;
-    left:0!important;right:0!important;
-    width:100%!important;
-    height:auto!important;
-    margin:0!important;
-    padding:5px 10px 7px!important;
-    z-index:100!important;
-    background:rgba(36,36,36,.98)!important;
-    border:0!important;border-bottom:1px solid #55524c!important;
-    border-radius:0!important;
-  }
-  body.keyboard-open #create .stage-wrap .live-preview-label{
-    display:block!important;margin:0 auto 4px!important;
-    color:#ff961a!important;text-align:center!important;font-size:9px!important;
-  }
-  body.keyboard-open #create .stage{
-    width:min(29vw,118px)!important;max-width:118px!important;
-    aspect-ratio:1!important;margin:0 auto!important;
-  }
-  /* The preview is fixed, so offset the scrolling content by its actual compact height. */
-  body.keyboard-open #create .panel{
-    padding-top:0!important;
-    margin-top:138px!important;
-  }
-  body.keyboard-open #create .panel-section:first-child{margin-top:0!important}
-  body.keyboard-open #create .creation-dock{display:none!important}
-  body.keyboard-open #create .bottom{display:none!important}
-}
-/* A fresh text layer must start upright. The rotation control remains available afterward. */
-</style>
-
-<style>
-/* V34: compact eyedropper icon beside the color swatch */
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) 42px 42px!important;
-  gap:7px!important;align-items:center!important;
-}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{
-  width:42px!important;min-width:42px!important;height:42px!important;min-height:42px!important;
-  display:grid!important;place-items:center!important;padding:0!important;
-  border-radius:10px!important;background:#242424!important;color:#ff961a!important;
-}
-#create .icon-eyedrop-btn svg{
-  width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;
-  stroke-linecap:round;stroke-linejoin:round;
-}
-#create .icon-eyedrop-btn:active{background:#ff961a!important;color:#2c2c2c!important}
-@media(max-width:380px){
- #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
-  grid-template-columns:minmax(0,1fr) 38px 38px!important;gap:5px!important;
- }
- #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .icon-eyedrop-btn{width:38px!important;min-width:38px!important}
-}
-</style>
-
-
-<style>
-/* V35: keep hex, color swatch, and eyedropper aligned on one row */
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
-  display:grid!important;
-  grid-template-columns:minmax(0,1fr) 42px 42px!important;
-  grid-template-rows:42px!important;
-  gap:7px!important;
-  align-items:stretch!important;
-}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #colorHex{
-  grid-column:1!important;grid-row:1!important;width:100%!important;min-width:0!important;height:42px!important;
-}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #color{
-  grid-column:2!important;grid-row:1!important;width:42px!important;min-width:42px!important;height:42px!important;
-}
-#create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > .icon-eyedrop-btn{
-  grid-column:3!important;grid-row:1!important;width:42px!important;min-width:42px!important;height:42px!important;
-}
-@media(max-width:380px){
- #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row{
-   grid-template-columns:minmax(0,1fr) 38px 38px!important;grid-template-rows:38px!important;gap:5px!important;
- }
- #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > #color,
- #create .panel-section:has(>#selectionControls) > .field:has(#colorHex) .color-picker-row > .icon-eyedrop-btn{
-   width:38px!important;min-width:38px!important;height:38px!important;
- }
-}
-</style>
-
-
-<style>
-/* V36: keyboard preview is anchored to the visible viewport, not a stale offset */
-@media(max-width:799px){
-  body:has(#textValue:focus) #create .stage-wrap,
-  body.keyboard-open #create .stage-wrap{
-    display:block!important;
-    position:fixed!important;
-    top:4px!important;
-    left:0!important;right:0!important;
-    width:100%!important;
-    height:auto!important;
-    margin:0!important;
-    padding:5px 10px 7px!important;
-    z-index:1000!important;
-    background:rgba(36,36,36,.98)!important;
-    border:0!important;border-bottom:1px solid #55524c!important;
-    border-radius:0!important;
-    box-shadow:0 6px 18px rgba(0,0,0,.24)!important;
-  }
-  body:has(#textValue:focus) #create .stage-wrap .live-preview-label,
-  body.keyboard-open #create .stage-wrap .live-preview-label{
-    display:block!important;margin:0 auto 4px!important;
-    color:#ff961a!important;text-align:center!important;font-size:9px!important;
-  }
-  body:has(#textValue:focus) #create .stage,
-  body.keyboard-open #create .stage{
-    width:min(31vw,124px)!important;max-width:124px!important;
-    aspect-ratio:1!important;margin:0 auto!important;
-  }
-  body:has(#textValue:focus) #create .panel,
-  body.keyboard-open #create .panel{
-    margin-top:0!important;padding-top:0!important;
-  }
-  body:has(#textValue:focus) #create .creation-dock,
-  body.keyboard-open #create .creation-dock,
-  body:has(#textValue:focus) #create .bottom,
-  body.keyboard-open #create .bottom{display:none!important}
-}
-</style>
-
-
-<style>
-/* V37: keep both the live preview and the text field usable with Android keyboard open */
-@media(max-width:799px){
-  body.keyboard-open #create #textEntryField,
-  body:has(#textValue:focus) #create #textEntryField{
-    scroll-margin-top:245px!important;
-  }
-  body.keyboard-open #create .stage-wrap,
-  body:has(#textValue:focus) #create .stage-wrap{
-    top:0!important;
-    padding:4px 10px 6px!important;
-  }
-  body.keyboard-open #create .stage,
-  body:has(#textValue:focus) #create .stage{
-    width:min(34vw,148px)!important;
-    max-width:148px!important;
-    aspect-ratio:1!important;
-  }
-}
-</style>
 <script>
 /* V37: when Android opens the keyboard, bring the active text field into view below the pinned preview. */
 (function(){
@@ -2548,119 +3266,13 @@ body.erase-mode #stage .layer.selected{
 </script>
 
 
-<style>
-/* V38: focused home, one clear path into creation */
-.home-create-hero{
-  min-height:0!important;
-  margin:clamp(28px,8vh,86px) 0 24px!important;
-  padding:clamp(26px,6vw,54px)!important;
-}
-.home-create-hero .eyebrow{margin-bottom:18px!important}
-.home-create-hero h1{max-width:650px!important}
-.home-create-hero .sub{max-width:440px!important;line-height:1.55!important}
-.home-create-hero .actions{display:block!important;margin-top:24px!important}
-.home-create-hero .btn{width:auto!important;min-width:190px;min-height:52px!important}
-@media(max-width:799px){
- .home-create-hero{margin:20px 0 16px!important;padding:27px 22px!important}
- .home-create-hero h1{font-size:clamp(42px,12vw,62px)!important}
- .home-create-hero .sub{font-size:16px!important;max-width:32rem!important}
- .home-create-hero .actions{margin-top:22px!important}
- .home-create-hero .btn{width:100%!important}
-}
-</style>
 
 
-<style>
-/* V39: useful, action-led home below the primary CTA */
-.home-create-hero{
-  margin:clamp(20px,4vh,38px) 0 22px!important;
-  padding:clamp(24px,4vw,42px)!important;
-}
-.home-create-hero h1{font-size:clamp(40px,7vw,66px)!important;line-height:.94!important;margin:18px 0 14px!important}
-.home-create-hero .sub{font-size:clamp(15px,1.8vw,17px)!important;max-width:500px!important;line-height:1.5!important}
-.home-create-hero .actions{margin-top:20px!important}
-.home-create-hero .btn{min-height:50px!important}
-.home-quick-start{margin:24px 0 20px}
-.home-section-heading{display:flex;align-items:end;justify-content:space-between;margin:0 0 13px}
-.home-section-heading .eyebrow{margin:0 0 7px;color:#ff961a!important}
-.home-section-heading h2{margin:0;font-size:clamp(20px,3vw,26px);line-height:1.15;letter-spacing:-.035em}
-.home-action-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.home-action-card{
- position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;
- min-width:0;min-height:148px;padding:18px 16px!important;text-align:left;
- border:1px solid #4c4943!important;border-radius:17px!important;background:#30302f!important;color:#fffcf4!important;
- transition:transform .15s ease,border-color .15s ease;
-}
-.home-action-card:active{transform:scale(.98)}
-.home-action-card:hover{border-color:#ff961a!important}
-.home-action-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;background:rgba(255,150,26,.12);color:#ff961a}
-.home-action-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.home-action-card strong{font-size:16px;line-height:1.1}
-.home-action-card>span:not(.home-action-icon){font-size:12px;line-height:1.35;color:#c7c2b9}
-.home-action-card i{position:absolute;right:13px;top:14px;color:#ff961a;font-size:15px;font-style:normal}
-.home-how-it-works{margin:24px 0 36px;padding:18px 0 0;border-top:1px solid #48453f}
-.home-how-it-works>.eyebrow{margin-bottom:14px;color:#aaa69f!important}
-.home-steps{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.home-step{display:flex;align-items:center;gap:9px;min-width:0}
-.home-step>span{display:grid;place-items:center;flex:0 0 28px;width:28px;height:28px;border-radius:50%;background:#ff961a;color:#2c2c2c;font-size:10px;font-weight:900}
-.home-step strong{font-size:12px;white-space:nowrap}
-.home-step-arrow{color:#777168;font-size:17px}
-@media(max-width:799px){
- .home-create-hero{margin:14px 0 20px!important;padding:23px 20px!important}
- .home-create-hero h1{font-size:clamp(38px,10.5vw,54px)!important;margin:16px 0 13px!important}
- .home-create-hero .sub{font-size:15px!important;line-height:1.45!important}
- .home-create-hero .actions{margin-top:17px!important}
- .home-quick-start{margin:22px 0 18px}
- .home-section-heading h2{font-size:21px}
- .home-action-grid{gap:8px}
- .home-action-card{min-height:132px;padding:13px 10px!important;gap:7px;border-radius:14px!important}
- .home-action-icon{width:34px;height:34px}
- .home-action-card strong{font-size:14px}
- .home-action-card>span:not(.home-action-icon){font-size:11px}
- .home-action-card i{right:9px;top:10px}
- .home-how-it-works{margin:20px 0 26px;padding-top:15px}
- .home-step{gap:6px}
- .home-step>span{width:24px;height:24px;flex-basis:24px}
- .home-step strong{font-size:11px}
- .home-step-arrow{font-size:13px}
-}
-@media(max-width:370px){
- .home-action-grid{grid-template-columns:1fr}
- .home-action-card{min-height:82px;display:grid;grid-template-columns:38px 1fr 18px;grid-template-rows:auto auto;column-gap:11px;align-items:center}
- .home-action-icon{grid-row:1 / span 2}
- .home-action-card strong{align-self:end}
- .home-action-card>span:not(.home-action-icon){grid-column:2;align-self:start}
- .home-action-card i{grid-column:3;grid-row:1 / span 2;position:static}
- .home-steps{gap:5px}
- .home-step{flex-direction:column;align-items:flex-start;gap:4px}
-}
-@media(min-width:800px){
- .home-create-hero{margin-top:28px!important}
- .home-action-card{min-height:165px;padding:22px!important}
- .home-action-card>span:not(.home-action-icon){font-size:13px}
-}
-</style>
 
 
-<style>
-/* V40: bring text editing immediately below the preview on mobile and compact shape choices */
-@media(max-width:799px){
-  #create .panel{display:flex!important;flex-direction:column!important;gap:10px!important}
-  #create #textControls{order:-2!important;margin-top:0!important}
-  #create #selectionControls{order:-1!important}
-  #create .panel-section{padding:10px!important;margin:0!important}
-  #create .panel-title{font-size:11px!important;letter-spacing:.13em!important;margin-bottom:8px!important}
-  #create .shape-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important}
-  #create .shape-btn{min-width:0!important;min-height:68px!important;padding:7px 3px!important;gap:4px!important;font-size:10px!important;line-height:1.1!important;border-radius:12px!important}
-  #create .shape-btn svg{width:27px!important;height:27px!important;flex:0 0 27px!important}
-}
-@media(max-width:390px){
-  #create .shape-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
-  #create .shape-btn{font-size:9px!important;min-height:62px!important;padding:5px 2px!important}
-  #create .shape-btn svg{width:24px!important;height:24px!important;flex-basis:24px!important}
-}
-/* Put the text field at the top of the editor panel without changing desktop layout. */
-</style>
+
+
+
 <script>
 (function(){
   function prioritizeTextControls(){
@@ -2676,24 +3288,7 @@ body.erase-mode #stage .layer.selected{
 </script>
 
 
-<style>
-/* V41: keep the text field discoverable, cap layer copy, and protect layer-order controls */
-#textEntryField{display:block}
-#textEntryField textarea{width:100%;box-sizing:border-box}
-.text-char-count{float:right;font-size:11px;letter-spacing:0;color:#aaa69f;font-weight:700}
-.layer-row{min-width:0}
-.layer-name{min-width:0;flex:1 1 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.layer-order{flex:0 0 auto;display:flex;align-items:center;gap:2px;margin-left:auto}
-.layer-order .mini{flex:0 0 28px;width:28px;min-width:28px;height:32px;padding:3px;font-size:16px;display:grid;place-items:center}
-@media(max-width:799px){
- #create #textControls{order:-2!important}
- #create #textEntryField{display:block!important;margin-top:0!important}
- #create #textEntryField textarea{min-height:64px!important;font-size:16px!important}
- #create .layer-row{gap:6px!important}
- #create .layer-name{font-size:12px!important}
- #create .layer-order .mini{flex-basis:30px;width:30px;min-width:30px;height:36px}
-}
-</style>
+
 <script>
 /* V41: keep the character count in sync whenever a text layer is selected. */
 (function(){
@@ -2709,134 +3304,11 @@ body.erase-mode #stage .layer.selected{
 </script>
 
 
-<style>
-/* V42: Android typing layout - keep the live preview compact and the text field fully visible below it. */
-@media(max-width:799px){
-  body.keyboard-open #create .stage-wrap,
-  body:has(#textValue:focus) #create .stage-wrap{
-    position:fixed!important;
-    top:0!important;left:0!important;right:0!important;
-    width:100%!important;
-    height:158px!important;min-height:0!important;max-height:158px!important;
-    box-sizing:border-box!important;
-    padding:4px 10px 6px!important;
-    margin:0!important;
-    overflow:hidden!important;
-    z-index:1000!important;
-    display:flex!important;flex-direction:column!important;align-items:center!important;
-    justify-content:flex-start!important;
-    background:#242424!important;
-    border:0!important;border-bottom:1px solid #55524c!important;
-    border-radius:0!important;
-  }
-  body.keyboard-open #create .stage-wrap .live-preview-label,
-  body:has(#textValue:focus) #create .stage-wrap .live-preview-label{
-    display:block!important;flex:0 0 auto!important;
-    margin:0 auto 3px!important;font-size:9px!important;line-height:12px!important;
-  }
-  body.keyboard-open #create .stage,
-  body:has(#textValue:focus) #create .stage{
-    width:112px!important;max-width:112px!important;
-    height:112px!important;max-height:112px!important;
-    aspect-ratio:1!important;flex:0 0 112px!important;
-    margin:0 auto!important;
-  }
-  body.keyboard-open #create .panel,
-  body:has(#textValue:focus) #create .panel{
-    margin-top:0!important;padding-top:0!important;
-  }
-  body.keyboard-open #create #textControls,
-  body:has(#textValue:focus) #create #textControls{
-    position:relative!important;display:block!important;
-    margin-top:166px!important;order:-2!important;
-    padding-top:0!important;
-    z-index:1!important;
-  }
-  body.keyboard-open #create #textEntryField,
-  body:has(#textValue:focus) #create #textEntryField{
-    display:block!important;position:relative!important;
-    scroll-margin-top:166px!important;
-    opacity:1!important;visibility:visible!important;
-    background:#1b1b1b!important;
-    border-radius:12px!important;
-    padding:10px!important;
-  }
-  body.keyboard-open #create #textValue,
-  body:has(#textValue:focus) #create #textValue{
-    display:block!important;width:100%!important;min-height:72px!important;
-    box-sizing:border-box!important;font-size:16px!important;
-    color:#fffcf4!important;background:#252525!important;
-    opacity:1!important;visibility:visible!important;
-  }
-  body.keyboard-open #create .creation-dock,
-  body.keyboard-open #create .bottom,
-  body:has(#textValue:focus) #create .creation-dock,
-  body:has(#textValue:focus) #create .bottom{display:none!important}
-}
-</style>
 
 
 
-<style>
-/* V43: live preview stays visible while editing text or its formatting controls on mobile. */
-@media(max-width:799px){
-  #create .workspace{display:block!important;overflow:visible!important}
-  #create .stage-wrap{
-    position:sticky!important;
-    top:0!important;
-    z-index:80!important;
-    display:block!important;
-    width:100%!important;
-    box-sizing:border-box!important;
-    margin:0 0 10px!important;
-    padding:7px 10px 9px!important;
-    background:rgba(25,25,25,.98)!important;
-    border:1px solid #454545!important;
-    border-radius:0 0 16px 16px!important;
-    box-shadow:0 8px 18px rgba(0,0,0,.24)!important;
-  }
-  #create .stage-wrap .live-preview-label{
-    display:block!important;
-    margin:0 auto 5px!important;
-    font-size:10px!important;
-    line-height:12px!important;
-    text-align:center!important;
-  }
-  #create .stage{
-    width:min(43vw,168px)!important;
-    max-width:168px!important;
-    aspect-ratio:1!important;
-    margin:0 auto!important;
-  }
-  #create .panel{overflow:visible!important;min-width:0!important}
-  #create #textControls{scroll-margin-top:190px!important}
-  #create #textEntryField{scroll-margin-top:190px!important}
-  body.keyboard-open #create .stage-wrap,
-  body:has(#textValue:focus) #create .stage-wrap{
-    position:fixed!important;
-    top:0!important;left:0!important;right:0!important;
-    width:100%!important;height:146px!important;max-height:146px!important;
-    margin:0!important;padding:4px 8px 6px!important;
-    border-radius:0!important;
-    z-index:1000!important;
-    display:flex!important;flex-direction:column!important;align-items:center!important;
-    background:#242424!important;
-  }
-  body.keyboard-open #create .stage,
-  body:has(#textValue:focus) #create .stage{
-    width:104px!important;height:104px!important;max-width:104px!important;
-    aspect-ratio:1!important;flex:0 0 104px!important;
-  }
-  body.keyboard-open #create #textControls,
-  body:has(#textValue:focus) #create #textControls{
-    margin-top:154px!important;scroll-margin-top:154px!important;
-  }
-  body.keyboard-open #create #textEntryField,
-  body:has(#textValue:focus) #create #textEntryField{
-    display:block!important;visibility:visible!important;opacity:1!important;
-  }
-}
-</style>
+
+
 <script>
 /* V43: preserve a visible preview when navigating text formatting options. */
 (function(){
@@ -2863,158 +3335,16 @@ body.erase-mode #stage .layer.selected{
 </script>
 
 
-<style>
-/* V44: enlarge the live preview while the Android keyboard is open, with viewport-aware sizing. */
-@media(max-width:799px){
-  body.keyboard-open #create .stage-wrap,
-  body:has(#textValue:focus) #create .stage-wrap{
-    height:clamp(210px,34svh,270px)!important;
-    min-height:clamp(210px,34svh,270px)!important;
-    max-height:clamp(210px,34svh,270px)!important;
-    padding:6px 8px 8px!important;
-  }
-  body.keyboard-open #create .stage,
-  body:has(#textValue:focus) #create .stage{
-    width:min(58vw,230px,calc(34svh - 32px))!important;
-    height:min(58vw,230px,calc(34svh - 32px))!important;
-    max-width:none!important;
-    max-height:none!important;
-    flex:0 0 auto!important;
-    aspect-ratio:1!important;
-  }
-  body.keyboard-open #create #textControls,
-  body:has(#textValue:focus) #create #textControls{
-    margin-top:clamp(218px,35svh,278px)!important;
-    scroll-margin-top:clamp(218px,35svh,278px)!important;
-  }
-  body.keyboard-open #create #textEntryField,
-  body:has(#textValue:focus) #create #textEntryField{
-    scroll-margin-top:clamp(218px,35svh,278px)!important;
-  }
-}
-</style>
 
 
-<style id="home-contrast-hotfix-v47">
-/* V47: fix homepage contrast after legacy theme blocks that load later in the document. */
-#home .home-create-hero,
-#home .hero.home-create-hero { background:#fffdf8!important; color:#30332d!important; }
-#home .home-create-hero h1,
-#home .home-create-hero h1 * { color:#30332d!important; }
-#home .home-create-hero h1 .headline-accent { color:#a95f49!important; }
-#home .home-create-hero .eyebrow { color:#77796f!important; }
-#home .home-create-hero .sub { color:#686b61!important; }
-#home .home-action-grid .home-action-card,
-#home .home-action-grid .home-action-card:hover {
-  background:#e8e9df!important; border-color:#d9dbcf!important; color:#30332d!important;
-}
-#home .home-action-grid .home-action-card strong { color:#30332d!important; }
-#home .home-action-grid .home-action-card>span:not(.home-action-icon) { color:#62665c!important; }
-#home .home-action-grid .home-action-icon { background:#f4f0e8!important; color:#a95f49!important; }
-#home .home-action-grid .home-action-card i { color:#a95f49!important; }
-#home .home-create-hero .btn { background:#30332d!important; color:#fffdf8!important; border-color:#30332d!important; }
-header .logo { color:#30332d!important; font-weight:600!important; }
-header .logo i, header .logo span { color:#a95f49!important; }
-header .language-toggle, header .round { background:transparent!important; color:#30332d!important; border-color:#d8d2c7!important; }
-</style>
 
 
-<style id="global-theme-consistency-v48">
-/* V48: align every app view to one palette; keep the canvas checkerboard intact. */
-:root { color-scheme:light!important; --accent:#a95f49!important; --accent-hover:#8f4c3a!important; --ink:#30332d!important; --muted:#77796f!important; --line:#e2ddd2!important; --bg:#f3efe6!important; --paper:#fffdf8!important; --stage:#e9e5db!important; }
-html,body,.app { background:#f3efe6!important; color:#30332d!important; }
-header.shell { background:#f3efe6!important; border-bottom:1px solid #e2ddd2!important; }
-header.shell .logo { color:#30332d!important; font-size:20px!important; font-weight:600!important; letter-spacing:-.04em!important; }
-header.shell .logo span { color:#a95f49!important; }
-header.shell .language-toggle,header.shell .round { background:#fffdf8!important; color:#30332d!important; border:1px solid #d8d2c7!important; }
-header.shell .language-toggle { font-size:12px!important; font-weight:500!important; }
-header.shell .round { font-size:20px!important; }
-#home .home-create-hero { background:#fffdf8!important; color:#30332d!important; }
-#home .home-create-hero h1 { color:#30332d!important; }
-#home .home-create-hero h1 .headline-accent { color:#a95f49!important; }
-#home .home-create-hero .sub { color:#686b61!important; }
-#home .home-action-card,#home .home-action-card:hover { background:#e8e9df!important; border-color:#d9dbcf!important; color:#30332d!important; }
-#home .home-action-card strong { color:#30332d!important; }
-#home .home-action-card>span:not(.home-action-icon) { color:#62665c!important; }
-#home .home-action-icon { background:#f4f0e8!important; color:#a95f49!important; }
-#home .home-action-card i { color:#a95f49!important; }
-#create .editor-head { background:transparent!important; }
-#create .editor-head h2 { color:#30332d!important; }
-#create .stage-wrap { background:#e9e5db!important; border-color:#d8d2c7!important; box-shadow:none!important; }
-#create .stage { background-color:#fffdf8!important; }
-#create .panel { background:#fffdf8!important; color:#30332d!important; border-color:#e2ddd2!important; box-shadow:0 8px 24px rgba(48,51,45,.05)!important; }
-#create .panel-title,#create .field label { color:#686b61!important; }
-#create .small-btn,#create .tool,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .search,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn { background:#fffdf8!important; color:#30332d!important; border-color:#e2ddd2!important; }
-#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#30332d!important; color:#fffdf8!important; border-color:#30332d!important; }
-#create input[type=range] { accent-color:#a95f49!important; }
-#create .creation-dock { background:#fffdf8!important; border:1px solid #e2ddd2!important; box-shadow:0 8px 24px rgba(48,51,45,.08)!important; }
-#create .creation-dock button { background:#f3efe6!important; color:#30332d!important; border-color:#e2ddd2!important; }
-#create .creation-dock button.active,#create .creation-dock button[aria-pressed=true],#create .creation-dock .dock-primary { background:#a95f49!important; color:#fffdf8!important; border-color:#a95f49!important; }
-.bottom { background:rgba(243,239,230,.98)!important; border-color:#e2ddd2!important; }
-.nav-btn { color:#77796f!important; }
-.nav-btn.active { color:#a95f49!important; }
-@media(max-width:799px){
- header.shell { background:#f3efe6!important; }
- #create .stage-wrap { background:#e9e5db!important; border-radius:14px!important; box-shadow:none!important; }
- #create .stage-wrap .live-preview-label { color:#30332d!important; }
- #create .creation-dock { background:#fffdf8!important; }
-}
-</style>
 
 
-<style id="mobile-editor-redesign-v49">
-:root { color-scheme:light!important; --bg:#f5f2eb!important; --paper:#fffdf8!important; --ink:#343630!important; --muted:#77796f!important; --line:#e4dfd5!important; --accent:#ad715f!important; --accent-hover:#965b4b!important; --stage:#eeeae2!important; }
-html,body,.app { background:#f5f2eb!important; color:#343630!important; }
-header.shell { background:#f5f2eb!important; border-color:#e4dfd5!important; }
-header.shell .logo { color:#343630!important; font-weight:600!important; }
-header.shell .logo span { color:#ad715f!important; }
-header.shell .language-toggle,header.shell .round { background:#fffdf8!important; color:#343630!important; border-color:#e4dfd5!important; }
-.bottom { background:rgba(245,242,235,.97)!important; border-color:#e4dfd5!important; box-shadow:0 -4px 18px rgba(52,54,48,.035)!important; }
-.nav-btn { color:#85857b!important; }
-.nav-btn.active { color:#ad715f!important; }
-#create .editor-head h2 { color:#343630!important; font-size:24px!important; font-weight:400!important; }
-#create .stage-wrap { background:#eeeae2!important; border:1px solid #e4dfd5!important; box-shadow:none!important; }
-#create .stage { aspect-ratio:9/16!important; width:auto!important; height:auto!important; max-width:min(100%,calc((100svh - 250px)*9/16))!important; max-height:calc(100svh - 250px)!important; margin:0 auto!important; }
-#create .panel { background:#fffdf8!important; border-color:#e4dfd5!important; box-shadow:0 5px 18px rgba(52,54,48,.035)!important; }
-#create .panel-title,#create .field label { color:#77796f!important; font-weight:500!important; }
-#create .tool,#create .small-btn,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn { background:#fffdf8!important; color:#343630!important; border-color:#e4dfd5!important; box-shadow:none!important; }
-#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#e9e4d9!important; color:#343630!important; border-color:#d7cfc2!important; }
-#create input[type=range] { accent-color:#ad715f!important; }
-#create .creation-dock { background:rgba(255,253,248,.97)!important; border:1px solid #e4dfd5!important; box-shadow:0 4px 18px rgba(52,54,48,.08)!important; backdrop-filter:blur(14px)!important; }
-#create .creation-dock button { min-height:42px!important; background:#f5f2eb!important; color:#55574f!important; border-color:#e4dfd5!important; font-weight:500!important; }
-#create .creation-dock button span { color:#ad715f!important; }
-#create .creation-dock button.dock-primary { background:#e9e4d9!important; color:#343630!important; border-color:#d7cfc2!important; }
-#create .creation-dock button.dock-primary span { color:#ad715f!important; }
-#create .shape-menu-wrap { margin-top:14px!important; }
-#create .shape-menu-trigger { width:100%!important; min-height:44px!important; border-radius:12px!important; text-align:left!important; padding:10px 14px!important; background:#f5f2eb!important; color:#55574f!important; }
-#create #shapeOptionsMenu[hidden] { display:none!important; }
-#create #shapeOptionsMenu { margin-top:8px!important; padding:10px!important; border:1px solid #e4dfd5!important; border-radius:14px!important; background:#faf7f0!important; }
-#create #shapeOptionsMenu .shape-btn { min-height:66px!important; }
-@media(max-width:799px){
- #create { padding-top:0!important; padding-bottom:calc(140px + env(safe-area-inset-bottom))!important; }
- #create .editor-head { position:fixed!important; top:0!important; left:0!important; right:0!important; z-index:1100!important; display:flex!important; flex-wrap:nowrap!important; align-items:center!important; gap:6px!important; padding:calc(7px + env(safe-area-inset-top)) 10px 7px!important; margin:0!important; background:rgba(245,242,235,.97)!important; border-bottom:1px solid #e4dfd5!important; box-shadow:0 3px 12px rgba(52,54,48,.04)!important; backdrop-filter:blur(14px)!important; }
- #create .editor-head h2 { flex:0 1 auto!important; min-width:0!important; max-width:35%!important; font-size:18px!important; white-space:nowrap!important; overflow:hidden!important; text-overflow:ellipsis!important; }
- #create .editor-head .editor-actions { display:flex!important; flex:1 1 auto!important; min-width:0!important; flex-wrap:nowrap!important; justify-content:flex-end!important; gap:4px!important; }
- #create .editor-head .small-btn { min-width:0!important; height:34px!important; padding:5px 8px!important; border-radius:9px!important; font-size:11px!important; white-space:nowrap!important; }
- #create .editor-head .small-btn[aria-label="Undo"],#create .editor-head .small-btn[aria-label="Redo"] { width:30px!important; flex:0 0 30px!important; padding:0!important; }
- #create .editor-head .small-btn.dark { flex:0 0 auto!important; }
- #create .stage-wrap { position:relative!important; top:auto!important; margin-top:calc(58px + env(safe-area-inset-top))!important; padding:10px!important; border-radius:16px!important; }
- #create .stage-wrap .live-preview-label { color:#77796f!important; font-weight:500!important; }
- #create .stage { width:auto!important; height:min(54svh,calc((100vw - 64px)*16/9))!important; max-width:calc((100vw - 64px)*9/16)!important; max-height:54svh!important; aspect-ratio:9/16!important; }
- #create .workspace { display:flex!important; flex-direction:column!important; gap:12px!important; }
- #create .panel { margin-bottom:0!important; }
- #create .creation-dock { position:fixed!important; z-index:1090!important; left:10px!important; right:10px!important; bottom:calc(66px + env(safe-area-inset-bottom))!important; display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr))!important; gap:5px!important; padding:6px!important; border-radius:15px!important; }
- #create .creation-dock button { min-height:42px!important; border-radius:10px!important; gap:1px!important; font-size:10px!important; padding:4px 2px!important; }
- #create .creation-dock button span { font-size:17px!important; }
- #create .creation-dock button b { font-size:10px!important; font-weight:500!important; }
- body.keyboard-open #create .editor-head,body:has(#textValue:focus) #create .editor-head { top:0!important; }
- body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap { position:relative!important; top:auto!important; left:auto!important; right:auto!important; height:auto!important; min-height:0!important; max-height:none!important; margin-top:calc(58px + env(safe-area-inset-top))!important; padding:8px!important; background:#eeeae2!important; border:1px solid #e4dfd5!important; border-radius:14px!important; box-shadow:none!important; }
- body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage { width:auto!important; height:min(35svh,calc((100vw - 72px)*16/9))!important; max-width:calc((100vw - 72px)*9/16)!important; max-height:35svh!important; aspect-ratio:9/16!important; flex:0 0 auto!important; }
- body.keyboard-open #create #textControls,body:has(#textValue:focus) #create #textControls { margin-top:0!important; scroll-margin-top:calc(70px + env(safe-area-inset-top))!important; }
- body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock { display:none!important; }
- body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .bottom { display:none!important; }
-}
-</style>
+
+
+
+
 <script id="shape-menu-behavior-v49">
 function toggleShapeMenu(){
  const menu=document.getElementById('shapeOptionsMenu');
@@ -3038,209 +3368,6 @@ function closeShapeMenu(){
 </script>
 
 
-<style id="light-theme-preview-fix-v50">
-:root { color-scheme:light!important; --bg:#f7f5ef!important; --paper:#fffefa!important; --ink:#3c3d38!important; --muted:#777970!important; --line:#e8e4dc!important; --accent:#b17d6b!important; --accent-hover:#986552!important; --stage:#f0ede6!important; }
-html,body,.app { background:#f7f5ef!important; color:#3c3d38!important; }
-header.shell { background:#f7f5ef!important; border-color:#e8e4dc!important; }
-header.shell .logo { color:#3c3d38!important; }
-header.shell .language-toggle,header.shell .round { background:#fffefa!important; color:#3c3d38!important; border-color:#e8e4dc!important; }
-.bottom { background:rgba(247,245,239,.98)!important; border-color:#e8e4dc!important; }
-#create .editor-head { background:rgba(247,245,239,.98)!important; border-color:#e8e4dc!important; box-shadow:0 2px 10px rgba(60,61,56,.025)!important; }
-#create .editor-head h2 { color:#3c3d38!important; }
-#create .editor-head .editor-actions .small-btn,
-#create .editor-head .editor-actions .small-btn.dark { background:#fffefa!important; color:#55574f!important; border-color:#e8e4dc!important; box-shadow:none!important; }
-#create .stage-wrap { background:#f0ede6!important; border:1px solid #e8e4dc!important; box-shadow:none!important; }
-#create .stage { background-color:#fffefa!important; }
-#create .panel { background:#fffefa!important; border:1px solid #e8e4dc!important; border-radius:20px!important; box-shadow:none!important; }
-#create .panel-section { border-color:#e8e4dc!important; }
-#create .panel-title,#create .field label { color:#777970!important; }
-#create .tool,#create .small-btn,#create .preset,#create .font-btn,#create .shape-btn,#create .layer-row,#create .field input,#create .field textarea,#create .field select,#create .hex-input,#create .zoom-btn,
-#create #textEntryField,#create #textValue { background:#fffefa!important; color:#3c3d38!important; border-color:#e8e4dc!important; box-shadow:none!important; }
-#create #textEntryField { border-radius:14px!important; }
-#create #textValue { outline-color:#c4a393!important; }
-#create .small-btn.dark,#create .tool.primary,#create .tool.on,#create .chip.active,#create .font-btn.active { background:#eee9df!important; color:#3c3d38!important; border-color:#ded7ca!important; }
-#create input[type=range] { accent-color:#b17d6b!important; }
-#create .creation-dock { background:rgba(255,254,250,.98)!important; border-color:#e8e4dc!important; box-shadow:0 2px 12px rgba(60,61,56,.06)!important; }
-#create .creation-dock button,#create .creation-dock button.dock-primary { background:#f7f5ef!important; color:#55574f!important; border-color:#e8e4dc!important; }
-#create .creation-dock button span,#create .creation-dock button.dock-primary span { color:#b17d6b!important; }
-#create .shape-menu-trigger,#create #shapeOptionsMenu { background:#f7f5ef!important; border-color:#e8e4dc!important; color:#55574f!important; }
-#create #shapeOptionsMenu .shape-btn svg [fill="#ff961a"],#create #shapeOptionsMenu .shape-btn svg [fill="#151515"] { fill:#b17d6b!important; }
-#create .status,#create #status { color:#777970!important; }
-@media(max-width:799px){
- #create .editor-head { min-height:52px!important; padding:calc(7px + env(safe-area-inset-top)) 8px 7px!important; }
- #create .editor-head h2 { max-width:0!important; flex:0 1 0!important; overflow:hidden!important; margin:0!important; }
- #create .editor-head .editor-actions { justify-content:space-between!important; }
- #create .editor-head .editor-actions .small-btn { height:34px!important; padding:5px 7px!important; font-size:11px!important; }
- #create .stage-wrap { margin-top:calc(66px + env(safe-area-inset-top))!important; padding:8px!important; overflow:visible!important; }
- #create .stage-wrap .live-preview-label { margin-bottom:6px!important; color:#777970!important; }
- #create .stage { display:block!important; width:auto!important; height:auto!important; aspect-ratio:9/16!important; max-width:min(calc(100vw - 64px),calc((100svh - 210px)*9/16))!important; max-height:calc(100svh - 210px)!important; }
- body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap { margin-top:calc(66px + env(safe-area-inset-top))!important; }
- body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage { width:auto!important; height:auto!important; aspect-ratio:9/16!important; max-width:min(calc(100vw - 80px),calc((100svh - 300px)*9/16))!important; max-height:calc(100svh - 300px)!important; }
- #create .creation-dock { bottom:calc(66px + env(safe-area-inset-bottom))!important; }
-}
-</style>
-
-
-<style id="curved-export-guard-v51">
-/* Keep exported curved text centered and avoid glyph collisions from equal-width character spacing. */
-</style>
-
-
-<style id="remove-all-dark-ui-v53">
-/* V53: hard override the remaining legacy dark blocks, while leaving artwork/export colors intact. */
-:root{color-scheme:light!important;--bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;--muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;--stage:#f1efea!important}
-#create .status,#create #status,#create .selection-hint,#create #selectionHint{
- background:#f5f3ee!important;color:#77756f!important;border:1px solid #e9e6df!important;
-}
-#create #selectionControls,#create .selection-controls,#create .layer-controls{
- background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
-}
-#create .text-look,#create .text-look-card,#create .look-card,#create .preset-card,
-#create #presetControls .preset,#create #presetControls .visual-preset-grid .preset,
-#create #presetControls .preset-art{
- background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
-}
-#create #presetControls .preset-art{
- color:#555650!important;text-shadow:none!important;border:0!important;
-}
-#create #presetControls .preset-meme .preset-art,
-#create #presetControls .preset-impact .preset-art{color:#ad8072!important;text-shadow:none!important}
-#create #presetControls .preset-editorial .preset-art{color:#555650!important}
-#create #presetControls .preset-bubble .preset-art{background:transparent!important;color:#555650!important}
-#create #presetControls .preset-marker .preset-art{color:#ad8072!important}
-#create .panel .small-btn.dark,#create .panel button.dark,
-#create .panel .layer-action,#create .panel .layer-actions button,
-#create #colorEditBtn,#create .icon-eyedrop-btn{
- background:#f5f3ee!important;color:#77756f!important;border:1px solid #e9e6df!important;box-shadow:none!important;
-}
-#create .icon-eyedrop-btn svg{stroke:#ad8072!important}
-#create .align-btn,#create .icon-align-grid .align-btn{
- background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
-}
-#create .align-btn.on,#create .icon-align-grid .align-btn.on{
- background:#eeeae5!important;color:#555650!important;border-color:#d9d2c9!important;
-}
-#create #textEntryField,#create #textEntryField .field,
-#create #textEntryField .text-entry-card,#create #textEntryField .text-input-wrap{
- background:#fffefa!important;color:#555650!important;border-color:#e9e6df!important;box-shadow:none!important;
-}
-#create #textEntryField textarea,#create #textValue{
- background:#fffefa!important;color:#41413d!important;border-color:#e9e6df!important;box-shadow:none!important;
-}
-#create #textEntryField textarea::placeholder,#create #textValue::placeholder{color:#a09d95!important}
-#create .tool:disabled,#create .small-btn:disabled,#create .preset:disabled,
-#create .font-btn:disabled{background:#f5f3ee!important;color:#a09d95!important;border-color:#e9e6df!important}
-#create .creation-dock button.active,#create .creation-dock button[aria-pressed=true]{
- background:#eeeae5!important;color:#555650!important;border-color:#d9d2c9!important;
-}
-#home .home-action-card,#home .home-action-card:hover{background:#f5f3ee!important;color:#555650!important;border-color:#e9e6df!important}
-#home .home-action-icon{background:#eeeae5!important;color:#ad8072!important}
-
-</style>
-
-
-<style id="artcraft-premium-editor-pass-v54">
-/* ArtCraft / FigCraft design pass: coherent light surfaces, hierarchy, no duplicated heavy containers. */
-:root{
- color-scheme:light!important;
- --bg:#f7f6f2!important;--paper:#fffefa!important;--ink:#41413d!important;
- --muted:#85837d!important;--line:#e9e6df!important;--accent:#ad8072!important;
- --stage:#f1efea!important;
-}
-#create{background:#f7f6f2!important;color:#41413d!important}
-#create .panel{
- background:#fffefa!important;border:1px solid #e9e6df!important;
- border-radius:18px!important;box-shadow:none!important;
-}
-#create .panel-section{
- background:transparent!important;border-color:#e9e6df!important;
- box-shadow:none!important;
-}
-#create .panel-title{color:#77766f!important;font-size:11px!important;letter-spacing:.13em!important;font-weight:600!important}
-#create .field label{color:#77766f!important;font-weight:500!important}
-#create .status,#create #status,#create #selectionControls{
- background:#f5f3ee!important;color:#77766f!important;
- border:1px solid #e9e6df!important;border-radius:10px!important;
- box-shadow:none!important;padding:9px 12px!important;
-}
-#create #textControls{background:transparent!important;border:0!important;box-shadow:none!important}
-#create #textEntryField{
- display:block!important;background:transparent!important;color:#555650!important;
- border:0!important;border-radius:0!important;padding:0!important;box-shadow:none!important;
-}
-#create #textEntryField>label{
- display:flex!important;justify-content:space-between!important;align-items:center!important;
- color:#77766f!important;background:transparent!important;padding:0!important;margin:0 0 8px!important;
-}
-#create #textEntryField textarea,#create textarea#textValue{
- display:block!important;width:100%!important;box-sizing:border-box!important;
- min-height:84px!important;padding:13px 14px!important;
- background:#fffefa!important;color:#41413d!important;
- border:1px solid #ded9d0!important;border-radius:12px!important;
- outline:0!important;box-shadow:none!important;
-}
-#create #textEntryField textarea:focus,#create textarea#textValue:focus{
- border-color:#c6a99d!important;outline:2px solid rgba(173,128,114,.12)!important;
-}
-#create #textEntryField textarea::placeholder{color:#a09d95!important}
-#create #textEntryField .status{
- background:transparent!important;border:0!important;border-radius:0!important;
- padding:7px 0 0!important;color:#85837d!important;font-size:12px!important;
-}
-#create .fonts{gap:7px!important}
-#create .font-btn{
- min-height:43px!important;background:#fffefa!important;color:#555650!important;
- border:1px solid #e9e6df!important;border-radius:11px!important;
- box-shadow:none!important;font-weight:500!important;
-}
-#create .font-btn.active{
- background:#eeeae5!important;color:#41413d!important;border-color:#dcd5cc!important;
-}
-#create .visual-preset-grid{gap:8px!important}
-#create .visual-preset,#create #presetControls .visual-preset{
- display:flex!important;align-items:center!important;justify-content:center!important;
- flex-direction:column!important;gap:10px!important;min-height:94px!important;
- padding:12px 8px!important;background:#f5f3ee!important;color:#555650!important;
- border:1px solid #e9e6df!important;border-radius:13px!important;
- box-shadow:none!important;overflow:hidden!important;
-}
-#create .visual-preset .preset-art,#create #presetControls .preset-art{
- display:flex!important;align-items:center!important;justify-content:center!important;
- min-height:36px!important;background:transparent!important;color:#555650!important;
- border:0!important;box-shadow:none!important;text-shadow:none!important;
-}
-#create .visual-preset.preset-meme .preset-art,
-#create .visual-preset.preset-impact .preset-art,
-#create .visual-preset.preset-marker .preset-art{color:#ad8072!important;text-shadow:none!important}
-#create .visual-preset.preset-editorial .preset-art{color:#555650!important}
-#create .visual-preset .preset-caption{color:#77766f!important;font-size:11px!important;font-weight:500!important}
-#create .tool,#create .small-btn,#create .preset,#create .shape-btn,
-#create .layer-row,#create .field input,#create .field select,
-#create .hex-input,#create .zoom-btn,#create .align-btn,
-#create .icon-eyedrop-btn,#create .eyedrop-btn{
- background:#fffefa!important;color:#555650!important;
- border:1px solid #e9e6df!important;border-radius:11px!important;
- box-shadow:none!important;
-}
-#create .small-btn.dark,#create .tool.primary,#create .tool.on,
-#create .align-btn.on,#create .chip.active{
- background:#eeeae5!important;color:#555650!important;
- border-color:#dcd5cc!important;
-}
-#create #colorHex,#create .hex-input{background:#fffefa!important;color:#41413d!important}
-#create .icon-eyedrop-btn{background:#f5f3ee!important;color:#ad8072!important}
-#create input[type=range]{accent-color:#ad8072!important}
-#create input[type=range]::-webkit-slider-thumb{background:#ad8072!important}
-#create input[type=range]::-moz-range-thumb{background:#ad8072!important}
-#create .stage-wrap{background:#f1efea!important;border:1px solid #e9e6df!important;box-shadow:none!important}
-#create .creation-dock{background:rgba(255,254,250,.97)!important;border:1px solid #e9e6df!important;box-shadow:0 2px 12px rgba(65,65,61,.05)!important}
-#create .creation-dock button{background:#f7f6f2!important;color:#555650!important;border-color:#e9e6df!important}
-#create .creation-dock button.active{background:#eeeae5!important}
-@media(max-width:799px){
- #create .panel{padding:16px!important}
- #create #textEntryField textarea{min-height:76px!important}
- #create .visual-preset,#create #presetControls .visual-preset{min-height:82px!important;padding:9px 6px!important}
-}
 
 
 
@@ -3251,131 +3378,6 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
 
 
 
-<style id="v60-mobile-editor-layout">
-/* V60: single authoritative responsive editor layout. */
-:root{--v60-paper:#fffefa;--v60-bg:#f7f6f2;--v60-ink:#41413d;--v60-muted:#85837d;--v60-line:#e9e6df;--v60-accent:#ad8072}
-#create .stage-wrap{background:var(--v60-bg)!important;border:1px solid var(--v60-line)!important;box-shadow:none!important}
-#create .stage{background:var(--v60-paper)!important;aspect-ratio:9/16!important;position:relative!important;overflow:hidden!important}
-#create .panel{background:var(--v60-paper)!important;border:1px solid var(--v60-line)!important}
-#create .panel-sheet-handle{display:none}
-@media(max-width:799px){
-  #create{padding-bottom:calc(150px + env(safe-area-inset-bottom))!important}
-  #create .editor-head{
-    position:sticky!important;top:0!important;z-index:90!important;
-    display:flex!important;flex-wrap:wrap!important;gap:7px!important;
-    padding:8px 0 10px!important;margin:0!important;
-    background:rgba(247,246,242,.97)!important;backdrop-filter:blur(12px)!important;
-  }
-  #create .editor-head h2{flex:1 1 100%!important;font-size:24px!important;line-height:1.05!important;margin:0!important}
-  #create .editor-actions{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;gap:5px!important}
-  #create .editor-actions .small-btn{min-width:0!important;min-height:38px!important;padding:6px 3px!important;font-size:10px!important;white-space:nowrap!important}
-  #create .workspace{display:flex!important;flex-direction:column!important;gap:10px!important;overflow:visible!important}
-  #create .stage-wrap{
-    position:sticky!important;top:104px!important;z-index:45!important;
-    display:flex!important;flex-direction:column!important;align-items:center!important;
-    width:100%!important;box-sizing:border-box!important;min-width:0!important;
-    margin:0!important;padding:7px 10px 9px!important;
-    background:rgba(247,246,242,.97)!important;backdrop-filter:blur(12px)!important;
-    border:1px solid var(--v60-line)!important;border-radius:16px!important;
-    box-shadow:0 3px 12px rgba(44,44,44,.04)!important;
-  }
-  #create .stage-wrap .live-preview-label{display:block!important;align-self:flex-start!important;margin:0 0 6px!important;font-size:10px!important;color:var(--v60-muted)!important}
-  #create .stage{
-    display:block!important;width:min(54vw,220px)!important;max-width:220px!important;
-    height:auto!important;aspect-ratio:9/16!important;max-height:none!important;flex:0 0 auto!important;
-    margin:0 auto!important;border-radius:8px!important;
-  }
-  #create .panel{
-    position:fixed!important;left:10px!important;right:10px!important;
-    bottom:calc(138px + env(safe-area-inset-bottom))!important;z-index:100!important;
-    display:flex!important;flex-direction:column!important;gap:0!important;
-    max-height:min(46dvh,420px)!important;overflow-y:auto!important;overscroll-behavior:contain;
-    transform:translateY(calc(100% - 48px))!important;transition:transform .18s ease!important;
-    border-radius:18px!important;padding:0!important;margin:0!important;
-    background:rgba(255,254,250,.99)!important;box-shadow:0 10px 36px rgba(44,44,44,.13)!important;
-    -webkit-overflow-scrolling:touch;
-  }
-  #create .panel.v60-open{transform:translateY(0)!important}
-  #create .panel .panel-sheet-handle{
-    display:flex!important;flex:0 0 48px!important;align-items:center!important;justify-content:space-between!important;
-    position:sticky!important;top:0!important;z-index:8!important;
-    padding:0 15px!important;background:rgba(255,254,250,.99)!important;
-    border:0!important;border-bottom:1px solid var(--v60-line)!important;border-radius:18px 18px 0 0!important;
-    touch-action:manipulation;
-  }
-  #create .panel .panel-sheet-handle:before{content:"";position:absolute;top:6px;left:calc(50% - 16px);width:32px;height:4px;background:#d5cfc5;border-radius:4px}
-  #create .panel .panel-sheet-handle strong{font-size:12px;font-weight:600;color:var(--v60-ink)!important}
-  #create .panel .panel-sheet-handle span{font-size:11px;color:var(--v60-muted)!important}
-  #create .panel .panel-section{flex:0 0 auto!important;padding:14px!important}
-  #create .panel .panel-section:last-child{padding-bottom:20px!important}
-  #create .panel .panel-section[hidden]{display:none!important}
-  #create .creation-dock{
-    position:fixed!important;left:10px!important;right:10px!important;
-    bottom:calc(68px + env(safe-area-inset-bottom))!important;z-index:110!important;
-    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;
-    padding:6px!important;border-radius:16px!important;border:1px solid var(--v60-line)!important;
-    background:rgba(255,254,250,.97)!important;box-shadow:0 7px 24px rgba(44,44,44,.09)!important;
-    backdrop-filter:blur(14px)!important;
-  }
-  #create .creation-dock button{min-width:0!important;min-height:44px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;padding:4px 2px!important;border-radius:10px!important;font-size:10px!important}
-  #create .creation-dock button b{font-size:10px!important;font-weight:600!important}
-  #create .creation-dock button span{font-size:16px!important}
-  #create .creation-dock button.dock-primary{background:#eeeae5!important;border-color:#dcd5cc!important}
-  #create .bottom{z-index:105!important}
-  body.keyboard-open #create .editor-head,
-  body:has(#textValue:focus) #create .editor-head{display:none!important}
-  body.keyboard-open #create .stage-wrap,
-  body:has(#textValue:focus) #create .stage-wrap{
-    position:fixed!important;top:0!important;left:0!important;right:0!important;
-    z-index:1200!important;height:184px!important;min-height:184px!important;max-height:184px!important;
-    width:100%!important;box-sizing:border-box!important;margin:0!important;padding:5px 8px 7px!important;
-    border:0!important;border-bottom:1px solid var(--v60-line)!important;border-radius:0!important;
-    display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-direction:column!important;
-    background:rgba(247,246,242,.99)!important;box-shadow:0 4px 18px rgba(44,44,44,.04)!important;
-  }
-  body.keyboard-open #create .stage-wrap .live-preview-label,
-  body:has(#textValue:focus) #create .stage-wrap .live-preview-label{display:block!important;align-self:center!important;margin:0 0 4px!important;font-size:9px!important;line-height:12px!important}
-  body.keyboard-open #create .stage,
-  body:has(#textValue:focus) #create .stage{
-    width:100px!important;max-width:100px!important;height:auto!important;aspect-ratio:9/16!important;
-    max-height:none!important;flex:0 0 auto!important;border-radius:5px!important;margin:0 auto!important;
-  }
-  body.keyboard-open #create .panel,
-  body:has(#textValue:focus) #create .panel{
-    position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;
-    transform:none!important;max-height:none!important;overflow:visible!important;
-    margin:190px 10px 12px!important;display:block!important;border-radius:14px!important;
-  }
-  body.keyboard-open #create .panel .panel-sheet-handle,
-  body:has(#textValue:focus) #create .panel .panel-sheet-handle{display:none!important}
-  body.keyboard-open #create .panel .panel-section,
-  body:has(#textValue:focus) #create .panel .panel-section{display:none!important}
-  body.keyboard-open #create .panel #textControls,
-  body:has(#textValue:focus) #create .panel #textControls{display:block!important;padding:12px!important;border:0!important}
-  body.keyboard-open #create .panel #textControls .panel-title,
-  body:has(#textValue:focus) #create .panel #textControls .panel-title{display:none!important}
-  body.keyboard-open #create .panel #textControls .fonts,
-  body:has(#textValue:focus) #create .panel #textControls .fonts,
-  body.keyboard-open #create .panel #textControls .text-sizing-row,
-  body:has(#textValue:focus) #create .panel #textControls .text-sizing-row,
-  body.keyboard-open #create .panel #textControls .text-width-hint,
-  body:has(#textValue:focus) #create .panel #textControls .text-width-hint,
-  body.keyboard-open #create .panel #textControls .field:not(#textEntryField),
-  body:has(#textValue:focus) #create .panel #textControls .field:not(#textEntryField){display:none!important}
-  body.keyboard-open #create .panel #textEntryField textarea,
-  body:has(#textValue:focus) #create .panel #textEntryField textarea{display:block!important;min-height:66px!important;height:66px!important;font-size:16px!important}
-  body.keyboard-open #create .creation-dock,
-  body:has(#textValue:focus) #create .creation-dock,
-  body.keyboard-open .bottom,
-  body:has(#textValue:focus) .bottom{display:none!important}
-}
-@media(min-width:800px){
-  #create .workspace{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(330px,410px)!important;align-items:start!important;gap:22px!important}
-  #create .stage-wrap{position:sticky!important;top:16px!important;align-self:start!important;min-width:0!important}
-  #create .stage{display:block!important;width:auto!important;height:auto!important;aspect-ratio:9/16!important;max-width:min(100%,420px)!important;max-height:calc(100vh - 40px)!important;margin:0 auto!important}
-  #create .panel{position:relative!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;transform:none!important}
-}
-</style>
 <script id="v60-panel-interaction">
 (function(){
  const panel=document.querySelector('#create .panel');
@@ -3434,6 +3436,7 @@ header.shell .language-toggle,header.shell .round { background:#fffefa!important
  });
 })();
 </script>
+
 
 </body>
 </html>
