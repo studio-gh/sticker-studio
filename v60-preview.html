@@ -3109,14 +3109,20 @@ try{
  }
 }catch(e){lang="pt";}
 const originalText=new WeakMap();
-function translateTextNode(node){
- if(!node||node.nodeType!==Node.TEXT_NODE)return;
- if(!originalText.has(node))originalText.set(node,node.nodeValue);
- const original=originalText.get(node),trim=original.trim();
- if(!trim)return;
- const translated=lang==="pt"?(dict[trim]||trim):trim;
- node.nodeValue=original.replace(trim,translated);
-}
+const reverseDict=Object.fromEntries(Object.entries(dict).map(([en,pt])=>[pt,en]));
+ function translateValue(value){
+  const key=String(value||"").trim();
+  if(!key)return value;
+  const translated=lang==="pt"?(dict[key]||key):(reverseDict[key]||key);
+  return String(value).replace(key,translated);
+ }
+ function translateTextNode(node){
+  if(!node||node.nodeType!==Node.TEXT_NODE)return;
+  if(!originalText.has(node))originalText.set(node,node.nodeValue);
+  const original=originalText.get(node),trim=original.trim();
+  if(!trim)return;
+  node.nodeValue=translateValue(original);
+ }
 function translateTree(root){
  if(!root)return;
  if(root.nodeType===Node.TEXT_NODE){translateTextNode(root);return}
@@ -3126,7 +3132,7 @@ function translateTree(root){
    const key="original"+attr;
    if(root.hasAttribute(attr)&&!root.dataset[key])root.dataset[key]=root.getAttribute(attr);
    const original=root.dataset[key];
-   if(original)root.setAttribute(attr,lang==="pt"?(dict[original]||original):original);
+   if(original)root.setAttribute(attr,translateValue(original));
   });
  }
 }
