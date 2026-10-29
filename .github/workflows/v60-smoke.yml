@@ -83,7 +83,14 @@ jobs:
           const layerRect = await page.locator('#stage .layer').boundingBox();
           assert.ok(layerRect, 'Text layer must render on canvas');
           const centerRatio = (layerRect.y + layerRect.height / 2 - rect.y) / rect.height;
-          assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas');
+          const geometryDebug = await page.evaluate(() => ({
+            stage: (() => { const r=document.querySelector('#stage').getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,clientWidth:document.querySelector('#stage').clientWidth,clientHeight:document.querySelector('#stage').clientHeight,display:getComputedStyle(document.querySelector('#stage')).display}; })(),
+            layer: (() => { const el=document.querySelector('#stage .layer'); const r=el.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height,top:el.style.top,left:el.style.left,transform:el.style.transform,style:el.style.cssText}; })(),
+            logical: {x: selected()?.x, y: selected()?.y, canvasHeight: CANVAS_H, unit: document.querySelector('#stage').clientWidth/500},
+            language: {htmlLang:document.documentElement.lang,button:document.querySelector('#languageToggle')?.textContent,hero:document.querySelector('#home .hero h1')?.textContent}
+          }));
+          console.log('V60_GEOMETRY_DEBUG '+JSON.stringify({centerRatio,rect,layerRect,geometryDebug}));
+          assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas: '+JSON.stringify({centerRatio,rect,layerRect,geometryDebug}));
           await page.screenshot({ path: 'artifacts/v60-mobile-text-focus.png', fullPage: true });
           const typingPreview = await page.evaluate(() => {
             const canvas = document.querySelector('#stage').getBoundingClientRect();
