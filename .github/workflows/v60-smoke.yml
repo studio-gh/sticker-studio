@@ -61,6 +61,8 @@ jobs:
           await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
           await page.locator('.nav-btn[data-view="create"]').click();
           await page.waitForTimeout(350);
+          assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
+          await page.screenshot({ path: 'artifacts/v60-mobile-editor-empty.png', fullPage: true });
 
           const stage = page.locator('#stage');
           await stage.waitFor({ state: 'visible' });
@@ -79,8 +81,29 @@ jobs:
           const centerRatio = (layerRect.y + layerRect.height / 2 - rect.y) / rect.height;
           assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas');
           await page.screenshot({ path: 'artifacts/v60-mobile-text-focus.png', fullPage: true });
+          const typingPreview = await page.evaluate(() => {
+            const canvas = document.querySelector('#stage').getBoundingClientRect();
+            const input = document.querySelector('#textValue').getBoundingClientRect();
+            return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, inputFocused: document.activeElement.id === 'textValue' };
+          });
+          assert.equal(typingPreview.inputFocused, true, 'Text field must retain focus after creating a layer');
+          assert.ok(typingPreview.canvasBottom <= typingPreview.inputTop + 10, 'Pinned preview should not overlap text input');
 
+          await page.setViewportSize({ width: 390, height: 460 });
+          await page.evaluate(() => document.body.classList.add('keyboard-open'));
+          await page.waitForTimeout(100);
+          const keyboardState = await page.evaluate(() => {
+            const canvas = document.querySelector('#stage').getBoundingClientRect();
+            const input = document.querySelector('#textValue').getBoundingClientRect();
+            return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, viewport: window.innerHeight };
+          });
+          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < 210, 'Keyboard layout simulation should keep a compact canvas pinned at the top');
+          assert.ok(keyboardState.inputTop >= keyboardState.canvasBottom - 1 && keyboardState.inputTop < keyboardState.viewport, 'Text input should remain below the preview and in the visible area');
+          await page.screenshot({ path: 'artifacts/v60-mobile-keyboard-layout-simulation.png', fullPage: true });
+
+          await page.setViewportSize({ width: 390, height: 844 });
           await page.evaluate(() => {
+            document.body.classList.remove('keyboard-open');
             document.activeElement?.blur();
             document.body.classList.remove('keyboard-open');
             window.setProp('fontSize', 68);
