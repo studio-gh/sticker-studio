@@ -2411,6 +2411,21 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <style id="v60-empty-layer-controls">
 #create .layer-tools[hidden]{display:none!important}
 </style>
+
+<style id="v60-visible-navigation-language-fix">
+/* V60 follow-up: make navigation and language control visibly persistent on mobile. */
+:root{scroll-padding-top:76px;scroll-padding-bottom:92px}
+header.shell{position:sticky!important;top:0!important;z-index:100!important;width:100%!important;min-height:62px!important;background:rgba(255,252,244,.97)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important;border-bottom:1px solid #ded8cd!important;padding-top:max(10px,env(safe-area-inset-top))!important}
+header.shell .header-tools{display:flex!important;align-items:center!important;gap:8px!important}
+header.shell #languageToggle{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;min-height:38px!important;padding:9px 12px!important;background:#2c2c2c!important;color:#fffcf4!important;border:1px solid #ff9614!important;border-radius:999px!important;font-size:12px!important;font-weight:800!important;letter-spacing:.02em!important;position:relative!important;z-index:101!important}
+nav.bottom{position:fixed!important;display:flex!important;visibility:visible!important;opacity:1!important;z-index:120!important;left:0!important;right:0!important;bottom:0!important;height:calc(72px + env(safe-area-inset-bottom))!important;padding:0 0 env(safe-area-inset-bottom)!important;background:rgba(255,252,244,.98)!important;border-top:1px solid #ded8cd!important;box-shadow:0 -8px 24px rgba(44,44,44,.10)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important}
+nav.bottom .nav-inner{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;max-width:560px!important;margin:0 auto!important}
+nav.bottom .nav-btn{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;min-height:64px!important;color:#666!important;font-size:11px!important}
+nav.bottom .nav-btn.active{color:#2c2c2c!important}
+nav.bottom .nav-btn.active .nav-icon{color:#ff9614!important}
+body{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}
+@media(max-width:799px){.creation-dock{bottom:calc(76px + env(safe-area-inset-bottom))!important}#create{padding-bottom:calc(170px + env(safe-area-inset-bottom))!important}}
+</style>
 </head>
 <body>
 <div id="v60-preview-banner" style="position:relative;z-index:2000;width:100%;box-sizing:border-box;padding:7px 12px;background:#2c2c2c;color:#fffcf4;text-align:center;font:600 11px/1.4 system-ui,sans-serif;letter-spacing:.02em">V60 · Prévia de teste · versão experimental, separada da página principal</div>
