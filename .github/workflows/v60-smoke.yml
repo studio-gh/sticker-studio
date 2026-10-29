@@ -129,12 +129,13 @@ jobs:
           const circleGeometry = await page.evaluate(() => {
             const path = document.querySelector('#stage .layer svg defs path')?.getAttribute('d') || '';
             const textPath = document.querySelector('#stage .layer svg textPath');
-            return { path, textLength: Number(textPath?.getAttribute('textLength') || 0), mode: window.selected?.()?.curveMode || null };
+            return { path, textLength: Number(textPath?.getAttribute('textLength') || 0) };
           });
           assert.ok((circleGeometry.path.match(/ A /g) || []).length >= 2, 'Circular text path must close a full 360-degree loop');
           assert.ok(circleGeometry.textLength > 0, 'Circular text must distribute text around the full circumference');
           await page.evaluate(() => window.setTextProp('curveRadius', 150));
           assert.equal(await page.locator('#curveRadiusVal').innerText(), '150', 'Circle radius control must update the selected text');
+          await page.screenshot({ path: 'artifacts/v60-mobile-circular-text.png', fullPage: true });
 
           const exported = await page.evaluate(async () => {
             const blob = await window.renderBlob();
@@ -153,7 +154,7 @@ jobs:
           await desktop.screenshot({ path: 'artifacts/v60-desktop-empty-canvas.png', fullPage: true });
 
           assert.deepEqual(errors, [], 'Page must not produce uncaught JavaScript errors');
-          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 4, errors }, null, 2));
+          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 7, errors }, null, 2));
           await browser.close();
           NODE
 
