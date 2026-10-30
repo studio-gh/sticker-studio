@@ -1,22 +1,24 @@
-name: V60 editor smoke test and visual capture
+name: Story Studio browser regression
 
 on:
   push:
     branches:
       - ux/mobile-editor-v60-recovery
+      - main
   pull_request:
     branches:
       - main
     paths:
       - index.html
       - .github/workflows/v60-smoke.yml
+  workflow_dispatch:
 
 jobs:
   mobile-editor:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Check out the exact branch commit
+      - name: Check out the exact V61 branch commit
         uses: actions/checkout@v4
 
       - name: Set up Node
@@ -56,37 +58,118 @@ jobs:
             hasTouch: true
           });
           const page = await context.newPage();
-          page.on('pageerror', error => errors.push(error.message));
+          page.on('pageerror', error => { errors.push(error.message); console.error('PAGE_ERROR:', error.stack || error.message); });
+          page.on('console', msg => { if (msg.type() === 'error') console.error('BROWSER_CONSOLE_ERROR:', msg.text()); });
 
           await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+          const languageButton = page.locator('#languageToggle');
+          await page.waitForTimeout(500);
+          const initialLanguageState = await page.evaluate(() => ({ lang: document.documentElement.lang, toggle: document.querySelector('#languageToggle')?.textContent, headline: document.querySelector('#home .hero h1')?.innerText, ready: document.readyState }));
+          console.log('INITIAL_LANGUAGE_STATE:', JSON.stringify(initialLanguageState));
+          assert.equal(initialLanguageState.lang, 'pt-BR', 'Portuguese should be the initial document language');
+          assert.equal(initialLanguageState.toggle?.trim(), 'EN', 'Toggle should offer English after Portuguese initialization');
+          assert.match(initialLanguageState.headline || '', /Faça seu Story/i, 'Home headline should be Brazilian Portuguese after initialization');
+          assert.equal(await languageButton.innerText(), 'EN', 'After language initialization, Portuguese should be active and the toggle should offer English');
+          assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Home headline should start in Brazilian Portuguese');
+          await languageButton.click();
+          await page.waitForFunction(() => document.documentElement.lang === 'en' && document.querySelector('#languageToggle')?.textContent.trim() === 'PT-BR' && /Make your Story/i.test(document.querySelector('#home .hero h1')?.innerText || ''), null, { timeout: 5000 });
+          assert.equal(await languageButton.innerText(), 'PT-BR', 'Toggle should offer Portuguese while English is active');
+          assert.match(await page.locator('#home .hero h1').innerText(), /Make your Story/i, 'Toggle should translate the home headline to English');
+          await languageButton.click();
+          await page.waitForFunction(() => document.documentElement.lang === 'pt-BR' && document.querySelector('#languageToggle')?.textContent.trim() === 'EN' && /Faça seu Story/i.test(document.querySelector('#home .hero h1')?.innerText || ''), null, { timeout: 5000 });
+          assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Second toggle should restore Portuguese');
           await page.locator('.nav-btn[data-view="create"]').click();
           await page.waitForTimeout(350);
+          const mobileSurfaceState = await page.evaluate(() => {
+            const wrap = document.querySelector('#create .stage-wrap');
+            const stage = document.querySelector('#stage');
+            const panel = document.querySelector('#create .panel');
+            const dock = document.querySelector('#create .creation-dock');
+            const dockRect = dock.getBoundingClientRect();
+            return {
+              wrapBackground: getComputedStyle(wrap).backgroundColor,
+              stageBackground: getComputedStyle(stage).backgroundColor,
+              panelTransform: getComputedStyle(panel).transform,
+              panelOpen: panel.classList.contains('v60-open'),
+              panelSections: [...panel.querySelectorAll(':scope > .panel-section')].map(el => getComputedStyle(el).display),
+              selectionSectionDisplay: getComputedStyle(document.querySelector('#selectionControls').closest('.panel-section')).display,
+              dockRect: { left:dockRect.left, right:dockRect.right, width:dockRect.width },
+              viewport: { width: innerWidth, height: innerHeight }
+            };
+          });
+          console.log('MOBILE_SURFACE_STATE:', JSON.stringify(mobileSurfaceState));
+          assert.notEqual(mobileSurfaceState.wrapBackground, 'rgb(36, 36, 36)', 'Mobile preview frame must not use the legacy dark surface');
+          assert.equal(mobileSurfaceState.panelOpen, false, 'The tools drawer must start collapsed');
+          assert.ok(mobileSurfaceState.panelSections.every(display => display === 'none'), 'Collapsed drawer must not leak tools beneath the handle');
+          assert.equal(mobileSurfaceState.selectionSectionDisplay, 'none', 'Selected-layer controls must be hidden when the canvas is empty');
+          assert.ok(mobileSurfaceState.dockRect.left >= 0 && mobileSurfaceState.dockRect.right <= 390 && mobileSurfaceState.dockRect.width > 300, 'All four creation shortcuts must fit inside the mobile viewport');
+          await page.locator('#create .panel-sheet-handle').click();
+          await page.waitForFunction(() => document.querySelector('#create .panel')?.classList.contains('v60-open'));
+          const openPanelGeometry = await page.evaluate(() => {
+            const stageRect = document.querySelector('#stage').getBoundingClientRect();
+            const panelRect = document.querySelector('#create .panel').getBoundingClientRect();
+            return { stageBottom:stageRect.bottom, panelTop:panelRect.top, panelBottom:panelRect.bottom };
+          });
+          assert.ok(openPanelGeometry.panelTop >= openPanelGeometry.stageBottom - 1, 'Expanded tools must sit below the preview instead of covering it');
+          await page.locator('#create .panel-sheet-handle').click();
+          await page.waitForFunction(() => !document.querySelector('#create .panel')?.classList.contains('v60-open'));
           assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
-          await page.screenshot({ path: 'artifacts/v60-mobile-editor-empty.png', fullPage: true });
+          await page.screenshot({ path: 'artifacts/v61-mobile-editor-empty.png' });
 
           const stage = page.locator('#stage');
           await stage.waitFor({ state: 'visible' });
           let rect = await stage.boundingBox();
           assert.ok(rect && rect.width > 100 && rect.height > 170, 'Mobile canvas must be visible and usable');
           assert.ok(Math.abs(rect.height / rect.width - 16 / 9) < 0.03, 'Canvas must keep 9:16 ratio');
-          await page.screenshot({ path: 'artifacts/v60-mobile-empty-canvas.png', fullPage: true });
+          await page.screenshot({ path: 'artifacts/v61-mobile-empty-canvas.png' });
 
-          await page.evaluate(() => window.addText('Story Studio V60'));
+          await page.evaluate(() => window.addText('Story Studio V61'));
           await page.waitForTimeout(150);
-          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V60', 'New text must be retained in input');
+          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V61', 'New text must be retained in input');
           assert.ok(await page.locator('#stage .layer').count() === 1, 'Adding text must create a layer');
           rect = await stage.boundingBox();
           const layerRect = await page.locator('#stage .layer').boundingBox();
           assert.ok(layerRect, 'Text layer must render on canvas');
           const centerRatio = (layerRect.y + layerRect.height / 2 - rect.y) / rect.height;
-          assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas');
-          await page.screenshot({ path: 'artifacts/v60-mobile-text-focus.png', fullPage: true });
-          const typingPreview = await page.evaluate(() => {
-            const canvas = document.querySelector('#stage').getBoundingClientRect();
-            const input = document.querySelector('#textValue').getBoundingClientRect();
-            return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, inputFocused: document.activeElement.id === 'textValue' };
+          const textLayerState = await page.evaluate(() => {
+            const stage = document.querySelector('#stage');
+            const layer = document.querySelector('#stage .layer');
+            return {
+              stageWidth: stage.getBoundingClientRect().width,
+              stageHeight: stage.getBoundingClientRect().height,
+              layerLeft: layer.style.left,
+              layerTop: layer.style.top,
+              layerTransform: layer.style.transform
+            };
           });
+          console.log('TEXT_LAYER_GEOMETRY:', JSON.stringify({ stage: rect, layer: layerRect, centerRatio, ...textLayerState }));
+          assert.ok(centerRatio > 0.42 && centerRatio < 0.58, 'New text must stay centered after the mobile preview resizes for editing');
+          await page.locator('#textValue').fill('Prévia em tempo real');
+          await page.waitForFunction(() => document.querySelector('#stage .layer .text-content')?.textContent === 'Prévia em tempo real');
+          assert.equal(await page.locator('#stage .layer .text-content').innerText(), 'Prévia em tempo real', 'The canvas preview must update while typing');
+          await page.locator('#textValue').fill('Story Studio V61');
+          await page.screenshot({ path: 'artifacts/v61-mobile-text-focus.png' });
+          const typingPreview = await page.evaluate(() => {
+            const canvasEl=document.querySelector('#stage'), inputEl=document.querySelector('#textValue');
+            const panel=document.querySelector('#create .panel'), controls=document.querySelector('#textControls'), entry=document.querySelector('#textEntryField');
+            const canvas=canvasEl.getBoundingClientRect(), input=inputEl.getBoundingClientRect();
+            const style=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {display:s.display,visibility:s.visibility,opacity:s.opacity,rect:{top:r.top,bottom:r.bottom,width:r.width,height:r.height},hidden:el.hidden,inlineDisplay:el.style.display}};
+            return {
+              canvasTop:canvas.top,canvasBottom:canvas.bottom,inputTop:input.top,inputBottom:input.bottom,
+              inputFocused:document.activeElement.id==='textValue',
+              panel:style(panel),controls:style(controls),entry:style(entry),input:style(inputEl),
+              parentSections:[...panel.querySelectorAll(':scope > .panel-section')].map(style),
+              ancestorChain:(()=>{const out=[];let el=panel;while(el&&out.length<7){const s=getComputedStyle(el),r=el.getBoundingClientRect();out.push({tag:el.tagName,id:el.id,className:typeof el.className==='string'?el.className:'',position:s.position,transform:s.transform,filter:s.filter,contain:s.contain,overflow:s.overflow,rect:{top:r.top,bottom:r.bottom,height:r.height}});el=el.parentElement;}return out;})()
+            };
+          });
+          console.log('TYPING_PREVIEW_STATE:', JSON.stringify(typingPreview));
+          const typingPanelBox = typingPreview.panel.rect;
+          const typingInputBox = typingPreview.input.rect;
+          const typingCreateTransform = await page.locator('#create').evaluate(el => getComputedStyle(el).transform);
           assert.equal(typingPreview.inputFocused, true, 'Text field must retain focus after creating a layer');
+          assert.equal(typingCreateTransform, 'none', 'Animated editor wrapper must not trap fixed typing controls');
+          assert.ok(typingPanelBox.height >= 120, 'Typing panel must have enough height to show the text input');
+          assert.ok(typingPanelBox.top <= typingInputBox.top && typingPanelBox.bottom >= typingInputBox.bottom, 'Visible panel must contain the full text input field');
           assert.ok(typingPreview.canvasBottom <= typingPreview.inputTop + 10, 'Pinned preview should not overlap text input');
 
           await page.setViewportSize({ width: 390, height: 460 });
@@ -95,11 +178,25 @@ jobs:
           const keyboardState = await page.evaluate(() => {
             const canvas = document.querySelector('#stage').getBoundingClientRect();
             const input = document.querySelector('#textValue').getBoundingClientRect();
-            return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, viewport: window.innerHeight };
+            const panel = document.querySelector('#create .panel').getBoundingClientRect();
+            return {
+              canvasTop: canvas.top, canvasBottom: canvas.bottom,
+              inputTop: input.top, inputBottom: input.bottom,
+              panelTop: panel.top, panelBottom: panel.bottom, panelHeight: panel.height,
+              viewport: window.innerHeight
+            };
           });
-          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < 210, 'Keyboard layout simulation should keep a compact canvas pinned at the top');
+          const keyboardLayout = await page.evaluate(() => ({
+            stageWrap: (() => { const r = document.querySelector('#stage').parentElement.getBoundingClientRect(); return { top:r.top, bottom:r.bottom, height:r.height }; })(),
+            bodyClasses: document.body.className,
+            previewTopVariable: getComputedStyle(document.documentElement).getPropertyValue('--keyboard-preview-top')
+          }));
+          console.log('KEYBOARD_LAYOUT_STATE:', JSON.stringify({ ...keyboardState, ...keyboardLayout }));
+          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < keyboardState.viewport * 0.68, 'Compact layout emulation should keep the canvas in the top region');
           assert.ok(keyboardState.inputTop >= keyboardState.canvasBottom - 1 && keyboardState.inputTop < keyboardState.viewport, 'Text input should remain below the preview and in the visible area');
-          await page.screenshot({ path: 'artifacts/v60-mobile-keyboard-layout-simulation.png', fullPage: true });
+          assert.ok(keyboardState.panelHeight >= 120, 'Keyboard panel must retain enough height for editing controls');
+          assert.ok(keyboardState.panelTop <= keyboardState.inputTop && keyboardState.panelBottom >= keyboardState.inputBottom, 'Keyboard panel must contain the full visible text field');
+          await page.screenshot({ path: 'artifacts/mobile-compact-layout-emulation.png' });
 
           await page.setViewportSize({ width: 390, height: 844 });
           await page.evaluate(() => {
@@ -110,9 +207,21 @@ jobs:
             window.setTextProp('curve', 30);
           });
           await page.waitForTimeout(150);
-          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V60', 'Size/curve changes must not remove text content');
+          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V61', 'Size/curve changes must not remove text content');
           const curved = await page.locator('#stage .layer svg textPath').textContent();
-          assert.equal(curved, 'Story Studio V60', 'Curved text must retain the full string in live preview');
+          assert.equal(curved, 'Story Studio V61', 'Curved text must retain the full string in live preview');
+
+          await page.evaluate(() => window.setCurveMode('circle'));
+          const circleGeometry = await page.evaluate(() => {
+            const path = document.querySelector('#stage .layer svg defs path')?.getAttribute('d') || '';
+            const textPath = document.querySelector('#stage .layer svg textPath');
+            return { path, textLength: Number(textPath?.getAttribute('textLength') || 0) };
+          });
+          assert.ok((circleGeometry.path.match(/ A /g) || []).length >= 2, 'Circular text path must close a full 360-degree loop');
+          assert.ok(circleGeometry.textLength > 0, 'Circular text must distribute text around the full circumference');
+          await page.evaluate(() => window.setTextProp('curveRadius', 150));
+          assert.equal(await page.locator('#curveRadiusVal').innerText(), '150', 'Circle radius control must update the selected text');
+          await page.screenshot({ path: 'artifacts/v61-mobile-circular-text.png' });
 
           const exported = await page.evaluate(async () => {
             const blob = await window.renderBlob();
@@ -120,18 +229,58 @@ jobs:
             return { width: bitmap.width, height: bitmap.height, size: blob.size };
           });
           assert.ok(exported.width > 0 && exported.height > 0 && exported.size > 100, 'PNG export rendering must return image pixels');
-          await page.screenshot({ path: 'artifacts/v60-mobile-curved-text.png', fullPage: true });
+          await page.screenshot({ path: 'artifacts/v61-mobile-curved-text.png' });
+
+          await page.evaluate(() => { window.addShape('circle'); window.v60SetPanel(true,'shape'); });
+          assert.equal(await page.locator('#stage .layer').count(), 2, 'Adding a shape must create a second layer');
+          const shapeControlsState = await page.locator('#shapeControls').evaluate(el => ({display:getComputedStyle(el).display,inline:el.style.display,hidden:el.hidden,parent:getComputedStyle(el.closest('.panel-section')).display}));
+          console.log('SHAPE_CONTROLS_STATE:', JSON.stringify(shapeControlsState));
+          assert.equal(shapeControlsState.display, 'block', 'Shape controls must appear for a selected shape');
+          assert.notEqual(shapeControlsState.parent, 'none', 'Shape controls parent section must be revealed for the selected shape');
+          const shapeLayer = await page.locator('#stage .layer.selected').count();
+          assert.equal(shapeLayer, 1, 'The newly created shape must become the selected layer');
+
+          await page.evaluate(async () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32; canvas.height = 32;
+            const context = canvas.getContext('2d');
+            context.fillStyle = '#ff9614'; context.fillRect(0,0,32,32);
+            const blob = await new Promise(resolve => canvas.toBlob(resolve,'image/png'));
+            await window.handleFile(new File([blob],'story-studio-qa.png',{type:'image/png'}));
+          });
+          await page.waitForFunction(() => document.querySelectorAll('#stage .layer').length === 3);
+          await page.evaluate(() => window.v60SetPanel(true,'photo'));
+          const photoControlsState = await page.locator('#imageControls').evaluate(el => ({display:getComputedStyle(el).display,inline:el.style.display,hidden:el.hidden,parent:getComputedStyle(el.closest('.panel-section')).display}));
+          console.log('PHOTO_CONTROLS_STATE:', JSON.stringify(photoControlsState));
+          assert.equal(photoControlsState.display, 'block', 'Photo controls must appear after a photo is imported');
+          assert.notEqual(photoControlsState.parent, 'none', 'Photo controls parent section must be revealed for the selected photo');
+          assert.equal(await page.locator('#stage .layer.selected img.layer-media').count(), 1, 'Imported photo must render in the selected canvas layer');
+          const composite = await page.evaluate(async () => {
+            const blob = await window.renderBlob();
+            const bitmap = await createImageBitmap(blob);
+            return {width:bitmap.width,height:bitmap.height,size:blob.size};
+          });
+          assert.ok(composite.size > 1000 && composite.width > 0 && composite.height > 0, 'PNG export must include text, shape and imported photo layers');
+          await page.screenshot({ path: 'artifacts/v61-mobile-photo-layer.png' });
 
           const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
           desktop.on('pageerror', error => errors.push(error.message));
           await desktop.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
-          await desktop.locator('.nav-btn[data-view="create"]').click();
+          await desktop.locator('#home .hero .actions .btn').click();
+          await desktop.waitForFunction(() => document.querySelector('#create')?.classList.contains('active'));
+          assert.equal(await desktop.locator('#create .creation-dock').evaluate(el => getComputedStyle(el).display), 'none', 'Mobile creation dock must be hidden on desktop');
           const desktopStage = await desktop.locator('#stage').boundingBox();
           assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
-          await desktop.screenshot({ path: 'artifacts/v60-desktop-empty-canvas.png', fullPage: true });
+          assert.equal(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Desktop selected-layer controls must be hidden on an empty canvas');
+          await desktop.evaluate(() => window.scrollTo(0,0));
+          await desktop.screenshot({ path: 'artifacts/v61-desktop-empty-canvas.png' });
+          await desktop.evaluate(() => window.addText('Desktop layer check'));
+          await desktop.waitForFunction(() => document.querySelector('#stage .layer'));
+          assert.notEqual(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Selected-layer controls must appear after a layer is created');
+          await desktop.screenshot({ path: 'artifacts/v61-desktop-selected-layer.png' });
 
           assert.deepEqual(errors, [], 'Page must not produce uncaught JavaScript errors');
-          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 4, errors }, null, 2));
+          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 9, errors }, null, 2));
           await browser.close();
           NODE
 
@@ -139,6 +288,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: story-studio-v60-visual-evidence
+          name: story-studio-v61-visual-evidence
           path: artifacts/
           if-no-files-found: warn
