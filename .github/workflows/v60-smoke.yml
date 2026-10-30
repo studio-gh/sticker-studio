@@ -1,4 +1,4 @@
-name: Story Studio browser regression
+name: Story Studio V62 browser regression
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Check out the exact V61 branch commit
+      - name: Check out the exact pull request commit
         uses: actions/checkout@v4
 
       - name: Set up Node
@@ -69,6 +69,32 @@ jobs:
           assert.equal(initialLanguageState.lang, 'pt-BR', 'Portuguese should be the initial document language');
           assert.equal(initialLanguageState.toggle?.trim(), 'EN', 'Toggle should offer English after Portuguese initialization');
           assert.match(initialLanguageState.headline || '', /Faça seu Story/i, 'Home headline should be Brazilian Portuguese after initialization');
+          const homeIdentity = await page.evaluate(() => {
+            const hero = document.querySelector('#home .home-create-hero');
+            const title = hero?.querySelector('h1');
+            const logo = document.querySelector('header .logo');
+            const cards = [...document.querySelectorAll('#home .home-action-card')];
+            const rect = hero?.getBoundingClientRect();
+            return {
+              background: getComputedStyle(document.body).backgroundColor,
+              font: getComputedStyle(title).fontFamily,
+              titleSize: parseFloat(getComputedStyle(title).fontSize),
+              heroRadius: getComputedStyle(hero).borderRadius,
+              logo: logo?.innerText,
+              cards: cards.length,
+              heroWidth: rect?.width,
+              viewportWidth: innerWidth,
+              horizontalOverflow: document.documentElement.scrollWidth > innerWidth
+            };
+          });
+          console.log('V62_HOME_IDENTITY_MOBILE:', JSON.stringify(homeIdentity));
+          assert.equal(homeIdentity.background, 'rgb(255, 252, 244)', 'V62 home must use the approved ivory canvas');
+          assert.match(homeIdentity.font, /DM Sans/, 'V62 interface heading must use the approved sans-serif');
+          assert.ok(homeIdentity.titleSize >= 44, 'V62 home hero must have large editorial display type on mobile');
+          assert.match(homeIdentity.logo || '', /STORY.*STUDIO/i, 'V62 brand signature must remain visible');
+          assert.equal(homeIdentity.cards, 3, 'All three quick-start actions must remain visible');
+          assert.equal(homeIdentity.horizontalOverflow, false, 'V62 home must not overflow horizontally on mobile');
+          await page.screenshot({ path: 'artifacts/v62-mobile-home.png', fullPage: true });
           assert.equal(await languageButton.innerText(), 'EN', 'After language initialization, Portuguese should be active and the toggle should offer English');
           assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Home headline should start in Brazilian Portuguese');
           await languageButton.click();
@@ -114,14 +140,14 @@ jobs:
           await page.locator('#create .panel-sheet-handle').click();
           await page.waitForFunction(() => !document.querySelector('#create .panel')?.classList.contains('v60-open'));
           assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
-          await page.screenshot({ path: 'artifacts/v61-mobile-editor-empty.png' });
+          await page.screenshot({ path: 'artifacts/v62-mobile-editor-empty.png' });
 
           const stage = page.locator('#stage');
           await stage.waitFor({ state: 'visible' });
           let rect = await stage.boundingBox();
           assert.ok(rect && rect.width > 100 && rect.height > 170, 'Mobile canvas must be visible and usable');
           assert.ok(Math.abs(rect.height / rect.width - 16 / 9) < 0.03, 'Canvas must keep 9:16 ratio');
-          await page.screenshot({ path: 'artifacts/v61-mobile-empty-canvas.png' });
+          await page.screenshot({ path: 'artifacts/v62-mobile-empty-canvas.png' });
 
           await page.evaluate(() => window.addText('Story Studio V61'));
           await page.waitForTimeout(150);
@@ -148,7 +174,7 @@ jobs:
           await page.waitForFunction(() => document.querySelector('#stage .layer .text-content')?.textContent === 'Prévia em tempo real');
           assert.equal(await page.locator('#stage .layer .text-content').innerText(), 'Prévia em tempo real', 'The canvas preview must update while typing');
           await page.locator('#textValue').fill('Story Studio V61');
-          await page.screenshot({ path: 'artifacts/v61-mobile-text-focus.png' });
+          await page.screenshot({ path: 'artifacts/v62-mobile-text-focus.png' });
           const typingPreview = await page.evaluate(() => {
             const canvasEl=document.querySelector('#stage'), inputEl=document.querySelector('#textValue');
             const panel=document.querySelector('#create .panel'), controls=document.querySelector('#textControls'), entry=document.querySelector('#textEntryField');
@@ -221,7 +247,7 @@ jobs:
           assert.ok(circleGeometry.textLength > 0, 'Circular text must distribute text around the full circumference');
           await page.evaluate(() => window.setTextProp('curveRadius', 150));
           assert.equal(await page.locator('#curveRadiusVal').innerText(), '150', 'Circle radius control must update the selected text');
-          await page.screenshot({ path: 'artifacts/v61-mobile-circular-text.png' });
+          await page.screenshot({ path: 'artifacts/v62-mobile-circular-text.png' });
 
           const exported = await page.evaluate(async () => {
             const blob = await window.renderBlob();
@@ -229,7 +255,7 @@ jobs:
             return { width: bitmap.width, height: bitmap.height, size: blob.size };
           });
           assert.ok(exported.width > 0 && exported.height > 0 && exported.size > 100, 'PNG export rendering must return image pixels');
-          await page.screenshot({ path: 'artifacts/v61-mobile-curved-text.png' });
+          await page.screenshot({ path: 'artifacts/v62-mobile-curved-text.png' });
 
           await page.evaluate(() => { window.addShape('circle'); window.v60SetPanel(true,'shape'); });
           assert.equal(await page.locator('#stage .layer').count(), 2, 'Adding a shape must create a second layer');
@@ -261,11 +287,31 @@ jobs:
             return {width:bitmap.width,height:bitmap.height,size:blob.size};
           });
           assert.ok(composite.size > 1000 && composite.width > 0 && composite.height > 0, 'PNG export must include text, shape and imported photo layers');
-          await page.screenshot({ path: 'artifacts/v61-mobile-photo-layer.png' });
+          await page.screenshot({ path: 'artifacts/v62-mobile-photo-layer.png' });
 
           const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
           desktop.on('pageerror', error => errors.push(error.message));
           await desktop.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
+          const desktopHome = await desktop.evaluate(() => {
+            const hero = document.querySelector('#home .home-create-hero');
+            const title = hero?.querySelector('h1');
+            const cards = [...document.querySelectorAll('#home .home-action-card')];
+            return {
+              background: getComputedStyle(document.body).backgroundColor,
+              font: getComputedStyle(title).fontFamily,
+              titleSize: parseFloat(getComputedStyle(title).fontSize),
+              heroHeight: hero?.getBoundingClientRect().height,
+              cards: cards.length,
+              overflow: document.documentElement.scrollWidth > innerWidth
+            };
+          });
+          console.log('V62_HOME_IDENTITY_DESKTOP:', JSON.stringify(desktopHome));
+          assert.equal(desktopHome.background, 'rgb(255, 252, 244)', 'V62 desktop home must use ivory canvas');
+          assert.match(desktopHome.font, /DM Sans/, 'V62 desktop headings must use DM Sans');
+          assert.ok(desktopHome.titleSize >= 60, 'V62 desktop hero should be a display heading');
+          assert.equal(desktopHome.cards, 3, 'Desktop quick-start cards must render');
+          assert.equal(desktopHome.overflow, false, 'V62 home must not overflow horizontally on desktop');
+          await desktop.screenshot({ path: 'artifacts/v62-desktop-home.png', fullPage: true });
           await desktop.locator('#home .hero .actions .btn').click();
           await desktop.waitForFunction(() => document.querySelector('#create')?.classList.contains('active'));
           assert.equal(await desktop.locator('#create .creation-dock').evaluate(el => getComputedStyle(el).display), 'none', 'Mobile creation dock must be hidden on desktop');
@@ -273,11 +319,11 @@ jobs:
           assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
           assert.equal(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Desktop selected-layer controls must be hidden on an empty canvas');
           await desktop.evaluate(() => window.scrollTo(0,0));
-          await desktop.screenshot({ path: 'artifacts/v61-desktop-empty-canvas.png' });
+          await desktop.screenshot({ path: 'artifacts/v62-desktop-empty-canvas.png' });
           await desktop.evaluate(() => window.addText('Desktop layer check'));
           await desktop.waitForFunction(() => document.querySelector('#stage .layer'));
           assert.notEqual(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Selected-layer controls must appear after a layer is created');
-          await desktop.screenshot({ path: 'artifacts/v61-desktop-selected-layer.png' });
+          await desktop.screenshot({ path: 'artifacts/v62-desktop-selected-layer.png' });
 
           assert.deepEqual(errors, [], 'Page must not produce uncaught JavaScript errors');
           console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 9, errors }, null, 2));
@@ -288,6 +334,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: story-studio-v61-visual-evidence
+          name: story-studio-v62-visual-evidence
           path: artifacts/
           if-no-files-found: warn
