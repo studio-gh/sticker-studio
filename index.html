@@ -3525,5 +3525,33 @@ function closeShapeMenu(){
 })();</script>
 
 
+
+<script id="v61-stage-resize-sync">
+/* V61: keep every layer aligned with the logical 9:16 canvas when mobile preview scales. */
+(function(){
+  const stage=document.getElementById('stage');
+  if(!stage || typeof window.renderEditor!=='function' || typeof ResizeObserver==='undefined')return;
+  let lastWidth=stage.getBoundingClientRect().width;
+  let frame=0;
+  const observer=new ResizeObserver(entries=>{
+    const nextWidth=entries[0]?.contentRect?.width ?? stage.getBoundingClientRect().width;
+    if(Math.abs(nextWidth-lastWidth)<0.5)return;
+    lastWidth=nextWidth;
+    if(frame)cancelAnimationFrame(frame);
+    frame=requestAnimationFrame(()=>{
+      frame=0;
+      if(document.documentElement.contains(stage))window.renderEditor();
+    });
+  });
+  observer.observe(stage);
+  window.addEventListener('orientationchange',()=>{
+    requestAnimationFrame(()=>{
+      lastWidth=stage.getBoundingClientRect().width;
+      window.renderEditor();
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
