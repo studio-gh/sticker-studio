@@ -248,8 +248,21 @@ jobs:
           });
           assert.ok((circleGeometry.path.match(/ A /g) || []).length >= 2, 'Circular text path must close a full 360-degree loop');
           assert.ok(circleGeometry.textLength > 0, 'Circular text must distribute text around the full circumference');
-          await page.evaluate(() => window.setTextProp('curveRadius', 150));
+          await page.evaluate(() => { window.setTextProp('curveRadius', 150); window.v60SetPanel(true,'text'); });
+          await page.waitForTimeout(120);
           assert.equal(await page.locator('#curveRadiusVal').innerText(), '150', 'Circle radius control must update the selected text');
+          const curvePanelState = await page.evaluate(() => {
+            const preview = document.querySelector('#stage-wrap') || document.querySelector('#create .stage-wrap');
+            const canvas = document.querySelector('#stage');
+            const panel = document.querySelector('#create .panel');
+            const controls = document.querySelector('#curveControls');
+            const pr = preview.getBoundingClientRect(), cr = canvas.getBoundingClientRect(), nr = panel.getBoundingClientRect();
+            return { previewBottom:pr.bottom, canvasBottom:cr.bottom, panelTop:nr.top, panelVisible:getComputedStyle(panel).display!=='none' && getComputedStyle(panel).visibility!=='hidden', curveVisible:getComputedStyle(controls).display!=='none' && controls.getBoundingClientRect().height>0 };
+          });
+          console.log('CURVE_PANEL_LAYOUT_STATE:', JSON.stringify(curvePanelState));
+          assert.equal(curvePanelState.panelVisible,true,'Curve controls panel must remain visible while editing');
+          assert.equal(curvePanelState.curveVisible,true,'Curve controls must be visible after selecting circular text');
+          assert.ok(curvePanelState.panelTop >= curvePanelState.canvasBottom - 2,'Curve controls must not cover the Story preview');
           await page.screenshot({ path: 'artifacts/v62-mobile-circular-text.png' });
 
           const exported = await page.evaluate(async () => {
