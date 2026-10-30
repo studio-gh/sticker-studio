@@ -4317,8 +4317,8 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
 
 <style id="v63-contextual-editor">
 /* V63: reveal only the controls that belong to an existing selected element. */
-#create .panel{display:none;border-radius:16px;margin:8px 0 100px;padding:0;gap:0;overflow:visible}
-#create .panel.v63-visible{display:block}
+#create .panel{display:none!important;border-radius:16px;margin:8px 0 100px;padding:0;gap:0;overflow:visible}
+#create .panel.v63-visible{display:block!important}
 #create .panel-section[hidden],#create .panel-section[style*="display: none"]{display:none!important}
 #create #presetControls{display:none!important}
 #create .panel-section#selectionPanelSection{padding:14px!important}
@@ -4356,9 +4356,9 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
   border-bottom:1px solid #ded8cd!important;border-radius:0!important;box-shadow:none!important;
  }
  #create .stage-wrap .live-preview-label{width:100%!important;margin:0 0 4px!important;font-size:9px!important}
- #create .stage,
- body.v62-curve-editing #create .stage{
-  width:116px!important;max-width:116px!important;height:auto!important;max-height:none!important;
+ #create .workspace .stage-wrap #stage,
+ body.v62-curve-editing #create .workspace .stage-wrap #stage{
+  width:116px!important;max-width:116px!important;min-width:116px!important;height:auto!important;max-height:none!important;
   aspect-ratio:9/16!important;flex:0 0 auto!important;margin:0 auto!important;border-radius:10px!important;
  }
  #create .panel{max-height:none!important;overflow:visible!important;margin:8px 0 100px!important;border-radius:15px!important}
@@ -4388,7 +4388,7 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
  body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock,
  body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .bottom{display:none!important}
  body.v62-curve-editing #create .stage-wrap{position:sticky!important;height:auto!important;max-height:none!important}
- body.v62-curve-editing #create .stage{width:116px!important;max-width:116px!important}
+ body.v62-curve-editing #create .workspace .stage-wrap #stage{width:116px!important;max-width:116px!important;min-width:116px!important}
 }
 @media(min-width:800px){
  #create .workspace{grid-template-columns:minmax(0,1fr) 360px!important;align-items:start}
