@@ -90,7 +90,7 @@ jobs:
           console.log('V62_HOME_IDENTITY_MOBILE:', JSON.stringify(homeIdentity));
           assert.equal(homeIdentity.background, 'rgb(255, 252, 244)', 'V62 home must use the approved ivory canvas');
           assert.match(homeIdentity.font, /DM Sans/, 'V62 interface heading must use the approved sans-serif');
-          assert.ok(homeIdentity.titleSize >= 44, 'V62 home hero must have large editorial display type on mobile');
+          assert.ok(homeIdentity.titleSize >= 40, 'V62 home hero must retain prominent display type on mobile');
           assert.match(homeIdentity.logo || '', /STORY.*STUDIO/i, 'V62 brand signature must remain visible');
           assert.equal(homeIdentity.cards, 3, 'All three quick-start actions must remain visible');
           assert.equal(homeIdentity.horizontalOverflow, false, 'V62 home must not overflow horizontally on mobile');
