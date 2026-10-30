@@ -178,7 +178,13 @@ jobs:
           const keyboardState = await page.evaluate(() => {
             const canvas = document.querySelector('#stage').getBoundingClientRect();
             const input = document.querySelector('#textValue').getBoundingClientRect();
-            return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, viewport: window.innerHeight };
+            const panel = document.querySelector('#create .panel').getBoundingClientRect();
+            return {
+              canvasTop: canvas.top, canvasBottom: canvas.bottom,
+              inputTop: input.top, inputBottom: input.bottom,
+              panelTop: panel.top, panelBottom: panel.bottom, panelHeight: panel.height,
+              viewport: window.innerHeight
+            };
           });
           const keyboardLayout = await page.evaluate(() => ({
             stageWrap: (() => { const r = document.querySelector('#stage').parentElement.getBoundingClientRect(); return { top:r.top, bottom:r.bottom, height:r.height }; })(),
@@ -188,6 +194,8 @@ jobs:
           console.log('KEYBOARD_LAYOUT_STATE:', JSON.stringify({ ...keyboardState, ...keyboardLayout }));
           assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < keyboardState.viewport * 0.68, 'Compact layout emulation should keep the canvas in the top region');
           assert.ok(keyboardState.inputTop >= keyboardState.canvasBottom - 1 && keyboardState.inputTop < keyboardState.viewport, 'Text input should remain below the preview and in the visible area');
+          assert.ok(keyboardState.panelHeight >= 120, 'Keyboard panel must retain enough height for editing controls');
+          assert.ok(keyboardState.panelTop <= keyboardState.inputTop && keyboardState.panelBottom >= keyboardState.inputBottom, 'Keyboard panel must contain the full visible text field');
           await page.screenshot({ path: 'artifacts/mobile-compact-layout-emulation.png' });
 
           await page.setViewportSize({ width: 390, height: 844 });
@@ -247,6 +255,12 @@ jobs:
           assert.equal(photoControlsState.display, 'block', 'Photo controls must appear after a photo is imported');
           assert.notEqual(photoControlsState.parent, 'none', 'Photo controls parent section must be revealed for the selected photo');
           assert.equal(await page.locator('#stage .layer.selected img.layer-media').count(), 1, 'Imported photo must render in the selected canvas layer');
+          const composite = await page.evaluate(async () => {
+            const blob = await window.renderBlob();
+            const bitmap = await createImageBitmap(blob);
+            return {width:bitmap.width,height:bitmap.height,size:blob.size};
+          });
+          assert.ok(composite.size > 1000 && composite.width > 0 && composite.height > 0, 'PNG export must include text, shape and imported photo layers');
           await page.screenshot({ path: 'artifacts/v61-mobile-photo-layer.png' });
 
           const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
