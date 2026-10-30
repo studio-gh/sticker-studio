@@ -4172,6 +4172,20 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
 #create .visual-preset .preset-art{color:#2c2c2c!important}
 #create .visual-preset.preset-marker .preset-art{color:#ff9614!important}
 #create .custom-color .native-color{accent-color:#ff9614}
+@media(max-width:799px){
+ #create:has(#curveControls[style*="display: block"]) .stage-wrap{
+  position:sticky!important;top:0!important;left:auto!important;right:auto!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:6px 8px 9px!important;overflow:visible!important;
+ }
+ #create:has(#curveControls[style*="display: block"]) .panel{
+  position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+  width:100%!important;height:auto!important;min-height:260px!important;max-height:calc(100dvh - 430px)!important;
+  margin:8px 0 100px!important;padding-bottom:18px!important;
+  overflow-x:hidden!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+  transform:none!important;border-radius:15px!important;
+ }
+}
 </style>
 <script id="v62.3-curved-editing-visual-flow-js">
 (function(){
