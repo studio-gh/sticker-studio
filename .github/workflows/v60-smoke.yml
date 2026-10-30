@@ -92,6 +92,7 @@ jobs:
               panelTransform: getComputedStyle(panel).transform,
               panelOpen: panel.classList.contains('v60-open'),
               panelSections: [...panel.querySelectorAll(':scope > .panel-section')].map(el => getComputedStyle(el).display),
+              selectionSectionDisplay: getComputedStyle(document.querySelector('#selectionControls').closest('.panel-section')).display,
               dockRect: { left:dockRect.left, right:dockRect.right, width:dockRect.width },
               viewport: { width: innerWidth, height: innerHeight }
             };
@@ -100,6 +101,7 @@ jobs:
           assert.notEqual(mobileSurfaceState.wrapBackground, 'rgb(36, 36, 36)', 'Mobile preview frame must not use the legacy dark surface');
           assert.equal(mobileSurfaceState.panelOpen, false, 'The tools drawer must start collapsed');
           assert.ok(mobileSurfaceState.panelSections.every(display => display === 'none'), 'Collapsed drawer must not leak tools beneath the handle');
+          assert.equal(mobileSurfaceState.selectionSectionDisplay, 'none', 'Selected-layer controls must be hidden when the canvas is empty');
           assert.ok(mobileSurfaceState.dockRect.left >= 0 && mobileSurfaceState.dockRect.right <= 390 && mobileSurfaceState.dockRect.width > 300, 'All four creation shortcuts must fit inside the mobile viewport');
           await page.locator('#create .panel-sheet-handle').click();
           await page.waitForFunction(() => document.querySelector('#create .panel')?.classList.contains('v60-open'));
@@ -228,6 +230,10 @@ jobs:
           await desktop.waitForFunction(() => document.querySelector('#create')?.classList.contains('active'));
           const desktopStage = await desktop.locator('#stage').boundingBox();
           assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
+          assert.equal(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Desktop selected-layer controls must be hidden on an empty canvas');
+          await desktop.evaluate(() => window.addText('Desktop layer check'));
+          await desktop.waitForFunction(() => document.querySelector('#stage .layer'));
+          assert.notEqual(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Selected-layer controls must appear after a layer is created');
           await desktop.screenshot({ path: 'artifacts/v61-desktop-empty-canvas.png' });
 
           assert.deepEqual(errors, [], 'Page must not produce uncaught JavaScript errors');
