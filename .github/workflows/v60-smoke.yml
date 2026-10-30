@@ -254,6 +254,7 @@ jobs:
           await desktop.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
           await desktop.locator('#home .hero .actions .btn').click();
           await desktop.waitForFunction(() => document.querySelector('#create')?.classList.contains('active'));
+          assert.equal(await desktop.locator('#create .creation-dock').evaluate(el => getComputedStyle(el).display), 'none', 'Mobile creation dock must be hidden on desktop');
           const desktopStage = await desktop.locator('#stage').boundingBox();
           assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
           assert.equal(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Desktop selected-layer controls must be hidden on an empty canvas');
@@ -265,7 +266,7 @@ jobs:
           await desktop.screenshot({ path: 'artifacts/v61-desktop-selected-layer.png' });
 
           assert.deepEqual(errors, [], 'Page must not produce uncaught JavaScript errors');
-          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 7, errors }, null, 2));
+          console.log(JSON.stringify({ result: 'PASS', exported, screenshots: 9, errors }, null, 2));
           await browser.close();
           NODE
 
