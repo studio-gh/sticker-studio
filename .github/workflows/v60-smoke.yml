@@ -98,8 +98,23 @@ jobs:
           const layerRect = await page.locator('#stage .layer').boundingBox();
           assert.ok(layerRect, 'Text layer must render on canvas');
           const centerRatio = (layerRect.y + layerRect.height / 2 - rect.y) / rect.height;
-          console.log('TEXT_LAYER_GEOMETRY:', JSON.stringify({ stage: rect, layer: layerRect, centerRatio }));
-          assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas');
+          const textLayerState = await page.evaluate(() => {
+            const stage = document.querySelector('#stage');
+            const layer = document.querySelector('#stage .layer');
+            return {
+              stageWidth: stage.getBoundingClientRect().width,
+              stageHeight: stage.getBoundingClientRect().height,
+              layerLeft: layer.style.left,
+              layerTop: layer.style.top,
+              layerTransform: layer.style.transform
+            };
+          });
+          console.log('TEXT_LAYER_GEOMETRY:', JSON.stringify({ stage: rect, layer: layerRect, centerRatio, ...textLayerState }));
+          assert.ok(centerRatio > 0.42 && centerRatio < 0.58, 'New text must stay centered after the mobile preview resizes for editing');
+          await page.locator('#textValue').fill('Prévia em tempo real');
+          await page.waitForFunction(() => document.querySelector('#stage .layer .text-content')?.textContent === 'Prévia em tempo real');
+          assert.equal(await page.locator('#stage .layer .text-content').innerText(), 'Prévia em tempo real', 'The canvas preview must update while typing');
+          await page.locator('#textValue').fill('Story Studio V61');
           await page.screenshot({ path: 'artifacts/v60-mobile-text-focus.png', fullPage: true });
           const typingPreview = await page.evaluate(() => {
             const canvas = document.querySelector('#stage').getBoundingClientRect();
