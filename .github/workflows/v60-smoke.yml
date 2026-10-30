@@ -91,7 +91,7 @@ jobs:
           assert.equal(homeIdentity.background, 'rgb(255, 252, 244)', 'V62 home must use the approved ivory canvas');
           assert.match(homeIdentity.font, /DM Sans/, 'V62 interface heading must use the approved sans-serif');
           assert.ok(homeIdentity.titleSize >= 40, 'V62 home hero must retain prominent display type on mobile');
-          assert.match(homeIdentity.logo || '', /STORY.*STUDIO/i, 'V62 brand signature must remain visible');
+          assert.match((homeIdentity.logo || '').replace(/\\s+/g, ''), /STORY[•·]?STUDIO/i, 'V62 brand signature must remain visible');
           assert.equal(homeIdentity.cards, 3, 'All three quick-start actions must remain visible');
           assert.equal(homeIdentity.horizontalOverflow, false, 'V62 home must not overflow horizontally on mobile');
           await page.screenshot({ path: 'artifacts/v62-mobile-home.png', fullPage: true });
