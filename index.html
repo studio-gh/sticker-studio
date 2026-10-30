@@ -2902,6 +2902,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 @media(max-width:700px){
   .shell{width:min(100% - 28px,560px)}
   header.shell{height:68px}
+  body:has(#home.active) nav.bottom{position:static!important;height:auto!important;padding-bottom:0!important;margin:18px 0 0!important;background:transparent!important;border:0!important;backdrop-filter:none!important;box-shadow:none!important}
+  body:has(#home.active) nav.bottom .nav-inner{min-height:58px;background:#FFFFFF;border:1px solid #DEDED8;border-radius:16px;overflow:hidden}
+  body:has(#home.active) nav.bottom .nav-btn{min-height:58px}
+  body:has(#home.active) #home{padding-bottom:24px!important}
+
   #home{padding:22px 0 calc(330px + env(safe-area-inset-bottom))}
   #home .home-quick-start{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
   #home .home-action-grid{padding-bottom:120px}
