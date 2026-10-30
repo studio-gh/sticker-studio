@@ -4121,5 +4121,39 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
 })();
 </script>
 
+<style id="v62.2-keyboard-input-visibility">
+@media(max-width:799px){
+ body.keyboard-open #create .panel,
+ body:has(#textValue:focus) #create .panel{
+   position:fixed!important;
+   left:10px!important;right:10px!important;
+   bottom:0!important;
+   top:clamp(195px,27dvh,240px)!important;
+   width:auto!important;
+   max-height:none!important;
+   height:auto!important;
+   margin:0!important;
+   overflow-y:auto!important;
+   border-radius:16px 16px 0 0!important;
+   z-index:1250!important;
+   padding-bottom:18px!important;
+ }
+ body.keyboard-open #create .panel .panel-section:not(#textControls),
+ body:has(#textValue:focus) #create .panel .panel-section:not(#textControls){display:none!important}
+ body.keyboard-open #create #textControls,
+ body:has(#textValue:focus) #create #textControls{display:block!important}
+ body.keyboard-open #create #textControls .field:not(#textEntryField),
+ body:has(#textValue:focus) #create #textControls .field:not(#textEntryField),
+ body.keyboard-open #create #textControls .fonts,
+ body:has(#textValue:focus) #create #textControls .fonts{display:none!important}
+ body.keyboard-open #create #textValue,
+ body:has(#textValue:focus) #create #textValue{height:58px!important;min-height:58px!important}
+ body.keyboard-open #create #finishTextEditing,
+ body:has(#textValue:focus) #create #finishTextEditing{display:flex!important}
+ body.keyboard-open #create .stage-wrap,
+ body:has(#textValue:focus) #create .stage-wrap{height:clamp(190px,27dvh,240px)!important;min-height:clamp(190px,27dvh,240px)!important;max-height:clamp(190px,27dvh,240px)!important}
+}
+</style>
+
 </body>
 </html>
