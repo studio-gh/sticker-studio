@@ -263,13 +263,16 @@ jobs:
             const panel = document.querySelector('#create .panel');
             const controls = document.querySelector('#curveControls');
             const pr = preview.getBoundingClientRect(), cr = canvas.getBoundingClientRect(), nr = panel.getBoundingClientRect();
-            return { previewBottom:pr.bottom, canvasBottom:cr.bottom, panelTop:nr.top, panelVisible:getComputedStyle(panel).display!=='none' && getComputedStyle(panel).visibility!=='hidden', curveVisible:getComputedStyle(controls).display!=='none' && controls.getBoundingClientRect().height>0 };
+            const rr=controls.getBoundingClientRect(),ps=getComputedStyle(panel);
+            return { previewBottom:pr.bottom, canvasBottom:cr.bottom, panelTop:nr.top, panelBottom:nr.bottom, panelHeight:nr.height, panelOpacity:ps.opacity, panelTransform:ps.transform, curveTop:rr.top, curveBottom:rr.bottom, viewport:innerHeight, panelVisible:ps.display!=='none' && ps.visibility!=='hidden' && Number(ps.opacity)>0, curveVisible:getComputedStyle(controls).display!=='none' && rr.height>0 };
           });
           console.log('CURVE_PANEL_LAYOUT_STATE:', JSON.stringify(curvePanelState));
           assert.equal(curvePanelState.panelVisible,true,'Curve controls panel must remain visible while editing');
           assert.equal(curvePanelState.curveVisible,true,'Curve controls must be visible after selecting circular text');
           assert.ok(curvePanelState.panelTop >= curvePanelState.canvasBottom - 2,'Curve controls must not cover the Story preview');
-          await page.screenshot({ path: 'artifacts/v62-mobile-circular-text.png' });
+          assert.ok(curvePanelState.panelTop < curvePanelState.viewport - 100,'Curve editing panel must start inside the visible mobile screen');
+          assert.ok(curvePanelState.curveTop < curvePanelState.viewport,'Curve controls must be visible without scrolling past a blank screen');
+          await page.screenshot({ path: 'artifacts/v62-mobile-circular-text.png', fullPage:true });
 
           const exported = await page.evaluate(async () => {
             const blob = await window.renderBlob();
