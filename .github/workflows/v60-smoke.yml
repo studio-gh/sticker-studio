@@ -113,7 +113,7 @@ jobs:
             const wrap = document.querySelector('#create .stage-wrap');
             const stage = document.querySelector('#stage');
             const panel = document.querySelector('#create .panel');
-            const dock = [...document.querySelectorAll('#create .creation-dock button')].map(b=>b.innerText.trim());
+            const dock = [...document.querySelectorAll('#create .creation-dock > button')].map(b=>b.innerText.trim());
             const dockRect = document.querySelector('#create .creation-dock').getBoundingClientRect();
             return {
               wrapBackground:getComputedStyle(wrap).backgroundColor,
