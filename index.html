@@ -4514,5 +4514,84 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
 })();
 </script>
 
+<style id="v64-layer-order-fix">
+/* V64: reliable, explicit layer stack controls on mobile and desktop. */
+#create #layersPanelSection{display:block!important}
+#create #layersPanelSection[hidden]{display:none!important}
+#create #layersPanelSection .v64-layer-help{margin:0 0 10px;color:#777;font-size:11px;line-height:1.4}
+#create #layersPanelSection .layers{display:grid;gap:7px}
+#create #layersPanelSection .layer-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;align-items:center;min-height:54px;padding:7px;border:1px solid #deded8;border-radius:12px;background:#fff}
+#create #layersPanelSection .layer-row.active{border-color:#ff9614;background:#fffaf2}
+#create #layersPanelSection .layer-thumb{width:36px;height:36px;border-radius:8px;background:#f3f1eb;color:#2c2c2c}
+#create #layersPanelSection .layer-name{min-width:0;font-size:12px;color:#2c2c2c}
+#create #layersPanelSection .v64-layer-actions{display:flex;gap:5px;align-items:center}
+#create #layersPanelSection .v64-layer-move{min-width:36px;height:36px;padding:0 7px;border:1px solid #deded8;border-radius:9px;background:#fffcf4;color:#2c2c2c;font-size:17px;font-weight:700;line-height:1}
+#create #layersPanelSection .v64-layer-move:disabled{opacity:.28;cursor:not-allowed}
+#create #layersPanelSection .v64-layer-move:active{background:#fff0dc;border-color:#ff9614}
+#create #layersPanelSection .v64-layer-position{grid-column:1/-1;margin:-2px 0 0 46px;color:#85837d;font-size:10px}
+#create #layersPanelSection .layer-tools{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+#create #layersPanelSection .layer-tools[hidden]{display:none!important}
+</style>
+<script id="v64-layer-order-fix">
+(function(){
+ const section=document.getElementById('layersPanelSection');
+ const list=document.getElementById('layers');
+ if(!section||!list)return;
+ const label=l=>l.type==='text'?(l.text||'Texto').trim().slice(0,32)||'Texto':l.type==='shape'?(l.name||'Forma'):(l.name||'Foto');
+ window.renderLayers=function(){
+  const items=Array.isArray(window.layers)?window.layers:[];
+  const selectedIdNow=window.selectedId;
+  const tools=section.querySelector('.layer-tools');
+  const hasSelection=items.some(l=>l.id===selectedIdNow);
+  if(tools){tools.hidden=!hasSelection;tools.setAttribute('aria-hidden',String(!hasSelection))}
+  if(!items.length){list.innerHTML='<div class="status">Nenhuma camada ainda. Adicione texto, foto ou forma para começar.</div>';return}
+  list.innerHTML=items.slice().reverse().map((l,displayIndex)=>{
+   const index=items.findIndex(x=>x.id===l.id);
+   const isFront=index===items.length-1;
+   const isBack=index===0;
+   const thumb=l.type==='image'&&l.src?'<img src="'+l.src+'" alt="">':l.type==='shape'?'◆':'T';
+   const type=l.type==='text'?'Texto':l.type==='shape'?'Forma':'Foto';
+   const title=label(l);
+   return '<div class="layer-row '+(l.id===selectedIdNow?'active':'')+'" data-layer-id="'+l.id+'">'+
+    '<button type="button" class="layer-thumb" data-layer-select="'+l.id+'" aria-label="Selecionar '+type+': '+title+'">'+thumb+'</button>'+
+    '<button type="button" class="layer-name" data-layer-select="'+l.id+'" title="Selecionar camada">'+type+' · '+title+'</button>'+
+    '<div class="v64-layer-actions">'+
+     '<button type="button" class="v64-layer-move" data-layer-move="'+l.id+'" data-direction="1" aria-label="Trazer '+title+' para frente" title="Trazer para frente" '+(isFront?'disabled':'')+'>↑</button>'+
+     '<button type="button" class="v64-layer-move" data-layer-move="'+l.id+'" data-direction="-1" aria-label="Enviar '+title+' para trás" title="Enviar para trás" '+(isBack?'disabled':'')+'>↓</button>'+
+    '</div>'+
+    '<div class="v64-layer-position">'+(isFront?'Na frente':isBack?'No fundo':'Camada '+(items.length-index)+' de '+items.length)+'</div>'+
+   '</div>';
+  }).join('');
+ };
+ list.addEventListener('click',e=>{
+  const move=e.target.closest('[data-layer-move]');
+  if(move){
+   e.preventDefault();e.stopPropagation();
+   if(move.disabled)return;
+   const id=move.getAttribute('data-layer-move');
+   const dir=Number(move.getAttribute('data-direction'));
+   if(typeof window.moveLayer==='function')window.moveLayer(id,dir);
+   return;
+  }
+  const select=e.target.closest('[data-layer-select]');
+  if(select){
+   e.preventDefault();e.stopPropagation();
+   if(typeof window.selectLayer==='function')window.selectLayer(select.getAttribute('data-layer-select'));
+  }
+ });
+ const originalRender=window.renderEditor;
+ if(typeof originalRender==='function'){
+  window.renderEditor=function(){
+   const result=originalRender.apply(this,arguments);
+   window.renderLayers();
+   if(typeof window.v63SyncEditor==='function')window.v63SyncEditor();
+   return result;
+  };
+ }
+ window.renderLayers();
+ if(typeof window.v63SyncEditor==='function')window.v63SyncEditor();
+})();
+</script>
+
 </body>
 </html>
