@@ -3717,9 +3717,16 @@ function closeShapeMenu(){
       mode==='layers'?['layers']:sectionIds;
    sectionIds.forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=!chosen.includes(id)});
    const layersSection=document.getElementById('layers')?.closest('.panel-section');
-   if(layersSection)layersSection.hidden=mode!=='layers'&&mode!=='tools';
    const quickSection=panel.querySelector(':scope > .panel-section');
-   if(quickSection&&quickSection.querySelector('.quick-tool-grid'))quickSection.hidden=mode!=='tools';
+   const selector=chosen.map(id=>'#'+id).join(',');
+   panel.querySelectorAll(':scope > .panel-section').forEach(section=>{
+     const containsChosen=!!selector&&(section.matches(selector)||!!section.querySelector(selector));
+     const show=(section===quickSection&&mode==='tools')||
+       (section===layersSection&&(mode==='layers'||mode==='tools'))||containsChosen;
+     section.hidden=!show;
+     if(show)section.style.removeProperty('display');
+     else section.style.setProperty('display','none','important');
+   });
  };
  if(!panel.querySelector('.panel-sheet-handle')){
   const handle=document.createElement('button');
@@ -3733,7 +3740,7 @@ function closeShapeMenu(){
   if(!mobile())return;
   panel.classList.toggle('v60-open',!!open);
   if(open)revealForMode(mode||'tools');
-  else panel.querySelectorAll(':scope > .panel-section').forEach(section=>{section.hidden=true;});
+  else panel.querySelectorAll(':scope > .panel-section').forEach(section=>{section.hidden=true;section.style.setProperty('display','none','important');});
   const h=panel.querySelector('.panel-sheet-handle');
   if(h)h.setAttribute('aria-expanded',String(!!open));
   const title=document.getElementById('v60PanelTitle'),hint=document.getElementById('v60PanelHint');
