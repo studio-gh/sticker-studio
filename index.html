@@ -2695,6 +2695,33 @@ body #create .creation-dock button.dock-primary span{color:#ff9614!important}
 }
 </style>
 
+
+<style id="v61-mobile-fixed-viewport-context">
+/* Fixed typing controls must be positioned against the viewport, not the animated view wrapper. */
+@media(max-width:799px){
+  body.keyboard-open #create,
+  body:has(#textValue:focus) #create{
+    animation:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+  body.keyboard-open #create .stage-wrap,
+  body:has(#textValue:focus) #create .stage-wrap{
+    top:var(--keyboard-preview-top,8px)!important;
+  }
+  body.keyboard-open #create .panel,
+  body:has(#textValue:focus) #create .panel{
+    top:calc(var(--keyboard-preview-top,8px) + 236px)!important;
+    bottom:8px!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
