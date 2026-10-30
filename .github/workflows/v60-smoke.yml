@@ -101,7 +101,6 @@ jobs:
           assert.equal(mobileSurfaceState.panelOpen, false, 'The tools drawer must start collapsed');
           assert.ok(mobileSurfaceState.panelSections.every(display => display === 'none'), 'Collapsed drawer must not leak tools beneath the handle');
           assert.ok(mobileSurfaceState.dockRect.left >= 0 && mobileSurfaceState.dockRect.right <= 390 && mobileSurfaceState.dockRect.width > 300, 'All four creation shortcuts must fit inside the mobile viewport');
-          const stage = page.locator('#stage');
           await page.locator('#create .panel-sheet-handle').click();
           await page.waitForFunction(() => document.querySelector('#create .panel')?.classList.contains('v60-open'));
           const openPanelGeometry = await page.evaluate(() => {
