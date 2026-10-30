@@ -98,6 +98,7 @@ jobs:
           const layerRect = await page.locator('#stage .layer').boundingBox();
           assert.ok(layerRect, 'Text layer must render on canvas');
           const centerRatio = (layerRect.y + layerRect.height / 2 - rect.y) / rect.height;
+          console.log('TEXT_LAYER_GEOMETRY:', JSON.stringify({ stage: rect, layer: layerRect, centerRatio }));
           assert.ok(centerRatio > 0.36 && centerRatio < 0.64, 'New text must begin near the center of the vertical canvas');
           await page.screenshot({ path: 'artifacts/v60-mobile-text-focus.png', fullPage: true });
           const typingPreview = await page.evaluate(() => {
