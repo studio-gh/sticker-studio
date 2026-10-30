@@ -4224,8 +4224,9 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
    const target=document.getElementById('curveControls');
    if(target){
     const r=target.getBoundingClientRect();
-    const visible=window.visualViewport?window.visualViewport.height:innerHeight;
-    if(r.bottom>visible-12)panel.scrollTop+=r.bottom-(visible-12)+12;
+    const p=panel.getBoundingClientRect();
+    const nextTop=r.top-p.top+panel.scrollTop-8;
+    panel.scrollTop=Math.max(0,nextTop);
    }
   });
  }
