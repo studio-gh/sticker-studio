@@ -84,16 +84,34 @@ jobs:
             const wrap = document.querySelector('#create .stage-wrap');
             const stage = document.querySelector('#stage');
             const panel = document.querySelector('#create .panel');
+            const dock = document.querySelector('#create .creation-dock');
+            const dockRect = dock.getBoundingClientRect();
             return {
               wrapBackground: getComputedStyle(wrap).backgroundColor,
               stageBackground: getComputedStyle(stage).backgroundColor,
               panelTransform: getComputedStyle(panel).transform,
               panelOpen: panel.classList.contains('v60-open'),
+              panelSections: [...panel.querySelectorAll(':scope > .panel-section')].map(el => getComputedStyle(el).display),
+              dockRect: { left:dockRect.left, right:dockRect.right, width:dockRect.width },
               viewport: { width: innerWidth, height: innerHeight }
             };
           });
           console.log('MOBILE_SURFACE_STATE:', JSON.stringify(mobileSurfaceState));
           assert.notEqual(mobileSurfaceState.wrapBackground, 'rgb(36, 36, 36)', 'Mobile preview frame must not use the legacy dark surface');
+          assert.equal(mobileSurfaceState.panelOpen, false, 'The tools drawer must start collapsed');
+          assert.ok(mobileSurfaceState.panelSections.every(display => display === 'none'), 'Collapsed drawer must not leak tools beneath the handle');
+          assert.ok(mobileSurfaceState.dockRect.left >= 0 && mobileSurfaceState.dockRect.right <= 390 && mobileSurfaceState.dockRect.width > 300, 'All four creation shortcuts must fit inside the mobile viewport');
+          const stage = page.locator('#stage');
+          await page.locator('#create .panel-sheet-handle').click();
+          await page.waitForFunction(() => document.querySelector('#create .panel')?.classList.contains('v60-open'));
+          const openPanelGeometry = await page.evaluate(() => {
+            const stageRect = document.querySelector('#stage').getBoundingClientRect();
+            const panelRect = document.querySelector('#create .panel').getBoundingClientRect();
+            return { stageBottom:stageRect.bottom, panelTop:panelRect.top, panelBottom:panelRect.bottom };
+          });
+          assert.ok(openPanelGeometry.panelTop >= openPanelGeometry.stageBottom - 1, 'Expanded tools must sit below the preview instead of covering it');
+          await page.locator('#create .panel-sheet-handle').click();
+          await page.waitForFunction(() => !document.querySelector('#create .panel')?.classList.contains('v60-open'));
           assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
           await page.screenshot({ path: 'artifacts/v61-mobile-editor-empty.png' });
 
