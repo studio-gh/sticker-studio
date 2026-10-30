@@ -140,7 +140,7 @@ jobs:
           await page.locator('#addShapeMenuToggle').click();
           await page.waitForFunction(()=>!document.querySelector('#shapeOptionsMenu')?.hidden);
           assert.equal(await page.locator('#shapeOptionsMenu .shape-btn').count(),8,'Shape action must reveal the full geometric shape picker');
-          await page.locator('#shapeOptionsMenu .shape-btn').filter({hasText:'Circle'}).click();
+          await page.locator('#shapeOptionsMenu .shape-btn').first().click();
           await page.waitForFunction(()=>document.querySelectorAll('#stage .layer').length===1);
           assert.equal(await page.locator('#shapeControls').evaluate(el=>getComputedStyle(el).display),'block','Adding a shape must reveal shape controls');
           assert.equal(await page.locator('#textControls').evaluate(el=>getComputedStyle(el).display),'none','Shape selection must not reveal text controls');
