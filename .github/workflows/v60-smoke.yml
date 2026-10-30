@@ -113,38 +113,44 @@ jobs:
             const wrap = document.querySelector('#create .stage-wrap');
             const stage = document.querySelector('#stage');
             const panel = document.querySelector('#create .panel');
-            const dock = document.querySelector('#create .creation-dock');
-            const dockRect = dock.getBoundingClientRect();
+            const dock = [...document.querySelectorAll('#create .creation-dock button')].map(b=>b.innerText.trim());
+            const dockRect = document.querySelector('#create .creation-dock').getBoundingClientRect();
             return {
-              wrapBackground: getComputedStyle(wrap).backgroundColor,
-              stageBackground: getComputedStyle(stage).backgroundColor,
-              panelTransform: getComputedStyle(panel).transform,
-              panelOpen: panel.classList.contains('v60-open'),
-              panelSections: [...panel.querySelectorAll(':scope > .panel-section')].map(el => getComputedStyle(el).display),
-              selectionSectionDisplay: getComputedStyle(document.querySelector('#selectionControls').closest('.panel-section')).display,
-              dockRect: { left:dockRect.left, right:dockRect.right, width:dockRect.width },
-              viewport: { width: innerWidth, height: innerHeight }
+              wrapBackground:getComputedStyle(wrap).backgroundColor,
+              panelDisplay:getComputedStyle(panel).display,
+              panelVisible:getComputedStyle(panel).display!=='none',
+              panelSections:[...panel.querySelectorAll(':scope > .panel-section')].filter(el=>!el.hidden&&getComputedStyle(el).display!=='none').length,
+              textControlsVisible:getComputedStyle(document.querySelector('#textControls')).display!=='none'&&!document.querySelector('#textControls').hidden,
+              selectionVisible:getComputedStyle(document.querySelector('#selectionPanelSection')).display!=='none'&&!document.querySelector('#selectionPanelSection').hidden,
+              stageWidth:stage.getBoundingClientRect().width,
+              dock,
+              dockRect:{left:dockRect.left,right:dockRect.right,width:dockRect.width},
+              viewport:{width:innerWidth,height:innerHeight}
             };
           });
           console.log('MOBILE_SURFACE_STATE:', JSON.stringify(mobileSurfaceState));
-          assert.notEqual(mobileSurfaceState.wrapBackground, 'rgb(36, 36, 36)', 'Mobile preview frame must not use the legacy dark surface');
-          assert.equal(mobileSurfaceState.panelOpen, false, 'The tools drawer must start collapsed');
-          assert.ok(mobileSurfaceState.panelSections.every(display => display === 'none'), 'Collapsed drawer must not leak tools beneath the handle');
-          assert.equal(mobileSurfaceState.selectionSectionDisplay, 'none', 'Selected-layer controls must be hidden when the canvas is empty');
-          assert.ok(mobileSurfaceState.dockRect.left >= 0 && mobileSurfaceState.dockRect.right <= 390 && mobileSurfaceState.dockRect.width > 300, 'All four creation shortcuts must fit inside the mobile viewport');
-          await page.locator('#create .panel-sheet-handle').click();
-          await page.waitForFunction(() => document.querySelector('#create .panel')?.classList.contains('v60-open'));
-          const openPanelGeometry = await page.evaluate(() => {
-            const stageRect = document.querySelector('#stage').getBoundingClientRect();
-            const panelRect = document.querySelector('#create .panel').getBoundingClientRect();
-            return { stageBottom:stageRect.bottom, panelTop:panelRect.top, panelBottom:panelRect.bottom };
-          });
-          assert.ok(openPanelGeometry.panelTop >= openPanelGeometry.stageBottom - 1, 'Expanded tools must sit below the preview instead of covering it');
-          await page.locator('#create .panel-sheet-handle').click();
-          await page.waitForFunction(() => !document.querySelector('#create .panel')?.classList.contains('v60-open'));
-          assert.ok(await page.locator('.layer-tools[hidden]').count() === 1, 'Layer actions must be hidden for an empty canvas');
-          await page.screenshot({ path: 'artifacts/v62-mobile-editor-empty.png' });
-
+          assert.notEqual(mobileSurfaceState.wrapBackground,'rgb(36, 36, 36)','Mobile preview frame must use the approved light surface');
+          assert.equal(mobileSurfaceState.panelVisible,false,'No editing panel should appear before an element exists');
+          assert.equal(mobileSurfaceState.panelSections,0,'Empty canvas must not show unrelated tool sections');
+          assert.equal(mobileSurfaceState.textControlsVisible,false,'Text controls must stay hidden until text is added');
+          assert.equal(mobileSurfaceState.selectionVisible,false,'Selected-layer controls must stay hidden until an element exists');
+          assert.ok(mobileSurfaceState.stageWidth<=120,'Mobile preview must stay compact');
+          assert.deepEqual(mobileSurfaceState.dock,['Texto','Foto','Formas'],'Empty canvas must offer only the three clear creation actions');
+          assert.ok(mobileSurfaceState.dockRect.left>=0&&mobileSurfaceState.dockRect.right<=390&&mobileSurfaceState.dockRect.width>300,'Creation actions must fit inside the mobile viewport');
+          await page.locator('#addShapeMenuToggle').click();
+          await page.waitForFunction(()=>!document.querySelector('#shapeOptionsMenu')?.hidden);
+          assert.equal(await page.locator('#shapeOptionsMenu .shape-btn').count(),8,'Shape action must reveal the full geometric shape picker');
+          await page.locator('#shapeOptionsMenu .shape-btn').filter({hasText:'Circle'}).click();
+          await page.waitForFunction(()=>document.querySelectorAll('#stage .layer').length===1);
+          assert.equal(await page.locator('#shapeControls').evaluate(el=>getComputedStyle(el).display),'block','Adding a shape must reveal shape controls');
+          assert.equal(await page.locator('#textControls').evaluate(el=>getComputedStyle(el).display),'none','Shape selection must not reveal text controls');
+          assert.equal(await page.locator('#imageControls').evaluate(el=>getComputedStyle(el).display),'none','Shape selection must not reveal photo controls');
+          await page.locator('#stage .layer.selected .delete').click();
+          await page.waitForFunction(()=>document.querySelectorAll('#stage .layer').length===0);
+          await page.waitForFunction(()=>getComputedStyle(document.querySelector('#create .panel')).display==='none');
+          assert.ok(await page.locator('.layer-tools[hidden]').count()===1,'Layer actions must be hidden for an empty canvas');
+          await page.screenshot({path:'artifacts/v63-mobile-editor-empty.png'});
+          
           const stage = page.locator('#stage');
           await stage.waitFor({ state: 'visible' });
           let rect = await stage.boundingBox();
