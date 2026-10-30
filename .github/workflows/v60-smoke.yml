@@ -3,14 +3,14 @@ name: Story Studio browser regression
 on:
   push:
     branches:
-      - ux/mobile-editor-v61-recovery
+      - ux/mobile-editor-v60-recovery
       - main
   pull_request:
     branches:
       - main
     paths:
       - index.html
-      - .github/workflows/v61-smoke.yml
+      - .github/workflows/v60-smoke.yml
   workflow_dispatch:
 
 jobs:
