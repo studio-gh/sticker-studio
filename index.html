@@ -4317,8 +4317,8 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
 
 <style id="v63-contextual-editor">
 /* V63: reveal only the controls that belong to an existing selected element. */
-#create .panel{display:none!important;border-radius:16px;margin:8px 0 100px;padding:0;gap:0;overflow:visible}
-#create .panel.v63-visible{display:block!important}
+body #create .panel:not(.v63-visible){display:none!important;border-radius:16px;margin:8px 0 100px;padding:0;gap:0;overflow:visible}
+body #create .panel.v63-visible{display:block!important}
 #create .panel-section[hidden],#create .panel-section[style*="display: none"]{display:none!important}
 #create #presetControls{display:none!important}
 #create .panel-section#selectionPanelSection{padding:14px!important}
