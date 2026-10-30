@@ -2975,12 +2975,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </section>
 
 <section id="create" class="view">
-<div class="editor-head"><h2>Create your Story.</h2><div class="editor-actions"><button id="undoBtn" class="small-btn" onclick="undo()" disabled aria-label="Undo">↶</button><button id="redoBtn" class="small-btn" onclick="redo()" disabled aria-label="Redo">↷</button><button class="small-btn" onclick="addText()">+ Text</button><button class="small-btn" onclick="document.getElementById('file').click()">+ Photo</button><button class="small-btn dark" onclick="exportPNG()">Export PNG</button></div></div>
-<nav class="creation-dock" aria-label="Creation tools">
-<button onclick="startTextEditing()" class="dock-primary"><span aria-hidden="true">T</span><b>Text</b></button>
-<button onclick="document.getElementById('file').click()"><span aria-hidden="true">＋</span><b>Photo</b></button>
-<button id="addShapeMenuToggle" onclick="toggleShapeMenu()"><span aria-hidden="true">＋</span><b>Add shape</b></button>
-<button onclick="window.v60SetPanel(true,'shape')"><span aria-hidden="true">◉</span><b>Style</b></button>
+<div class="editor-head"><h2>Create your Story.</h2><div class="editor-actions"><button id="undoBtn" class="small-btn" onclick="undo()" disabled aria-label="Undo">↶</button><button id="redoBtn" class="small-btn" onclick="redo()" disabled aria-label="Redo">↷</button><button id="exportStoryBtn" class="small-btn dark" onclick="exportPNG()" disabled>Export PNG</button></div></div>
+<nav class="creation-dock" aria-label="Adicionar ao Story">
+<button id="dockAddText" onclick="startTextEditing()" class="dock-primary"><span aria-hidden="true">T</span><b>Texto</b></button>
+<button id="dockAddPhoto" onclick="document.getElementById('file').click()"><span aria-hidden="true">＋</span><b>Foto</b></button>
+<button id="addShapeMenuToggle" type="button" onclick="toggleShapeMenu()" aria-haspopup="true" aria-expanded="false"><span aria-hidden="true">◇</span><b>Formas</b></button>
 </nav>
 <input id="file" type="file" accept="image/*" hidden onchange="handleFile(this.files[0])">
 <div class="workspace">
@@ -3014,8 +3013,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 <div class="status" id="status">Add text or a photo from the toolbar above. Paste image imports an image from your clipboard.</div><div class="progress"><i id="progress"></i></div>
 </div>
 
-<div class="panel-section">
-<div class="panel-title">Selected layer</div>
+<div class="panel-section" id="selectionPanelSection">
+<div class="panel-title">Ajustes do elemento</div>
 <div id="shapeControls" class="panel-section" style="display:none">
 <div class="panel-title">Shape style</div>
 <div class="shape-style-grid">
@@ -3159,8 +3158,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </div>
 </div>
 
-<div class="panel-section">
-<div class="panel-title">Layers</div>
+<div class="panel-section" id="layersPanelSection">
+<div class="panel-title">Camadas</div>
 <div class="layer-tools"><button class="mini-action" onclick="duplicateSelected()">Duplicate</button><button class="mini-action" onclick="toggleSelectedVisibility()">Hide</button><button class="mini-action" onclick="toggleSelectedLock()">Lock</button></div>
 <div id="layers" class="layers"></div>
 </div>
@@ -4315,5 +4314,183 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
  }
 }
 </style>
+
+<style id="v63-contextual-editor">
+/* V63: reveal only the controls that belong to an existing selected element. */
+#create .panel{display:none;border-radius:16px;margin:8px 0 100px;padding:0;gap:0;overflow:visible}
+#create .panel.v63-visible{display:block}
+#create .panel-section[hidden],#create .panel-section[style*="display: none"]{display:none!important}
+#create #presetControls{display:none!important}
+#create .panel-section#selectionPanelSection{padding:14px!important}
+#create #selectionControls{font-size:12px;margin-bottom:10px}
+#create #shapeControls{border:0!important;padding:0!important;margin:0!important}
+#create .panel-section#layersPanelSection{padding:14px!important}
+#create .panel .panel-title{margin-bottom:10px}
+#create .v63-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border-bottom:1px solid #ded8cd}
+#create .v63-panel-head strong{font-size:14px;font-weight:800;color:#2c2c2c}
+#create .v63-panel-close{border:1px solid #ded8cd;border-radius:999px;background:#fffefa;color:#2c2c2c;padding:7px 12px;font-size:12px;font-weight:700}
+#create .creation-dock{grid-template-columns:repeat(3,minmax(0,1fr))!important;background:rgba(255,254,250,.97)!important;border:1px solid #ded8cd!important;box-shadow:0 8px 24px rgba(44,44,44,.10)!important}
+#create .creation-dock button{background:#fffefa!important;color:#2c2c2c!important;border:1px solid #ded8cd!important}
+#create .creation-dock button span{color:#ff9614!important}
+#create .creation-dock button.dock-primary{background:#ff9614!important;color:#2c2c2c!important;border-color:#ff9614!important}
+#create .creation-dock button.dock-primary span{color:#2c2c2c!important}
+#create .shape-grid#shapeOptionsMenu{position:fixed!important;z-index:1600!important;left:12px!important;right:12px!important;bottom:calc(145px + env(safe-area-inset-bottom))!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;padding:12px!important;background:#fffefa!important;border:1px solid #ded8cd!important;border-radius:16px!important;box-shadow:0 12px 32px rgba(44,44,44,.16)!important}
+#create .shape-grid#shapeOptionsMenu[hidden]{display:none!important}
+#create .shape-grid#shapeOptionsMenu .shape-btn{min-height:72px;background:#fffcf4!important;border-color:#ded8cd!important;color:#2c2c2c!important}
+#create .shape-grid#shapeOptionsMenu .shape-btn svg{width:28px;height:28px}
+#create .text-edit-done{margin-top:10px}
+#create .text-effects-controls .row{display:none}
+#create #textEffectsControls>.row{display:none!important}
+#create #textEffectsControls .field>label{margin-bottom:8px}
+#create #textEffectsControls .tool-grid .tool{min-height:42px}
+#create #curveControls{margin-top:10px;padding:12px;border:1px solid #ded8cd;border-radius:12px;background:#fffefa}
+#create .stage-wrap{background:transparent!important;box-shadow:none!important;border:0!important}
+@media(max-width:799px){
+ #create .workspace{display:flex!important;flex-direction:column!important;gap:8px!important}
+ #create .stage-wrap,
+ body.v62-curve-editing #create .stage-wrap{
+  position:sticky!important;top:0!important;left:auto!important;right:auto!important;z-index:80!important;
+  width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:6px 8px 9px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  flex-direction:column!important;overflow:visible!important;background:rgba(255,252,244,.98)!important;
+  border-bottom:1px solid #ded8cd!important;border-radius:0!important;box-shadow:none!important;
+ }
+ #create .stage-wrap .live-preview-label{width:100%!important;margin:0 0 4px!important;font-size:9px!important}
+ #create .stage,
+ body.v62-curve-editing #create .stage{
+  width:116px!important;max-width:116px!important;height:auto!important;max-height:none!important;
+  aspect-ratio:9/16!important;flex:0 0 auto!important;margin:0 auto!important;border-radius:10px!important;
+ }
+ #create .panel{max-height:none!important;overflow:visible!important;margin:8px 0 100px!important;border-radius:15px!important}
+ #create .panel .panel-section{padding:13px!important}
+ #create .panel .panel-sheet-handle{display:none!important}
+ #create .editor-head{position:relative!important;top:auto!important;display:flex!important;flex-direction:row!important;align-items:center!important;padding:7px 0 8px!important;margin:0!important;background:transparent!important;backdrop-filter:none!important}
+ #create .editor-head h2{font-size:22px!important}
+ #create .editor-head .editor-actions{display:flex!important;grid-template-columns:none!important;gap:5px!important;width:auto!important}
+ #create .editor-head .editor-actions .small-btn{min-height:34px!important;padding:6px 9px!important;font-size:11px!important}
+ #create .editor-head .editor-actions #undoBtn,#create .editor-head .editor-actions #redoBtn{font-size:15px!important}
+ #create .creation-dock{position:fixed!important;left:12px!important;right:12px!important;bottom:calc(72px + env(safe-area-inset-bottom))!important;z-index:1500!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ #create{padding-bottom:calc(154px + env(safe-area-inset-bottom))!important}
+ #create .panel .field textarea{font-size:16px!important}
+ #create .shape-grid#shapeOptionsMenu{bottom:calc(145px + env(safe-area-inset-bottom))!important}
+ body.keyboard-open #create .editor-head,body:has(#textValue:focus) #create .editor-head{display:none!important}
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap{
+  position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:1400!important;
+  height:184px!important;min-height:184px!important;max-height:184px!important;padding:5px 8px!important;
+  background:rgba(255,252,244,.99)!important;border-bottom:1px solid #ded8cd!important;overflow:hidden!important;
+ }
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage{width:94px!important;max-width:94px!important;height:auto!important;aspect-ratio:9/16!important}
+ body.keyboard-open #create .panel,body:has(#textValue:focus) #create .panel{
+  position:fixed!important;left:10px!important;right:10px!important;top:190px!important;bottom:0!important;
+  z-index:1350!important;height:auto!important;max-height:none!important;margin:0!important;overflow-y:auto!important;
+  overscroll-behavior:contain!important;padding-bottom:18px!important;
+ }
+ body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock,
+ body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .bottom{display:none!important}
+ body.v62-curve-editing #create .stage-wrap{position:sticky!important;height:auto!important;max-height:none!important}
+ body.v62-curve-editing #create .stage{width:116px!important;max-width:116px!important}
+}
+@media(min-width:800px){
+ #create .workspace{grid-template-columns:minmax(0,1fr) 360px!important;align-items:start}
+ #create .stage-wrap{position:sticky!important;top:14px!important}
+ #create .stage{width:min(100%,260px)!important;max-width:260px!important}
+ #create .creation-dock{display:none!important}
+}
+</style>
+<script id="v63-contextual-editor-js">
+(function(){
+ const panel=document.querySelector('#create .panel');
+ const stage=document.getElementById('stage');
+ const dock=document.querySelector('#create .creation-dock');
+ if(!panel||!stage||!dock)return;
+ const quick=panel.querySelector(':scope > .panel-section');
+ const selection=document.getElementById('selectionPanelSection');
+ const layersSection=document.getElementById('layersPanelSection');
+ const text=document.getElementById('textControls');
+ const effects=document.getElementById('textEffectsControls');
+ const presets=document.getElementById('presetControls');
+ const photo=document.getElementById('imageControls');
+ const shape=document.getElementById('shapeControls');
+ const menu=document.getElementById('shapeOptionsMenu');
+ const panelHead=document.createElement('div');
+ panelHead.className='v63-panel-head';
+ panelHead.innerHTML='<strong id="v63PanelTitle">Editar elemento</strong><button type="button" class="v63-panel-close" id="v63PanelClose">Concluir</button>';
+ panel.insertBefore(panelHead,panel.firstChild);
+ panel.querySelector('.panel-sheet-handle')?.remove();
+ if(menu)dock.appendChild(menu);
+ if(quick)quick.hidden=true;
+ if(presets)presets.hidden=true;
+ function mobile(){return matchMedia('(max-width:799px)').matches}
+ function sync(){
+  const selectedLayer=typeof selected==='function'?selected():null;
+  const count=Array.isArray(layers)?layers.length:0;
+  const kind=selectedLayer?.type||'';
+  const hasSelection=!!selectedLayer;
+  document.body.classList.toggle('v63-empty',count===0);
+  document.body.classList.toggle('v63-context-text',kind==='text');
+  document.body.classList.toggle('v63-context-shape',kind==='shape');
+  document.body.classList.toggle('v63-context-photo',kind==='image');
+  const showLayers=!hasSelection&&count>0;
+  const showPanel=hasSelection||showLayers;
+  panel.classList.toggle('v63-visible',showPanel);
+  panel.style.display=showPanel?'block':'none';
+  panelHead.hidden=!showPanel;
+  const title=document.getElementById('v63PanelTitle');
+  if(title)title.textContent=kind==='text'?'Editar texto':kind==='shape'?'Editar forma':kind==='image'?'Editar foto':'Camadas';
+  if(quick)quick.hidden=true;
+  if(text)text.hidden=kind!=='text';
+  if(effects)effects.hidden=kind!=='text';
+  if(presets)presets.hidden=true;
+  if(photo)photo.hidden=kind!=='image';
+  if(selection)selection.hidden=!hasSelection;
+  if(shape)shape.hidden=kind!=='shape';
+  if(layersSection)layersSection.hidden=count===0;
+  if(!hasSelection&&layersSection)layersSection.hidden=false;
+  const exportBtn=document.getElementById('exportStoryBtn');
+  if(exportBtn)exportBtn.disabled=count===0;
+  const close=document.getElementById('v63PanelClose');
+  if(close)close.textContent=hasSelection?'Concluir':'Fechar';
+  const hint=document.querySelector('#create .v62-empty-canvas-note');
+  if(count===0&&!hint){
+   const note=document.createElement('div');note.className='v62-empty-canvas-note';note.textContent='Seu Story começa aqui';stage.appendChild(note);
+  }else if(count>0&&hint)hint.remove();
+  if(!hasSelection&&count===0)panel.classList.remove('v60-open');
+ }
+ window.v60SetPanel=function(open,mode){sync();};
+ window.v63SyncEditor=sync;
+ const originalRender=window.renderEditor;
+ if(typeof originalRender==='function'){
+  window.renderEditor=function(){const result=originalRender.apply(this,arguments);sync();return result};
+ }
+ const originalAddShape=window.addShape;
+ if(typeof originalAddShape==='function'){
+  window.addShape=function(){const result=originalAddShape.apply(this,arguments);sync();return result};
+ }
+ document.getElementById('v63PanelClose').addEventListener('click',()=>{
+  if(typeof selectedId!=='undefined')selectedId=null;
+  if(typeof renderEditor==='function')renderEditor();
+  sync();
+ });
+ function openShapes(){
+  if(!menu)return;
+  menu.hidden=!menu.hidden;
+  const open=!menu.hidden;
+  document.getElementById('addShapeMenuToggle')?.setAttribute('aria-expanded',String(open));
+  if(open)menu.querySelector('.shape-btn')?.focus({preventScroll:true});
+ }
+ window.toggleShapeMenu=openShapes;
+ window.closeShapeMenu=function(){
+  if(menu)menu.hidden=true;
+  document.getElementById('addShapeMenuToggle')?.setAttribute('aria-expanded','false');
+ };
+ document.addEventListener('click',e=>{
+  if(menu&&!menu.hidden&&!e.target.closest('#shapeOptionsMenu,#addShapeMenuToggle'))window.closeShapeMenu();
+ });
+ const originalDelete=window.deleteLayer;
+ if(typeof originalDelete==='function')window.deleteLayer=function(id){const r=originalDelete(id);sync();return r};
+ if(typeof renderEditor==='function')renderEditor();else sync();
+})();
+</script>
+
 </body>
 </html>
