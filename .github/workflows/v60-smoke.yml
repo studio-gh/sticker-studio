@@ -178,7 +178,8 @@ jobs:
           const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
           desktop.on('pageerror', error => errors.push(error.message));
           await desktop.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
-          await desktop.locator('.nav-btn[data-view="create"]').click();
+          await desktop.locator('#home .hero .actions .btn').click();
+          await desktop.waitForFunction(() => document.querySelector('#create')?.classList.contains('active'));
           const desktopStage = await desktop.locator('#stage').boundingBox();
           assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
           await desktop.screenshot({ path: 'artifacts/v61-desktop-empty-canvas.png', fullPage: true });
