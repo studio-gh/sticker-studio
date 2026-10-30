@@ -94,6 +94,9 @@ jobs:
           assert.ok((homeIdentity.logo || '').includes('STORY') && (homeIdentity.logo || '').includes('STUDIO'), 'V62 brand signature must remain visible');
           assert.equal(homeIdentity.cards, 3, 'All three quick-start actions must remain visible');
           assert.equal(homeIdentity.horizontalOverflow, false, 'V62 home must not overflow horizontally on mobile');
+          const fixedNav = await page.locator('nav.bottom').boundingBox();
+          const lastHomeCard = await page.locator('#home .home-action-card').last().boundingBox();
+          assert.ok(fixedNav && lastHomeCard && lastHomeCard.y + lastHomeCard.height <= fixedNav.y - 8, 'Mobile home cards must remain fully visible above the fixed navigation');
           await page.screenshot({ path: 'artifacts/v62-mobile-home.png', fullPage: true });
           assert.equal(await languageButton.innerText(), 'EN', 'After language initialization, Portuguese should be active and the toggle should offer English');
           assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Home headline should start in Brazilian Portuguese');
