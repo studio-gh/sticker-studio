@@ -58,11 +58,17 @@ jobs:
             hasTouch: true
           });
           const page = await context.newPage();
-          page.on('pageerror', error => errors.push(error.message));
+          page.on('pageerror', error => { errors.push(error.message); console.error('PAGE_ERROR:', error.stack || error.message); });
+          page.on('console', msg => { if (msg.type() === 'error') console.error('BROWSER_CONSOLE_ERROR:', msg.text()); });
 
           await page.goto('http://127.0.0.1:4173/', { waitUntil: 'domcontentloaded' });
           const languageButton = page.locator('#languageToggle');
-          await page.waitForFunction(() => document.documentElement.lang === 'pt-BR' && document.querySelector('#languageToggle')?.textContent.trim() === 'EN' && /Faça seu Story/i.test(document.querySelector('#home .hero h1')?.innerText || ''), null, { timeout: 5000 });
+          await page.waitForTimeout(500);
+          const initialLanguageState = await page.evaluate(() => ({ lang: document.documentElement.lang, toggle: document.querySelector('#languageToggle')?.textContent, headline: document.querySelector('#home .hero h1')?.innerText, ready: document.readyState }));
+          console.log('INITIAL_LANGUAGE_STATE:', JSON.stringify(initialLanguageState));
+          assert.equal(initialLanguageState.lang, 'pt-BR', 'Portuguese should be the initial document language');
+          assert.equal(initialLanguageState.toggle?.trim(), 'EN', 'Toggle should offer English after Portuguese initialization');
+          assert.match(initialLanguageState.headline || '', /Faça seu Story/i, 'Home headline should be Brazilian Portuguese after initialization');
           assert.equal(await languageButton.innerText(), 'EN', 'After language initialization, Portuguese should be active and the toggle should offer English');
           assert.match(await page.locator('#home .hero h1').innerText(), /Faça seu Story/i, 'Home headline should start in Brazilian Portuguese');
           await languageButton.click();
