@@ -1,4 +1,4 @@
-name: V60 editor smoke test and visual capture
+name: V61 editor smoke test and visual capture
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Check out the exact branch commit
+      - name: Check out the exact V61 branch commit
         uses: actions/checkout@v4
 
       - name: Set up Node
@@ -162,6 +162,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: story-studio-v60-visual-evidence
+          name: story-studio-v61-visual-evidence
           path: artifacts/
           if-no-files-found: warn
