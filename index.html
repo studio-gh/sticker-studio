@@ -3155,7 +3155,7 @@ function translateTree(root){
  root.childNodes&&root.childNodes.forEach(translateTree);
  if(root.nodeType===Node.ELEMENT_NODE){
   ["placeholder","aria-label","title"].forEach(attr=>{
-   const key="original"+attr;
+   const key="original"+attr.replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase());
    if(root.hasAttribute(attr)&&!root.dataset[key])root.dataset[key]=root.getAttribute(attr);
    const original=root.dataset[key];
    if(original)root.setAttribute(attr,lang==="pt"?(dict[original]||original):(reverseDict[original]||original));
