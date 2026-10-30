@@ -3246,7 +3246,7 @@ function curvedTextSVG(l){
  const width=Math.max(220,Math.abs(curve)*5+220),height=Math.max(120,Math.abs(curve)*2+120),r=Math.max(70,110+Math.abs(curve)*2),cy=curve>=0?height+r*.25:-r*.15,start=curve>=0?Math.PI+.35:Math.PI-.35,end=curve>=0?-.35:.35,sweep=curve>=0?1:0,x1=width/2+r*Math.cos(start),y1=cy+r*Math.sin(start),x2=width/2+r*Math.cos(end),y2=cy+r*Math.sin(end),path=`M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}`;
  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow:visible"><defs><path id="curvePath" d="${path}"/></defs><text fill="${l.color||'#151515'}" stroke="${l.outline?(l.outlineColor||'#fff'):'none'}" stroke-width="${l.outline?(l.outlineWidth||1)*2:0}" paint-order="stroke" font-family="${esc(l.fontFamily)}" font-size="${l.fontSize}" font-weight="900" letter-spacing="${l.letterSpacing||0}px"><textPath href="#curvePath" startOffset="50%" text-anchor="middle">${text}</textPath></text></svg>`;
 }
-function updateLayerVisual(id){const l=layers.find(x=>x.id===id),el=document.querySelector(`.layer[data-id="${id}"]`);if(!l||!el)return;const unit=stageUnit();el.style.left=(l.x*unit)+'px';el.style.top=(l.y*unit)+'px';el.style.opacity=l.opacity;el.style.transform=`translate(-50%,-50%) rotate(${l.rotation}deg) scale(${l.scale})`;if(l.type==='shape'){el.style.width=(l.w*unit)+'px';el.style.height=(l.h*unit)+'px';el.innerHTML=shapeSVG(l)}if(l.type==='image'){const img=el.querySelector('.layer-media');if(img){img.style.width=(l.w*unit)+'px';img.style.height=(l.h*unit)+'px';img.style.objectFit=l.fit==='cover'?'cover':'contain';img.style.objectPosition=`${l.cropX??50}% ${l.cropY??50}%`;img.style.filter=outlineFilter(l)}}if(l.type==='text'){el.style.fontSize=(l.fontSize*unit)+'px';el.style.textAlign=l.textAlign||'center';el.style.width=((l.textWidth||300)*unit)+'px';el.style.maxWidth='none';const span=el.querySelector('.text-content');if(span)span.textContent=l.text||'TEXT'}}
+function updateLayerVisual(id){const l=layers.find(x=>x.id===id),el=document.querySelector(`.layer[data-id="${id}"]`);if(!l||!el)return;const unit=stageUnit();el.style.left=(l.x*unit)+'px';el.style.top=(l.y*unit)+'px';el.style.opacity=l.opacity;el.style.transform=`translate(-50%,-50%) rotate(${l.rotation}deg) scale(${l.scale})`;if(l.type==='shape'){el.style.width=(l.w*unit)+'px';el.style.height=(l.h*unit)+'px';el.innerHTML=shapeSVG(l)}if(l.type==='image'){const img=el.querySelector('.layer-media');if(img){img.style.width=(l.w*unit)+'px';img.style.height=(l.h*unit)+'px';img.style.objectFit=l.fit==='cover'?'cover':'contain';img.style.objectPosition=`${l.cropX??50}% ${l.cropY??50}%`;img.style.filter=outlineFilter(l)}}if(l.type==='text'){el.style.fontSize=(l.fontSize*unit)+'px';el.style.textAlign=l.textAlign||'center';el.style.width=((l.textWidth||300)*unit)+'px';el.style.maxWidth='none';if(l.curve){el.innerHTML=curvedTextSVG(l);const d=l.curveMode==='circle'?(Math.max(70,Number(l.curveRadius)||130)*2+24):Math.max(220,Math.abs(l.curve)*5+220);el.style.width=(d*unit)+'px';el.style.height=(d*unit)+'px';el.style.backgroundColor='transparent';el.style.padding='0'}else{const span=el.querySelector('.text-content');if(span)span.textContent=l.text||'TEXT'}}}
 function stagePoint(e){const r=$('stage').getBoundingClientRect();return {x:(e.clientX-r.left)/(r.width/CANVAS_W),y:(e.clientY-r.top)/(r.height/CANVAS_H),r}}
 function layerCenterPx(id){const el=document.querySelector(`.layer[data-id="${id}"]`);if(!el)return null;const r=el.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2}}
 function snapPosition(l,threshold=10){let sx=null,sy=null;const candidates=[{x:CANVAS_W/2,y:CANVAS_H/2,id:null}];layers.forEach(o=>{if(o.id!==l.id&&o.visible!==false)candidates.push({x:o.x,y:o.y,id:o.id})});for(const c of candidates){if(Math.abs(l.x-c.x)<=threshold){l.x=c.x;sx=c.x}if(Math.abs(l.y-c.y)<=threshold){l.y=c.y;sy=c.y}}return {x:sx,y:sy}}
@@ -4063,6 +4063,61 @@ function closeShapeMenu(){
       window.renderEditor();
     });
   });
+})();
+</script>
+
+
+<style id="v62-mobile-editor-recovery">
+/* V62.1: mobile editing is a two-state workspace, not a tiny preview above a giant form. */
+:root{--bg:#fffcf4!important;--paper:#fffefa!important;--ink:#2c2c2c!important;--muted:#777777!important;--line:#ded8cd!important;--accent:#ff9614!important;--stage:#fffcf4!important;--v60-paper:#fffefa!important;--v60-bg:#fffcf4!important;--v60-ink:#2c2c2c!important;--v60-muted:#777777!important;--v60-line:#ded8cd!important;--v60-accent:#ff9614!important}
+html,body{background:#fffcf4!important;color:#2c2c2c!important}
+#create .stage-wrap,#create .panel,#create .panel-sheet-handle{background-color:#fffefa!important;border-color:#ded8cd!important}
+#create .tool.on,#create .font-btn.active,#create .chip.active{background:#ff9614!important;border-color:#ff9614!important;color:#2c2c2c!important}
+#create .tool.primary,#create .small-btn.dark{background:#ff9614!important;border-color:#ff9614!important;color:#2c2c2c!important}
+#create .stage{background:#fffefa!important}
+#create .field textarea{min-height:64px!important;height:64px!important;resize:none!important;font-size:16px!important}
+#create #textEntryField{margin-top:4px!important}
+#create #textEntryField .status{font-size:12px!important}
+#create .text-edit-done{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:9px;border:0;border-radius:12px;background:#2c2c2c;color:#fffcf4;font-weight:700}
+@media(max-width:799px){
+ #create .workspace{display:flex!important;flex-direction:column!important;gap:8px!important}
+ #create .stage-wrap{position:sticky!important;top:0!important;z-index:80!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;padding:7px 8px 10px!important;margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;background:rgba(255,252,244,.98)!important;border:0!important;border-bottom:1px solid #ded8cd!important;border-radius:0 0 16px 16px!important;box-shadow:0 4px 14px rgba(44,44,44,.06)!important}
+ #create .stage-wrap .live-preview-label{align-self:flex-start!important;width:100%!important;margin:0 0 5px!important}
+ #create .stage{width:min(42vw,164px)!important;max-width:164px!important;height:auto!important;aspect-ratio:9/16!important;max-height:none!important;margin:0 auto!important;flex:0 0 auto!important}
+ #create .panel{max-height:none!important;overflow:visible!important;margin:0!important;border-radius:16px!important}
+ #create .panel .panel-section{padding:13px!important}
+ #create .panel .panel-sheet-handle{position:sticky!important;top:0!important}
+ #create .creation-dock{position:fixed!important;bottom:calc(68px + env(safe-area-inset-bottom))!important}
+ body.keyboard-open #create .editor-head,body:has(#textValue:focus) #create .editor-head{display:none!important}
+ body.keyboard-open #create .stage-wrap,body:has(#textValue:focus) #create .stage-wrap{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:1300!important;height:clamp(190px,27dvh,240px)!important;min-height:clamp(190px,27dvh,240px)!important;max-height:clamp(190px,27dvh,240px)!important;padding:5px 8px 8px!important;overflow:hidden!important}
+ body.keyboard-open #create .stage,body:has(#textValue:focus) #create .stage{width:min(38vw,142px)!important;max-width:142px!important;max-height:calc(27dvh - 32px)!important;height:auto!important;aspect-ratio:9/16!important}
+ body.keyboard-open #create .panel,body:has(#textValue:focus) #create .panel{position:relative!important;margin-top:clamp(195px,27dvh,245px)!important;max-height:calc(100dvh - 250px)!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+ body.keyboard-open #create .panel .panel-section:not(#textControls),body:has(#textValue:focus) #create .panel .panel-section:not(#textControls){display:none!important}
+ body.keyboard-open #create #textControls,body:has(#textValue:focus) #create #textControls{display:block!important}
+ body.keyboard-open #create #textControls .field:not(#textEntryField),body:has(#textValue:focus) #create #textControls .field:not(#textEntryField),body.keyboard-open #create #textControls .fonts,body:has(#textValue:focus) #create #textControls .fonts{display:none!important}
+ body.keyboard-open #create #textValue,body:has(#textValue:focus) #create #textValue{height:58px!important;min-height:58px!important}
+ body.keyboard-open #create .creation-dock,body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .creation-dock,body:has(#textValue:focus) #create .bottom{display:none!important}
+}
+@media(min-width:800px){#create .stage-wrap{background:#fffcf4!important}#create .stage{max-width:390px!important}}
+</style>
+<script id="v62-mobile-editor-recovery-js">
+(function(){
+ const field=document.getElementById('textEntryField'),input=document.getElementById('textValue');
+ if(!field||!input)return;
+ if(!document.getElementById('finishTextEditing')){
+  const done=document.createElement('button');done.type='button';done.id='finishTextEditing';done.className='text-edit-done';done.textContent='Concluir edição';
+  done.addEventListener('click',()=>{input.blur();document.body.classList.remove('keyboard-open');if(window.v60SetPanel)window.v60SetPanel(true,'text');});
+  field.appendChild(done);
+ }
+ const sync=()=>{
+  const vv=window.visualViewport;
+  const open=document.activeElement===input&&!!vv&&(vv.height<window.innerHeight*.82||window.innerHeight-vv.height>120);
+  document.body.classList.toggle('keyboard-open',open);
+ };
+ input.addEventListener('focus',()=>{document.body.classList.add('keyboard-open');if(window.v60SetPanel)window.v60SetPanel(true,'text');setTimeout(sync,100)});
+ input.addEventListener('blur',()=>setTimeout(()=>{document.body.classList.remove('keyboard-open');if(window.v60SetPanel)window.v60SetPanel(true,'text');},160));
+ if(window.visualViewport){window.visualViewport.addEventListener('resize',sync);window.visualViewport.addEventListener('scroll',sync)}
+ window.addEventListener('resize',sync);
 })();
 </script>
 
