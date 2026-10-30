@@ -2573,6 +2573,128 @@ body #create .creation-dock button.dock-primary span{color:#ff9614!important}
 }
 </style>
 
+
+<style id="v61-mobile-workspace-flow">
+/* V61: one mobile flow, no overlapping drawers or tool rows while collapsed. */
+@media(max-width:799px){
+  body #create .workspace{
+    display:flex!important;flex-direction:column!important;gap:10px!important;
+    overflow:visible!important;padding-top:0!important;
+  }
+  body #create .workspace .stage-wrap{
+    position:sticky!important;top:6px!important;z-index:24!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    justify-content:flex-start!important;
+    width:100%!important;box-sizing:border-box!important;
+    height:auto!important;min-height:0!important;max-height:none!important;
+    margin:0!important;padding:8px 10px 10px!important;
+    background:#fffcf4!important;border:1px solid #e9e6df!important;
+    border-radius:16px!important;box-shadow:none!important;overflow:visible!important;
+  }
+  body #create .workspace .stage-wrap .live-preview-label{
+    align-self:center!important;width:auto!important;margin:0 0 6px!important;
+    color:#85837d!important;font-size:10px!important;line-height:12px!important;
+  }
+  body #create .workspace #stage{
+    display:block!important;width:min(44vw,190px)!important;max-width:190px!important;
+    height:auto!important;max-height:none!important;aspect-ratio:9/16!important;
+    margin:0 auto!important;border-radius:8px!important;background-color:#fffefa!important;
+  }
+  body #create .panel{
+    position:relative!important;left:auto!important;right:auto!important;
+    top:auto!important;bottom:auto!important;z-index:12!important;
+    display:flex!important;flex-direction:column!important;gap:0!important;
+    width:100%!important;box-sizing:border-box!important;
+    height:auto!important;max-height:none!important;min-height:0!important;
+    margin:0 0 calc(150px + env(safe-area-inset-bottom))!important;
+    padding:0!important;overflow:visible!important;overscroll-behavior:initial!important;
+    transform:none!important;transition:none!important;
+    background:#fffcf4!important;border:1px solid #e9e6df!important;
+    border-radius:16px!important;box-shadow:0 6px 20px rgba(44,44,44,.05)!important;
+  }
+  body #create .panel .panel-sheet-handle{
+    display:flex!important;position:relative!important;top:auto!important;
+    flex:0 0 48px!important;min-height:48px!important;
+    border:0!important;border-bottom:1px solid #e9e6df!important;
+    border-radius:16px 16px 0 0!important;background:#fffcf4!important;
+  }
+  body #create .panel:not(.v60-open)>.panel-section{display:none!important}
+  body #create .panel.v60-open{transform:none!important;max-height:none!important}
+  body #create .panel .panel-section{flex:0 0 auto!important;padding:14px!important}
+  body #create .panel .panel-section[hidden]{display:none!important}
+  body #create .creation-dock{
+    position:fixed!important;left:12px!important;right:12px!important;
+    width:auto!important;max-width:520px!important;height:auto!important;
+    margin:0 auto!important;bottom:calc(72px + env(safe-area-inset-bottom))!important;
+    z-index:1100!important;display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;
+    box-sizing:border-box!important;padding:6px!important;
+    background:rgba(255,252,244,.98)!important;border:1px solid #e9e6df!important;
+    border-radius:16px!important;box-shadow:0 6px 20px rgba(44,44,44,.08)!important;
+    transform:none!important;
+  }
+  body #create .creation-dock button{
+    width:100%!important;min-width:0!important;min-height:48px!important;
+    padding:4px 2px!important;display:flex!important;align-items:center!important;
+    justify-content:center!important;flex-direction:column!important;
+    gap:2px!important;overflow:hidden!important;white-space:nowrap!important;
+    background:#fffefa!important;color:#555650!important;
+    border:1px solid #e9e6df!important;border-radius:11px!important;
+  }
+  body #create .creation-dock button span{font-size:18px!important;color:#ff9614!important}
+  body #create .creation-dock button b{font-size:10px!important;line-height:1.1!important}
+  body #create .creation-dock button.dock-primary{
+    background:#f0eee8!important;border-color:#ded8cd!important;color:#2c2c2c!important;
+  }
+  body #create .creation-dock button.dock-primary span{color:#ff9614!important}
+  body.keyboard-open #create .workspace .stage-wrap,
+  body:has(#textValue:focus) #create .workspace .stage-wrap{
+    position:fixed!important;top:var(--keyboard-preview-top,8px)!important;
+    left:0!important;right:0!important;z-index:1200!important;
+    width:100%!important;height:228px!important;min-height:228px!important;
+    margin:0!important;padding:4px 8px 6px!important;border:0!important;
+    border-bottom:1px solid #e9e6df!important;border-radius:0!important;
+    background:rgba(255,252,244,.99)!important;box-shadow:none!important;
+  }
+  body.keyboard-open #create .workspace #stage,
+  body:has(#textValue:focus) #create .workspace #stage{
+    width:112px!important;max-width:112px!important;height:auto!important;
+    aspect-ratio:9/16!important;max-height:none!important;
+  }
+  body.keyboard-open #create .panel,
+  body:has(#textValue:focus) #create .panel{
+    position:fixed!important;top:calc(var(--keyboard-preview-top,8px) + 236px)!important;
+    left:10px!important;right:10px!important;bottom:8px!important;
+    width:auto!important;height:auto!important;max-height:none!important;
+    margin:0!important;overflow-x:hidden!important;overflow-y:auto!important;
+    z-index:1150!important;border-radius:14px!important;transform:none!important;
+  }
+  body.keyboard-open #create .panel .panel-sheet-handle,
+  body:has(#textValue:focus) #create .panel .panel-sheet-handle{display:none!important}
+  body.keyboard-open #create .panel .panel-section,
+  body:has(#textValue:focus) #create .panel .panel-section{display:none!important}
+  body.keyboard-open #create .panel #textControls,
+  body:has(#textValue:focus) #create .panel #textControls{display:block!important;margin:0!important;padding:12px!important}
+  body.keyboard-open #create .panel #textControls .field:not(#textEntryField),
+  body:has(#textValue:focus) #create .panel #textControls .field:not(#textEntryField),
+  body.keyboard-open #create .panel #textControls .fonts,
+  body:has(#textValue:focus) #create .panel #textControls .fonts,
+  body.keyboard-open #create .panel #textControls .panel-title,
+  body:has(#textValue:focus) #create .panel #textControls .panel-title{display:none!important}
+  body.keyboard-open #create #textEntryField,
+  body:has(#textValue:focus) #create #textEntryField{display:block!important;margin:0!important}
+  body.keyboard-open #create #textEntryField textarea,
+  body:has(#textValue:focus) #create #textEntryField textarea{
+    display:block!important;width:100%!important;height:72px!important;min-height:72px!important;
+    font-size:16px!important;color:#2c2c2c!important;background:#fffefa!important;
+  }
+  body.keyboard-open #create .creation-dock,
+  body:has(#textValue:focus) #create .creation-dock,
+  body.keyboard-open #create .bottom,
+  body:has(#textValue:focus) #create .bottom{display:none!important}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
