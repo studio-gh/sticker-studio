@@ -148,10 +148,18 @@ jobs:
           await page.locator('#textValue').fill('Story Studio V61');
           await page.screenshot({ path: 'artifacts/v61-mobile-text-focus.png' });
           const typingPreview = await page.evaluate(() => {
-            const canvas = document.querySelector('#stage').getBoundingClientRect();
-            const input = document.querySelector('#textValue').getBoundingClientRect();
-            return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, inputFocused: document.activeElement.id === 'textValue' };
+            const canvasEl=document.querySelector('#stage'), inputEl=document.querySelector('#textValue');
+            const panel=document.querySelector('#create .panel'), controls=document.querySelector('#textControls'), entry=document.querySelector('#textEntryField');
+            const canvas=canvasEl.getBoundingClientRect(), input=inputEl.getBoundingClientRect();
+            const style=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {display:s.display,visibility:s.visibility,opacity:s.opacity,rect:{top:r.top,bottom:r.bottom,width:r.width,height:r.height},hidden:el.hidden,inlineDisplay:el.style.display}};
+            return {
+              canvasTop:canvas.top,canvasBottom:canvas.bottom,inputTop:input.top,inputBottom:input.bottom,
+              inputFocused:document.activeElement.id==='textValue',
+              panel:style(panel),controls:style(controls),entry:style(entry),input:style(inputEl),
+              parentSections:[...panel.querySelectorAll(':scope > .panel-section')].map(style)
+            };
           });
+          console.log('TYPING_PREVIEW_STATE:', JSON.stringify(typingPreview));
           assert.equal(typingPreview.inputFocused, true, 'Text field must retain focus after creating a layer');
           assert.ok(typingPreview.canvasBottom <= typingPreview.inputTop + 10, 'Pinned preview should not overlap text input');
 
