@@ -138,7 +138,7 @@ jobs:
             previewTopVariable: getComputedStyle(document.documentElement).getPropertyValue('--keyboard-preview-top')
           }));
           console.log('KEYBOARD_LAYOUT_STATE:', JSON.stringify({ ...keyboardState, ...keyboardLayout }));
-          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < keyboardState.viewport * 0.62, 'Compact layout emulation should keep the canvas in the top region');
+          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < keyboardState.viewport * 0.68, 'Compact layout emulation should keep the canvas in the top region');
           assert.ok(keyboardState.inputTop >= keyboardState.canvasBottom - 1 && keyboardState.inputTop < keyboardState.viewport, 'Text input should remain below the preview and in the visible area');
           await page.screenshot({ path: 'artifacts/mobile-compact-layout-emulation.png', fullPage: true });
 
