@@ -4361,7 +4361,7 @@ body #create .panel.v63-visible{display:block!important}
   width:116px!important;max-width:116px!important;min-width:116px!important;height:auto!important;max-height:none!important;
   aspect-ratio:9/16!important;flex:0 0 auto!important;margin:0 auto!important;border-radius:10px!important;
  }
- #create .panel{max-height:none!important;overflow:visible!important;margin:8px 0 100px!important;border-radius:15px!important}
+ body #create .panel{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;transform:none!important;margin:8px 0 100px!important;border-radius:15px!important}
  #create .panel .panel-section{padding:13px!important}
  #create .panel .panel-sheet-handle{display:none!important}
  #create .editor-head{position:relative!important;top:auto!important;display:flex!important;flex-direction:row!important;align-items:center!important;padding:7px 0 8px!important;margin:0!important;background:transparent!important;backdrop-filter:none!important}
@@ -4433,6 +4433,7 @@ body #create .panel.v63-visible{display:block!important}
   const showLayers=!hasSelection&&count>0;
   const showPanel=hasSelection||showLayers;
   panel.classList.toggle('v63-visible',showPanel);
+  panel.classList.toggle('v60-open',showPanel);
   panel.style.display=showPanel?'block':'none';
   panelHead.hidden=!showPanel;
   const title=document.getElementById('v63PanelTitle');
