@@ -4345,6 +4345,8 @@ body #create .panel.v63-visible{display:block!important}
 #create #textEffectsControls .tool-grid .tool{min-height:42px}
 #create #curveControls{margin-top:10px;padding:12px;border:1px solid #ded8cd;border-radius:12px;background:#fffefa}
 #create .stage-wrap{background:transparent!important;box-shadow:none!important;border:0!important}
+#create .v62-empty-canvas-note{position:absolute!important;inset:0!important;display:grid!important;place-items:center!important;padding:12px!important;color:#777!important;font-size:11px!important;font-weight:600!important;text-align:center!important;pointer-events:none!important}
+body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v63-panel-head{display:none!important}
 @media(max-width:799px){
  #create .workspace{display:flex!important;flex-direction:column!important;gap:8px!important}
  #create .stage-wrap,
@@ -4387,7 +4389,8 @@ body #create .panel.v63-visible{display:block!important}
  }
  body.keyboard-open #create .creation-dock,body:has(#textValue:focus) #create .creation-dock,
  body.keyboard-open #create .bottom,body:has(#textValue:focus) #create .bottom{display:none!important}
- body.v62-curve-editing #create .stage-wrap{position:sticky!important;height:auto!important;max-height:none!important}
+ body.v62-curve-editing #create .stage-wrap{position:sticky!important;top:0!important;height:auto!important;max-height:none!important}
+ body.v62-curve-editing #create .panel{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;height:auto!important;max-height:none!important;margin:8px 0 100px!important;overflow:visible!important;transform:none!important}
  body.v62-curve-editing #create .workspace .stage-wrap #stage{width:116px!important;max-width:116px!important;min-width:116px!important}
 }
 @media(min-width:800px){
