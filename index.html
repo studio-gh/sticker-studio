@@ -2512,6 +2512,67 @@ html,body{background:#fffcf4;color:#2c2c2c}
 }
 </style>
 
+
+<style id="v61-mobile-surface-finish">
+/* Final mobile surface pass: remove legacy dark stage framing and keep one light editor surface. */
+body #create .workspace .stage-wrap,
+body #create .workspace .stage-wrap:has(#stage){
+  background:#fffcf4!important;
+  border:1px solid #e9e6df!important;
+  border-radius:16px!important;
+  box-shadow:none!important;
+}
+body #create .workspace #stage{
+  background-color:#fffefa!important;
+  border-radius:9px!important;
+}
+body #create .workspace .stage-wrap .live-preview-label{
+  color:#85837d!important;
+}
+body #create .panel{
+  background:#fffcf4!important;
+  color:#2c2c2c!important;
+  border-color:#e9e6df!important;
+  box-shadow:0 6px 20px rgba(44,44,44,.06)!important;
+}
+body #create .panel .panel-sheet-handle{
+  background:#fffcf4!important;
+  color:#2c2c2c!important;
+  border-bottom-color:#e9e6df!important;
+}
+body #create .panel .panel-title,
+body #create .panel .field label,
+body #create .panel .status{
+  color:#777970!important;
+}
+body #create .creation-dock{
+  background:rgba(255,252,244,.98)!important;
+  border:1px solid #e9e6df!important;
+  box-shadow:0 6px 20px rgba(44,44,44,.08)!important;
+}
+body #create .creation-dock button{
+  color:#555650!important;
+  background:#fffefa!important;
+  border-color:#e9e6df!important;
+}
+body #create .creation-dock button span{color:#ff9614!important}
+body #create .creation-dock button.dock-primary{
+  color:#2c2c2c!important;
+  background:#f0eee8!important;
+  border-color:#ded8cd!important;
+}
+body #create .creation-dock button.dock-primary span{color:#ff9614!important}
+@media(max-width:799px){
+  body #create .workspace .stage-wrap{
+    padding:8px 10px 10px!important;
+    margin:0!important;
+  }
+  body #create .workspace .stage{
+    background-color:#fffefa!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="app">
