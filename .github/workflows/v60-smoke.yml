@@ -1,15 +1,17 @@
-name: Story Studio editor smoke test
+name: Story Studio browser regression
 
 on:
   push:
     branches:
       - ux/mobile-editor-v60-recovery
+      - main
   pull_request:
     branches:
       - main
     paths:
       - index.html
       - .github/workflows/v60-smoke.yml
+  workflow_dispatch:
 
 jobs:
   mobile-editor:
@@ -82,9 +84,9 @@ jobs:
           assert.ok(Math.abs(rect.height / rect.width - 16 / 9) < 0.03, 'Canvas must keep 9:16 ratio');
           await page.screenshot({ path: 'artifacts/v60-mobile-empty-canvas.png', fullPage: true });
 
-          await page.evaluate(() => window.addText('Story Studio V60'));
+          await page.evaluate(() => window.addText('Story Studio V61'));
           await page.waitForTimeout(150);
-          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V60', 'New text must be retained in input');
+          assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V61', 'New text must be retained in input');
           assert.ok(await page.locator('#stage .layer').count() === 1, 'Adding text must create a layer');
           rect = await stage.boundingBox();
           const layerRect = await page.locator('#stage .layer').boundingBox();
@@ -108,9 +110,9 @@ jobs:
             const input = document.querySelector('#textValue').getBoundingClientRect();
             return { canvasTop: canvas.top, canvasBottom: canvas.bottom, inputTop: input.top, inputBottom: input.bottom, viewport: window.innerHeight };
           });
-          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < 230, 'Keyboard layout simulation should keep a compact canvas pinned at the top');
+          assert.ok(keyboardState.canvasTop >= -2 && keyboardState.canvasBottom < 230, 'Compact layout emulation should keep the canvas in the top region');
           assert.ok(keyboardState.inputTop >= keyboardState.canvasBottom - 1 && keyboardState.inputTop < keyboardState.viewport, 'Text input should remain below the preview and in the visible area');
-          await page.screenshot({ path: 'artifacts/v60-mobile-keyboard-layout-simulation.png', fullPage: true });
+          await page.screenshot({ path: 'artifacts/mobile-compact-layout-emulation.png', fullPage: true });
 
           await page.setViewportSize({ width: 390, height: 844 });
           await page.evaluate(() => {
