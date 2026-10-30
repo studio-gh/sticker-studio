@@ -4539,8 +4539,8 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
  if(!section||!list)return;
  const label=l=>l.type==='text'?(l.text||'Texto').trim().slice(0,32)||'Texto':l.type==='shape'?(l.name||'Forma'):(l.name||'Foto');
  window.renderLayers=function(){
-  const items=Array.isArray(window.layers)?window.layers:[];
-  const selectedIdNow=window.selectedId;
+  const items=typeof layers!=='undefined'&&Array.isArray(layers)?layers:[];
+  const selectedIdNow=typeof selectedId!=='undefined'?selectedId:null;
   const tools=section.querySelector('.layer-tools');
   const hasSelection=items.some(l=>l.id===selectedIdNow);
   if(tools){tools.hidden=!hasSelection;tools.setAttribute('aria-hidden',String(!hasSelection))}
