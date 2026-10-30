@@ -3733,6 +3733,7 @@ function closeShapeMenu(){
   if(!mobile())return;
   panel.classList.toggle('v60-open',!!open);
   if(open)revealForMode(mode||'tools');
+  else panel.querySelectorAll(':scope > .panel-section').forEach(section=>{section.hidden=true;});
   const h=panel.querySelector('.panel-sheet-handle');
   if(h)h.setAttribute('aria-expanded',String(!!open));
   const title=document.getElementById('v60PanelTitle'),hint=document.getElementById('v60PanelHint');
