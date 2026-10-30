@@ -223,10 +223,12 @@ jobs:
           assert.ok(exported.width > 0 && exported.height > 0 && exported.size > 100, 'PNG export rendering must return image pixels');
           await page.screenshot({ path: 'artifacts/v61-mobile-curved-text.png' });
 
-          await page.evaluate(() => window.addShape('circle'));
+          await page.evaluate(() => { window.addShape('circle'); window.v60SetPanel(true,'shape'); });
           assert.equal(await page.locator('#stage .layer').count(), 2, 'Adding a shape must create a second layer');
-          assert.equal(await page.locator('#shapeControls').evaluate(el => getComputedStyle(el).display), 'block', 'Shape controls must appear for a selected shape');
-          await page.evaluate(() => window.v60SetPanel(true,'shape'));
+          const shapeControlsState = await page.locator('#shapeControls').evaluate(el => ({display:getComputedStyle(el).display,inline:el.style.display,hidden:el.hidden,parent:getComputedStyle(el.closest('.panel-section')).display}));
+          console.log('SHAPE_CONTROLS_STATE:', JSON.stringify(shapeControlsState));
+          assert.equal(shapeControlsState.display, 'block', 'Shape controls must appear for a selected shape');
+          assert.notEqual(shapeControlsState.parent, 'none', 'Shape controls parent section must be revealed for the selected shape');
           const shapeLayer = await page.locator('#stage .layer.selected').count();
           assert.equal(shapeLayer, 1, 'The newly created shape must become the selected layer');
 
@@ -239,9 +241,12 @@ jobs:
             await window.handleFile(new File([blob],'story-studio-qa.png',{type:'image/png'}));
           });
           await page.waitForFunction(() => document.querySelectorAll('#stage .layer').length === 3);
-          assert.equal(await page.locator('#imageControls').evaluate(el => getComputedStyle(el).display), 'block', 'Photo controls must appear after a photo is imported');
-          assert.equal(await page.locator('#stage .layer.selected img.layer-media').count(), 1, 'Imported photo must render in the selected canvas layer');
           await page.evaluate(() => window.v60SetPanel(true,'photo'));
+          const photoControlsState = await page.locator('#imageControls').evaluate(el => ({display:getComputedStyle(el).display,inline:el.style.display,hidden:el.hidden,parent:getComputedStyle(el.closest('.panel-section')).display}));
+          console.log('PHOTO_CONTROLS_STATE:', JSON.stringify(photoControlsState));
+          assert.equal(photoControlsState.display, 'block', 'Photo controls must appear after a photo is imported');
+          assert.notEqual(photoControlsState.parent, 'none', 'Photo controls parent section must be revealed for the selected photo');
+          assert.equal(await page.locator('#stage .layer.selected img.layer-media').count(), 1, 'Imported photo must render in the selected canvas layer');
           await page.screenshot({ path: 'artifacts/v61-mobile-photo-layer.png' });
 
           const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
