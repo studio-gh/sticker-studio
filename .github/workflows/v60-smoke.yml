@@ -161,7 +161,13 @@ jobs:
             };
           });
           console.log('TYPING_PREVIEW_STATE:', JSON.stringify(typingPreview));
+          const typingPanelBox = typingPreview.panel.rect;
+          const typingInputBox = typingPreview.input.rect;
+          const typingCreateTransform = await page.locator('#create').evaluate(el => getComputedStyle(el).transform);
           assert.equal(typingPreview.inputFocused, true, 'Text field must retain focus after creating a layer');
+          assert.equal(typingCreateTransform, 'none', 'Animated editor wrapper must not trap fixed typing controls');
+          assert.ok(typingPanelBox.height >= 120, 'Typing panel must have enough height to show the text input');
+          assert.ok(typingPanelBox.top <= typingInputBox.top && typingPanelBox.bottom >= typingInputBox.bottom, 'Visible panel must contain the full text input field');
           assert.ok(typingPreview.canvasBottom <= typingPreview.inputTop + 10, 'Pinned preview should not overlap text input');
 
           await page.setViewportSize({ width: 390, height: 460 });
