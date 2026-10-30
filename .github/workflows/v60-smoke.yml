@@ -271,6 +271,7 @@ jobs:
           assert.equal(curvePanelState.curveVisible,true,'Curve controls must be visible after selecting circular text');
           assert.ok(curvePanelState.panelTop >= curvePanelState.canvasBottom - 2,'Curve controls must not cover the Story preview');
           assert.ok(curvePanelState.panelTop < curvePanelState.viewport - 100,'Curve editing panel must start inside the visible mobile screen');
+          assert.ok(curvePanelState.panelHeight > 120,'Curve editing panel must reserve real space for its controls');
           assert.ok(curvePanelState.curveTop < curvePanelState.viewport,'Curve controls must be visible without scrolling past a blank screen');
           await page.screenshot({ path: 'artifacts/v62-mobile-circular-text.png', fullPage:true });
 
