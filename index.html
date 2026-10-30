@@ -4297,5 +4297,22 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
  #create:has(#curveControls[style*="display: block"]) .bottom{display:none!important}
 }
 </style>
+
+<style id="v62.7-show-curve-editor-panel">
+@media(max-width:799px){
+ #create:has(#curveControls[style*="display: block"]) .panel{
+  transform:none!important;
+  visibility:visible!important;
+  opacity:1!important;
+ }
+ #create:has(#curveControls[style*="display: block"]) .panel .panel-sheet-handle{
+  display:none!important;
+ }
+ #create:has(#curveControls[style*="display: block"]) .panel .panel-section#textControls,
+ #create:has(#curveControls[style*="display: block"]) .panel .panel-section#textEffectsControls{
+  display:block!important;visibility:visible!important;opacity:1!important;
+ }
+}
+</style>
 </body>
 </html>
