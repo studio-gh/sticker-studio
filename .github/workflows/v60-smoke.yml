@@ -1,4 +1,4 @@
-name: V61 editor smoke test and visual capture
+name: Story Studio editor smoke test
 
 on:
   push:
