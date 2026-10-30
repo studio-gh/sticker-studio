@@ -3790,7 +3790,7 @@ function closeShapeMenu(){
  window.addEventListener('resize',()=>{if(!mobile()){panel.classList.remove('v60-open');document.body.classList.remove('keyboard-open');sectionIds.forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=false})}});
  if(mobile()){
   panel.classList.remove('v60-open');
-  revealForMode('tools');
+  window.v60SetPanel(false,'tools');
  }
 })();</script>
 
