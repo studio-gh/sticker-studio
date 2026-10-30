@@ -4212,7 +4212,7 @@ html,body{background:#fffcf4!important;color:#2c2c2c!important}
  function sync(){
   const active=isCurve();
   body.classList.toggle('v62-curve-editing',active);
-  if(!active)return;
+  if(!active){const curve=document.getElementById('curveControls');if(curve){curve.hidden=false;curve.style.display='none'}const presets=document.getElementById('presetControls');if(presets){presets.hidden=false;presets.style.removeProperty('display')}return;}
   const text=document.getElementById('textControls');
   const effects=document.getElementById('textEffectsControls');
   const presets=document.getElementById('presetControls');
