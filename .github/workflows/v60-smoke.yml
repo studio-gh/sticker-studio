@@ -162,6 +162,16 @@ jobs:
           await page.waitForTimeout(150);
           assert.equal(await page.locator('#textValue').inputValue(), 'Story Studio V61', 'New text must be retained in input');
           assert.ok(await page.locator('#stage .layer').count() === 1, 'Adding text must create a layer');
+          const expandedPreview = await page.evaluate(() => {
+            const stage=document.querySelector('#stage'),layer=stage.querySelector('.layer');
+            const sr=stage.getBoundingClientRect(),lr=layer.getBoundingClientRect();
+            return {stageHeight:sr.height,stageWidth:sr.width,layerVisible:lr.width>0&&lr.height>0&&lr.bottom>sr.top&&lr.top<sr.bottom,copyExists:!!document.querySelector('#copyStoryBtn'),dock:document.querySelector('.creation-dock').getBoundingClientRect()};
+          });
+          assert.ok(expandedPreview.stageHeight > 350, 'Expanded mobile preview must use the full workspace height');
+          assert.equal(expandedPreview.layerVisible,true,'New text must remain visible inside the expanded preview');
+          assert.equal(expandedPreview.copyExists,true,'Copy PNG must be available beside Export PNG');
+          assert.ok(Math.abs((expandedPreview.dock.left+expandedPreview.dock.right)/2-195)<3,'Creation actions must be centered in the dock');
+
           rect = await stage.boundingBox();
           const layerRect = await page.locator('#stage .layer').boundingBox();
           assert.ok(layerRect, 'Text layer must render on canvas');
