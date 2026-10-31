@@ -4593,5 +4593,126 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
 })();
 </script>
 
+<style id="v65-expanded-workspace-preview">
+/* V65: use the full workspace as the live preview surface. The export remains 9:16. */
+#create .workspace .stage-wrap{
+ background:#fffefa!important;
+ border:1px solid #deded8!important;
+ border-radius:20px!important;
+ min-height:470px!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:stretch!important;
+ justify-content:flex-start!important;
+ padding:14px!important;
+ overflow:hidden!important;
+}
+#create .workspace .stage-wrap .live-preview-label{
+ display:block!important;
+ align-self:flex-start!important;
+ width:auto!important;
+ margin:0 0 10px!important;
+ padding:0 2px!important;
+ color:#85837d!important;
+ font-size:10px!important;
+ line-height:1.2!important;
+ letter-spacing:.15em!important;
+}
+#create .workspace .stage-wrap #stage{
+ width:100%!important;
+ max-width:none!important;
+ min-width:0!important;
+ height:auto!important;
+ max-height:none!important;
+ aspect-ratio:unset!important;
+ flex:1 1 auto!important;
+ margin:0!important;
+ position:relative!important;
+ border-radius:12px!important;
+ overflow:hidden!important;
+ box-shadow:none!important;
+}
+/* Preserve proportional positioning and scale of artwork while the viewport grows. */
+#create .workspace .stage-wrap #stage .layer{
+ /* layer coordinates are recalculated by the editor's ResizeObserver below */
+}
+@media(max-width:799px){
+ #create .workspace{gap:12px!important}
+ #create .workspace .stage-wrap{
+  position:relative!important;top:auto!important;
+  width:100%!important;min-height:clamp(420px,62svh,660px)!important;
+  height:clamp(420px,62svh,660px)!important;
+  margin:0!important;padding:12px!important;
+  border-radius:18px!important;
+ }
+ #create .workspace .stage-wrap #stage{
+  width:100%!important;max-width:none!important;height:auto!important;
+  aspect-ratio:unset!important;flex:1 1 auto!important;
+ }
+ #create .editor-head{position:relative!important}
+}
+@media(min-width:800px){
+ #create .workspace{grid-template-columns:minmax(0,1fr) 360px!important;align-items:start!important}
+ #create .workspace .stage-wrap{min-height:min(78vh,820px)!important;height:min(78vh,820px)!important;position:sticky!important;top:14px!important}
+ #create .workspace .stage-wrap #stage{width:100%!important;max-width:none!important;aspect-ratio:unset!important}
+}
+/* The editor uses a 500x888 logical artwork coordinate system. Scale all logical coordinates
+   from stage width to stage height, so the preview area can be rectangular without changing exports. */
+</style>
+<script id="v65-expanded-workspace-preview-js">
+(function(){
+ const stage=document.getElementById('stage');
+ const wrap=stage?.parentElement;
+ if(!stage||!wrap)return;
+ const CANVAS_W=500,CANVAS_H=500*16/9;
+ let resizeFrame=0;
+ function resizePreview(){
+  cancelAnimationFrame(resizeFrame);
+  resizeFrame=requestAnimationFrame(()=>{
+   const width=stage.clientWidth,height=stage.clientHeight;
+   if(!width||!height)return;
+   const sx=width/CANVAS_W,sy=height/CANVAS_H;
+   stage.querySelectorAll('.layer').forEach(el=>{
+    const l=typeof layers!=='undefined'?layers.find(x=>x.id===el.dataset.id):null;
+    if(!l)return;
+    el.style.left=(l.x*sx)+'px';
+    el.style.top=(l.y*sy)+'px';
+    el.style.transform='translate(-50%,-50%) rotate('+l.rotation+'deg) scale('+l.scale+')';
+    if(l.type==='text'&&!l.curve){
+     el.style.fontSize=(l.fontSize*sx)+'px';
+     el.style.width=((l.textWidth||300)*sx)+'px';
+     el.style.maxWidth='none';
+    }else if(l.type==='text'&&l.curve){
+     el.style.width=((l.curveMode==='circle'?(Math.max(70,Number(l.curveRadius)||130)*2+24):Math.max(220,Math.abs(l.curve)*5+220))*sx)+'px';
+     el.style.height=((l.curveMode==='circle'?(Math.max(70,Number(l.curveRadius)||130)*2+24):Math.max(120,Math.abs(l.curve)*2+120))*sx)+'px';
+    }else if(l.type==='shape'||l.type==='image'){
+     el.style.width=((l.w||150)*sx)+'px';
+     el.style.height=((l.h||150)*sx)+'px';
+     if(l.type==='image'){
+      const img=el.querySelector('.layer-media');
+      if(img){img.style.width=((l.w||150)*sx)+'px';img.style.height=((l.h||150)*sx)+'px'}
+     }
+    }
+   });
+  });
+ }
+ if(typeof ResizeObserver!=='undefined'){
+  const observer=new ResizeObserver(resizePreview);
+  observer.observe(stage);
+ }
+ window.addEventListener('resize',resizePreview,{passive:true});
+ const originalRender=window.renderEditor;
+ if(typeof originalRender==='function'){
+  window.renderEditor=function(){
+   const r=originalRender.apply(this,arguments);
+   resizePreview();
+   return r;
+  };
+ }
+ window.v65ResizePreview=resizePreview;
+ resizePreview();
+})();
+</script>
+
 </body>
 </html>
