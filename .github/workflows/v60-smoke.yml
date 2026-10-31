@@ -294,6 +294,9 @@ jobs:
 
           await page.locator('#v63PanelClose').click();
           await page.waitForFunction(() => document.querySelector('#create .panel').classList.contains('v63-visible'));
+          await page.waitForFunction(() => getComputedStyle(document.querySelector('#layersPanelSection')).display !== 'none');
+          
+          await page.waitForFunction(() => document.querySelector('#create .panel').classList.contains('v63-visible'));
           const layerRowsBefore = await page.locator('#layers .layer-row').count();
           assert.equal(layerRowsBefore, 2, 'Camadas must list every existing layer after deselecting');
           const orderBefore = await page.evaluate(() => layers.map(layer => layer.id));
