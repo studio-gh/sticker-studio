@@ -4858,5 +4858,13 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
  }
 })();
 </script>
+<style id="v66-preview-interaction-layering">
+#create .workspace .stage-wrap .live-preview-label{pointer-events:none!important}
+#create .workspace .stage-wrap #stage{position:relative!important;z-index:2!important;overflow:visible!important}
+#create .workspace .stage-wrap #stage .layer{z-index:3!important;pointer-events:auto!important}
+#create .workspace .stage-wrap #stage .layer button{pointer-events:auto!important}
+#create .workspace .stage-wrap{isolation:isolate!important}
+#create .workspace .stage-wrap #stage .guide{z-index:15!important}
+</style>
 </body>
 </html>
