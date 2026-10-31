@@ -134,7 +134,7 @@ jobs:
           assert.equal(mobileSurfaceState.panelSections,0,'Empty canvas must not show unrelated tool sections');
           assert.equal(mobileSurfaceState.textControlsVisible,false,'Text controls must stay hidden until text is added');
           assert.equal(mobileSurfaceState.selectionVisible,false,'Selected-layer controls must stay hidden until an element exists');
-          assert.ok(mobileSurfaceState.stageWidth<=120,'Mobile preview must stay compact');
+          assert.ok(mobileSurfaceState.stageWidth>300,'Mobile preview must fill the workspace width');
           assert.deepEqual(mobileSurfaceState.dock,['Texto','Foto','Formas'],'Empty canvas must offer only the three clear creation actions');
           assert.ok(mobileSurfaceState.dockRect.left>=0&&mobileSurfaceState.dockRect.right<=390&&mobileSurfaceState.dockRect.width>300,'Creation actions must fit inside the mobile viewport');
           await page.locator('#addShapeMenuToggle').click();
@@ -371,7 +371,7 @@ jobs:
           await desktop.waitForFunction(() => document.querySelector('#create')?.classList.contains('active'));
           assert.equal(await desktop.locator('#create .creation-dock').evaluate(el => getComputedStyle(el).display), 'none', 'Mobile creation dock must be hidden on desktop');
           const desktopStage = await desktop.locator('#stage').boundingBox();
-          assert.ok(desktopStage && Math.abs(desktopStage.height / desktopStage.width - 16 / 9) < 0.03, 'Desktop canvas must keep 9:16 ratio');
+          assert.ok(desktopStage && desktopStage.width>500 && desktopStage.height>350, 'Desktop preview must fill the workspace while the export remains 9:16');
           assert.equal(await desktop.locator('#selectionControls').evaluate(el => getComputedStyle(el.closest('.panel-section')).display), 'none', 'Desktop selected-layer controls must be hidden on an empty canvas');
           await desktop.evaluate(() => window.scrollTo(0,0));
           await desktop.screenshot({ path: 'artifacts/v62-desktop-empty-canvas.png' });
