@@ -2975,7 +2975,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </section>
 
 <section id="create" class="view">
-<div class="editor-head"><h2>Create your Story.</h2><div class="editor-actions"><button id="undoBtn" class="small-btn" onclick="undo()" disabled aria-label="Undo">↶</button><button id="redoBtn" class="small-btn" onclick="redo()" disabled aria-label="Redo">↷</button><button id="exportStoryBtn" class="small-btn dark" onclick="exportPNG()" disabled>Export PNG</button></div></div>
+<div class="editor-head"><h2>Create your Story.</h2><div class="editor-actions"><button id="undoBtn" class="small-btn" onclick="undo()" disabled aria-label="Undo">↶</button><button id="redoBtn" class="small-btn" onclick="redo()" disabled aria-label="Redo">↷</button><button id="copyStoryBtn" class="small-btn" onclick="copyPNG()" disabled>Copiar PNG</button><button id="exportStoryBtn" class="small-btn dark" onclick="exportPNG()" disabled>Export PNG</button></div></div>
 <nav class="creation-dock" aria-label="Adicionar ao Story">
 <button id="dockAddText" onclick="startTextEditing()" class="dock-primary"><span aria-hidden="true">T</span><b>Texto</b></button>
 <button id="dockAddPhoto" onclick="document.getElementById('file').click()"><span aria-hidden="true">＋</span><b>Foto</b></button>
@@ -3039,7 +3039,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 </div>
 
 <div class="panel-section" id="imageControls" style="display:none">
-<div class="panel-title">Photo</div>
+<div class="panel-title">Photo</div><div class="v66-photo-actions"></div>
 <div class="tool-grid" style="margin-bottom:8px">
 <button class="tool" id="eraseModeBtn" onclick="toggleEraseMode()">Erase leftovers</button>
 <button class="tool" id="eraseClearBtn" onclick="clearEraseMode()">Finish erasing</button>
@@ -4714,5 +4714,137 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
 })();
 </script>
 
+<style id="v66-mobile-preview-recovery">
+/* Preview fills the available workspace. The artwork keeps its own logical 9:16 export. */
+#create .workspace .stage-wrap{
+ height:clamp(390px,62svh,680px)!important;
+ min-height:clamp(390px,62svh,680px)!important;
+ max-height:none!important;
+ flex:0 0 auto!important;
+ display:flex!important;flex-direction:column!important;
+ align-items:stretch!important;justify-content:flex-start!important;
+ padding:12px!important;overflow:hidden!important;
+}
+#create .workspace .stage-wrap #stage{
+ width:100%!important;max-width:none!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ flex:1 1 0!important;aspect-ratio:unset!important;
+ position:relative!important;margin:0!important;
+}
+#create .creation-dock{justify-content:center!important;justify-items:center!important}
+@media(max-width:799px){
+ #create .creation-dock{grid-template-columns:repeat(3,minmax(0,112px))!important;justify-content:center!important}
+ #create .workspace .stage-wrap{
+  height:clamp(390px,58svh,650px)!important;
+  min-height:clamp(390px,58svh,650px)!important;
+  width:100%!important;position:relative!important;top:auto!important;
+ }
+ body.keyboard-open #create .workspace .stage-wrap,
+ body:has(#textValue:focus) #create .workspace .stage-wrap{
+  height:clamp(210px,31svh,290px)!important;
+  min-height:clamp(210px,31svh,290px)!important;
+ }
+}
+@media(min-width:800px){
+ #create .workspace .stage-wrap{height:min(78vh,820px)!important;min-height:min(78vh,820px)!important}
+}
+</style>
+<style id="v66-compact-selection-handles">
+/* Smaller visual affordances, with a generous invisible touch target. */
+#create .resize-handle{
+ width:22px!important;height:22px!important;
+ right:-9px!important;bottom:-9px!important;
+ border-width:2px!important;
+ background:var(--accent)!important;
+ box-shadow:0 1px 3px #0002!important;
+}
+#create .rotate-handle{
+ width:18px!important;height:18px!important;top:-23px!important;
+ border-width:2px!important;
+}
+#create .width-handle{
+ width:12px!important;height:26px!important;
+ border-width:1px!important;border-radius:5px!important;
+}
+#create .width-handle.left{left:-6px!important}
+#create .width-handle.right{right:-6px!important}
+#create .layer.selected{outline-width:1px!important;outline-offset:3px!important}
+#create #finishTextEditing.v66-finished{display:none!important}
+#create .editor-actions #copyStoryBtn{white-space:nowrap}
+</style>
+<script id="v66-mobile-preview-recovery-js">
+(function(){
+ const stage=document.getElementById('stage');
+ if(!stage)return;
+ const CANVAS_W=500,CANVAS_H=500*16/9;
+ const byId=id=>document.getElementById(id);
+ function scalePreview(){
+  const r=stage.getBoundingClientRect();
+  if(r.width<20||r.height<20)return;
+  const sx=r.width/CANVAS_W,sy=r.height/CANVAS_H;
+  const textScale=sx;
+  const shapeScale=Math.min(sx,sy);
+  stage.querySelectorAll('.layer').forEach(el=>{
+   const l=typeof layers!=='undefined'?layers.find(x=>x.id===el.dataset.id):null;
+   if(!l)return;
+   el.style.left=(l.x*sx)+'px';
+   el.style.top=(l.y*sy)+'px';
+   if(l.type==='text'){
+    el.style.fontSize=(l.fontSize*textScale)+'px';
+    el.style.width=((l.textWidth||300)*textScale)+'px';
+    el.style.maxWidth='none';
+    if(l.curve){
+     const d=l.curveMode==='circle'?(Math.max(70,Number(l.curveRadius)||130)*2+24):Math.max(220,Math.abs(l.curve)*5+220);
+     const h=l.curveMode==='circle'?d:Math.max(120,Math.abs(l.curve)*2+120);
+     el.style.width=(d*textScale)+'px';el.style.height=(h*textScale)+'px';
+     const svg=el.querySelector('svg');if(svg){svg.style.width='100%';svg.style.height='100%'}
+    }
+   }else{
+    const u=shapeScale;
+    el.style.width=((l.w||150)*u)+'px';el.style.height=((l.h||150)*u)+'px';
+    const img=el.querySelector('.layer-media');
+    if(img){img.style.width=((l.w||150)*u)+'px';img.style.height=((l.h||150)*u)+'px'}
+   }
+  });
+ }
+ const oldRender=window.renderEditor;
+ if(typeof oldRender==='function'&&!oldRender.__v66){
+  const wrapped=function(){const v=oldRender.apply(this,arguments);requestAnimationFrame(scalePreview);return v};
+  wrapped.__v66=true;window.renderEditor=wrapped;
+ }
+ const oldVisual=window.updateLayerVisual;
+ if(typeof oldVisual==='function'&&!oldVisual.__v66){
+  const wrapped=function(){const v=oldVisual.apply(this,arguments);requestAnimationFrame(scalePreview);return v};
+  wrapped.__v66=true;window.updateLayerVisual=wrapped;
+ }
+ if(typeof ResizeObserver!=='undefined'){const ro=new ResizeObserver(scalePreview);ro.observe(stage)}
+ window.addEventListener('resize',scalePreview,{passive:true});
+ window.v66ScalePreview=scalePreview;
+ requestAnimationFrame(scalePreview);
+
+ // Keep the PNG copy action beside export and in sync with canvas availability.
+ const syncExport=()=>{
+  const enabled=typeof layers!=='undefined'&&layers.length>0;
+  const copy=byId('copyStoryBtn'),exp=byId('exportStoryBtn');
+  if(copy)copy.disabled=!enabled;
+  if(exp)exp.disabled=!enabled;
+ };
+ const originalRender2=window.renderEditor;
+ if(typeof originalRender2==='function'&&!originalRender2.__v66copy){
+  const wrapped=function(){const v=originalRender2.apply(this,arguments);syncExport();return v};
+  wrapped.__v66copy=true;window.renderEditor=wrapped;
+ }
+ syncExport();
+
+ // Restore background removal within the contextual photo tools.
+ const remove=byId('removeBgBtn'),photo=byId('imageControls .v66-photo-actions');
+ if(remove&&photo){remove.textContent='Remover background';remove.classList.add('tool','primary');remove.disabled=false;photo.appendChild(remove)}
+ const done=byId('finishTextEditing'),input=byId('textValue');
+ if(done&&input){
+  done.addEventListener('click',()=>{done.classList.add('v66-finished');setTimeout(()=>done.classList.add('v66-finished'),0)});
+  input.addEventListener('focus',()=>done.classList.remove('v66-finished'));
+ }
+})();
+</script>
 </body>
 </html>
