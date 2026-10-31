@@ -3286,12 +3286,12 @@ $('stage').addEventListener('pointermove',e=>{
   if(Math.abs(dx)+Math.abs(dy)>3){drag.moved=true;suppressClick=true}
   if(drag.mode==='move'){
     l.x=Math.max(-180,Math.min(680,drag.x+dx/(r.width/500)));
-    l.y=Math.max(-180,Math.min(CANVAS_H+180,drag.y+dy/(r.width/500)));
+    l.y=Math.max(-180,Math.min(CANVAS_H+180,drag.y+dy/(r.height/CANVAS_H)));
     const guide=snapPosition(l,9);
     updateGuides(guide);
   }else if(drag.mode==='crop'){
     l.cropX=Math.max(0,Math.min(100,drag.cropX-dx/Math.max(1,r.width)*100));
-    l.cropY=Math.max(0,Math.min(100,drag.cropY-dy/Math.max(1,r.width)*100));
+    l.cropY=Math.max(0,Math.min(100,drag.cropY-dy/Math.max(1,r.height)*100));
     $('cropX').value=l.cropX;$('cropY').value=l.cropY;$('cropXVal').textContent=Math.round(l.cropX);$('cropYVal').textContent=Math.round(l.cropY);
   }else if(drag.mode==='width-left'||drag.mode==='width-right'){
     const sign=drag.mode==='width-right'?1:-1;
