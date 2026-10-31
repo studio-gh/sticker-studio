@@ -4749,6 +4749,18 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
  #create .workspace .stage-wrap{height:min(78vh,820px)!important;min-height:min(78vh,820px)!important}
 }
 </style>
+<style id="v66-toolbar-and-touch-refinement">
+@media(max-width:799px){
+ #create .editor-head .editor-actions{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ #create .editor-head .editor-actions button{min-width:0!important;padding-left:4px!important;padding-right:4px!important;font-size:10px!important}
+}
+#create .resize-handle::before,#create .rotate-handle::before{
+ content:"";position:absolute;inset:-8px;border-radius:50%;background:transparent;
+}
+#create .width-handle::before{
+ content:"";position:absolute;inset:-7px -5px;background:transparent;
+}
+</style>
 <style id="v66-compact-selection-handles">
 /* Smaller visual affordances, with a generous invisible touch target. */
 #create .resize-handle{
