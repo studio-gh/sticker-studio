@@ -4451,7 +4451,7 @@ body.keyboard-open #create .v63-panel-head,body:has(#textValue:focus) #create .v
   document.body.classList.toggle('v63-context-text',kind==='text');
   document.body.classList.toggle('v63-context-shape',kind==='shape');
   document.body.classList.toggle('v63-context-photo',kind==='image');
-  const showLayers=!hasSelection&&count>0;
+  const showLayers=count>0;
   const showPanel=hasSelection||showLayers;
   panel.classList.toggle('v63-visible',showPanel);
   panel.classList.toggle('v60-open',showPanel);
